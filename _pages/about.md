@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Mingrui Zheng"
+title: "Title"
 author_profile: true
 redirect_from: 
   - /about/
