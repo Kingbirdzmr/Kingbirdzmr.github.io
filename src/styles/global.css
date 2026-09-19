@@ -12,3 +12,29 @@ html[data-theme="light"]{--bg:#f6f8fb;--bg2:#eef2f7;--surface:rgba(255,255,255,.
 
 /* Publication availability, translated titles, and forthcoming states */
 .publication-meta .publication-status{border-color:color-mix(in srgb,var(--accent) 36%,var(--line));color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--surface))}.publication-meta .status-under-review{border-style:dashed;color:var(--muted);background:transparent}.publication-meta .status-accepted-unpublished{border-style:dashed}.publication-original-title{margin:-2px 0 7px;color:var(--faint);font-size:.76rem;line-height:1.55;font-style:italic;max-width:980px}.detail-original-title{font-size:.9rem;max-width:1050px;margin:-10px 0 20px}.publication-actions .publication-action-disabled{color:var(--faint);cursor:not-allowed;opacity:.58;text-decoration:line-through;text-decoration-thickness:1px}.publication-actions .publication-action-disabled:hover{color:var(--faint)}.publication-update-note{max-width:900px;border:1px dashed color-mix(in srgb,var(--accent) 36%,var(--line));border-radius:var(--radius);padding:28px 30px;background:color-mix(in srgb,var(--accent) 5%,var(--surface));margin:12px 0 48px}.publication-update-note h2{font-size:1.65rem;margin:.35rem 0 .7rem}.publication-update-note>p:last-child{color:var(--muted);margin-bottom:0}.detail-grid-single{grid-template-columns:minmax(0,1fr)}.detail-grid-single article,.detail-grid-single aside{max-width:900px}
+
+/* Publication detail title spacing: keep multi-line CJK titles readable */
+.publication-detail h1{
+  font-size:clamp(2.8rem,5.8vw,5.45rem);
+  line-height:1.06;
+  letter-spacing:-.045em;
+  text-wrap:balance;
+  overflow-wrap:anywhere;
+}
+html[lang="zh-CN"] .publication-detail h1,
+html[lang="ja"] .publication-detail h1{
+  line-height:1.14;
+  letter-spacing:-.02em;
+}
+@media(max-width:650px){
+  .publication-detail h1{
+    font-size:clamp(2.35rem,11vw,4rem);
+    line-height:1.1;
+    letter-spacing:-.035em;
+  }
+  html[lang="zh-CN"] .publication-detail h1,
+  html[lang="ja"] .publication-detail h1{
+    line-height:1.18;
+    letter-spacing:-.015em;
+  }
+}
