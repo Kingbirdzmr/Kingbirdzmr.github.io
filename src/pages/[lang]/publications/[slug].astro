@@ -2,32 +2,94 @@
 import MainLayout from '../../../layouts/MainLayout.astro';
 import { publications } from '../../../data/publications';
 import { langs, ui } from '../../../i18n/ui';
-import type { Lang } from '../../../types';
-export function getStaticPaths(){return langs.flatMap(lang=>publications.map(p=>({params:{lang,slug:p.slug},props:{publication:p,lang}})));}
-const { publication:p, lang } = Astro.props;
-const desc = p.abstract?.[lang] ?? p.title[lang];
-const doi = p.links?.doi?.replace('https://doi.org/','');
+import type { Lang, Publication } from '../../../types';
+
+export function getStaticPaths(){
+  const detailed = publications.filter((p) => p.detailPage !== false);
+  return langs.flatMap((lang) => detailed.map((p) => ({ params: { lang, slug: p.slug }, props: { publication: p, lang } })));
+}
+
+const { publication: p, lang } = Astro.props as { publication: Publication; lang: Lang };
+const desc = p.abstract?.[lang] ?? p.unavailableNote?.[lang] ?? `${p.title[lang]} — ${p.venue}`;
+const doi = p.links?.doi?.replace('https://doi.org/', '');
+const me = 'Mingrui Zheng';
+const typeLabel = {
+  journal: { en: 'Journal', zh: '期刊', ja: '学術雑誌' },
+  conference: { en: 'Conference', zh: '会议', ja: '国際会議' },
+  preprint: { en: 'Preprint', zh: '预印本', ja: 'プレプリント' },
+  patent: { en: 'Patent', zh: '专利', ja: '特許' }
+} as const;
+const updateTitle = {
+  en: 'Publication metadata pending',
+  zh: '等待正式见刊信息',
+  ja: '正式出版情報を待っています'
+} as const;
+const publishableMetadata = p.statusKind !== 'accepted-unpublished';
 ---
 <MainLayout {lang} title={`${p.title[lang]} | Mingrui Zheng`} description={desc}>
   <Fragment slot="head">
-    <meta name="citation_title" content={p.title.en} />
-    {p.authors.map((author) => <meta name="citation_author" content={author} />)}
-    <meta name="citation_publication_date" content={String(p.year)} />
-    {p.type === 'journal' ? <meta name="citation_journal_title" content={p.venue} /> : <meta name="citation_conference_title" content={p.venue} />}
-    {doi && <meta name="citation_doi" content={doi} />}
-    {p.links?.pdf && <meta name="citation_pdf_url" content={new URL(p.links.pdf, Astro.site)} />}
+    {publishableMetadata && p.type !== 'patent' && <meta name="citation_title" content={p.title.en} />}
+    {publishableMetadata && p.type !== 'patent' && p.authors.map((author) => <meta name="citation_author" content={author} />)}
+    {publishableMetadata && p.type !== 'patent' && <meta name="citation_publication_date" content={String(p.year)} />}
+    {publishableMetadata && p.type === 'journal' && <meta name="citation_journal_title" content={p.venue} />}
+    {publishableMetadata && p.type === 'conference' && <meta name="citation_conference_title" content={p.venue} />}
+    {publishableMetadata && doi && <meta name="citation_doi" content={doi} />}
+    {publishableMetadata && p.links?.pdf && <meta name="citation_pdf_url" content={new URL(p.links.pdf, Astro.site)} />}
   </Fragment>
+
   <section class="publication-detail section-shell">
     <a class="back-link" href={`/${lang}/publications/`}>← {ui.nav.publications[lang]}</a>
-    <div class="publication-meta"><span>{p.type.toUpperCase()}</span><span>{p.year}</span>{p.status&&<span>{p.status[lang]}</span>}</div>
-    <h1>{p.title[lang]}</h1>
-    <p class="authors">{p.authors.join(', ')}</p><p class="venue">{p.venue}</p>
-    <div class="tag-row">{p.tags.map(tag=><span>{tag}</span>)}</div>
-    <div class="publication-actions detail-actions">{p.links?.doi&&<a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}{p.links?.pdf&&<a href={p.links.pdf}>PDF ↗</a>}{p.links?.code&&<a href={p.links.code}>Code ↗</a>}</div>
-    <div class="detail-grid">
-      <article><p class="eyebrow">ABSTRACT</p><h2>{ui.common.abstract[lang]}</h2><p>{p.abstract?.[lang]}</p></article>
-      {p.bibtex&&<aside><p class="eyebrow">CITATION</p><h2>BibTeX</h2><pre><code>{p.bibtex}</code></pre><button class="copy-citation" data-bibtex={p.bibtex}>{ui.common.copy[lang]}</button></aside>}
+    <div class="publication-meta">
+      <span>{typeLabel[p.type][lang]}</span>
+      <span>{p.year}</span>
+      {p.status && <span class:list={['publication-status', `status-${p.statusKind ?? 'default'}`]}>{p.status[lang]}</span>}
     </div>
+    <h1>{p.title[lang]}</h1>
+    {lang !== 'en' && <p class="publication-original-title detail-original-title">{p.title.en}</p>}
+    <p class="authors publication-authors">
+      {p.authors.map((author, i) => (
+        <>
+          {i > 0 && (i === p.authors.length - 1 ? ' and ' : ', ')}
+          {author === me ? <strong>{author}</strong> : author}
+          {p.correspondingAuthors?.includes(author) && <sup class="corresponding-star">*</sup>}
+        </>
+      ))}
+    </p>
+    <p class="venue publication-citation"><em>{p.venue}</em>{p.details && <>, {p.details[lang]}</>}</p>
+
+    {lang === 'zh' && p.classificationZh && p.classificationZh.length > 0 && (
+      <div class="classification-row detail-classification-row">
+        {p.classificationZh.map((item) => <span>{item}</span>)}
+      </div>
+    )}
+
+    <div class="publication-actions detail-actions">
+      {p.links?.doi && <a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}
+      {p.links?.arxiv && <a href={p.links.arxiv} target="_blank" rel="noreferrer">arXiv ↗</a>}
+      {p.links?.pdf && <a href={p.links.pdf} target="_blank" rel="noreferrer">PDF ↗</a>}
+      {p.links?.code && <a href={p.links.code} target="_blank" rel="noreferrer">Code ↗</a>}
+    </div>
+
+    {p.unavailableNote && (
+      <article class="publication-update-note">
+        <p class="eyebrow">FORTHCOMING</p>
+        <h2>{updateTitle[lang]}</h2>
+        <p>{p.unavailableNote[lang]}</p>
+      </article>
+    )}
+
+    {(p.abstract || p.bibtex) && (
+      <div class:list={['detail-grid', !p.abstract || !p.bibtex ? 'detail-grid-single' : '']}>
+        {p.abstract && <article><p class="eyebrow">ABSTRACT</p><h2>{ui.common.abstract[lang]}</h2><p>{p.abstract[lang]}</p></article>}
+        {p.bibtex && <aside><p class="eyebrow">CITATION</p><h2>BibTeX</h2><pre><code>{p.bibtex}</code></pre><button class="copy-citation" data-bibtex={p.bibtex}>{ui.common.copy[lang]}</button></aside>}
+      </div>
+    )}
   </section>
-  <script is:inline>document.querySelector('.copy-citation')?.addEventListener('click',async(e)=>{const b=e.currentTarget;await navigator.clipboard.writeText(b.dataset.bibtex||'');b.textContent='Copied ✓';});</script>
+  <script is:inline>
+    document.querySelector('.copy-citation')?.addEventListener('click', async (e) => {
+      const b = e.currentTarget;
+      await navigator.clipboard.writeText(b.dataset.bibtex || '');
+      b.textContent = 'Copied ✓';
+    });
+  </script>
 </MainLayout>

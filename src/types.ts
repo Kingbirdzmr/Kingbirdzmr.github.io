@@ -1,16 +1,31 @@
 export type Lang = 'en' | 'zh' | 'ja';
 export type Localized = Record<Lang, string>;
 
+export type PublicationStatusKind =
+  | 'published'
+  | 'early-access'
+  | 'accepted'
+  | 'accepted-unpublished'
+  | 'under-review'
+  | 'preprint'
+  | 'patent';
+
 export type Publication = {
   slug: string;
   year: number;
-  type: 'journal' | 'conference' | 'preprint';
+  type: 'journal' | 'conference' | 'preprint' | 'patent';
   title: Localized;
   authors: string[];
+  correspondingAuthors?: string[];
   venue: string;
+  details?: Localized;
+  classificationZh?: string[];
   status?: Localized;
+  statusKind?: PublicationStatusKind;
   abstract?: Localized;
-  tags: string[];
+  unavailableNote?: Localized;
+  detailPage?: boolean;
+  tags?: string[];
   featured?: boolean;
   links?: {
     doi?: string;

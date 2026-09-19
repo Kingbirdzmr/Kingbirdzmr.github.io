@@ -1,23 +1,76 @@
 ---
 import type { Lang, Publication } from '../types';
 import { ui } from '../i18n/ui';
-const { publication: p, lang, detailed = false } = Astro.props as { publication: Publication; lang: Lang; detailed?: boolean };
+const { publication: p, lang, index } = Astro.props as { publication: Publication; lang: Lang; index?: number };
 const me = 'Mingrui Zheng';
+const typeLabel = {
+  journal: { en: 'Journal', zh: '期刊', ja: '学術雑誌' },
+  conference: { en: 'Conference', zh: '会议', ja: '国際会議' },
+  preprint: { en: 'Preprint', zh: '预印本', ja: 'プレプリント' },
+  patent: { en: 'Patent', zh: '专利', ja: '特許' }
+} as const;
+const detailLabel = { en: 'Details', zh: '详情', ja: '詳細' } as const;
+const unavailable = {
+  en: 'Unavailable before publication',
+  zh: '正式发表前暂不提供',
+  ja: '正式公開前のため未提供'
+} as const;
+const hasDetailPage = p.detailPage !== false;
+const lockResearchAssets = p.statusKind === 'under-review' || p.statusKind === 'accepted-unpublished';
 ---
-<article class="publication-card" data-type={p.type} data-year={p.year}>
-  <div class="publication-meta"><span>{p.type.toUpperCase()}</span><span>{p.year}</span>{p.status && <span>{p.status[lang]}</span>}</div>
-  <h3><a href={`/${lang}/publications/${p.slug}/`}>{p.title[lang]}</a></h3>
-  <p class="authors">
-    {p.authors.map((a, i) => <>{i > 0 && ', '}{a === me ? <strong>{a}</strong> : a}</>)}
+<article class="publication-card publication-card-list" data-type={p.type} data-year={p.year}>
+  <div class="publication-card-topline">
+    {index && <span class="publication-index">[{index}]</span>}
+    <div class="publication-meta">
+      <span>{typeLabel[p.type][lang]}</span>
+      <span>{p.year}</span>
+      {p.status && <span class:list={['publication-status', `status-${p.statusKind ?? 'default'}`]}>{p.status[lang]}</span>}
+    </div>
+  </div>
+
+  <p class="authors publication-authors">
+    {p.authors.map((author, i) => (
+      <>
+        {i > 0 && (i === p.authors.length - 1 ? ' and ' : ', ')}
+        {author === me ? <strong>{author}</strong> : author}
+        {p.correspondingAuthors?.includes(author) && <sup class="corresponding-star">*</sup>}
+      </>
+    ))}
   </p>
-  <p class="venue">{p.venue}</p>
-  <div class="tag-row">{p.tags.map((tag) => <span>{tag}</span>)}</div>
+
+  <h3>
+    {hasDetailPage
+      ? <a href={`/${lang}/publications/${p.slug}/`}>{p.title[lang]}</a>
+      : <span>{p.title[lang]}</span>}
+  </h3>
+  {lang !== 'en' && <p class="publication-original-title">{p.title.en}</p>}
+  <p class="venue publication-citation"><em>{p.venue}</em>{p.details && <>, {p.details[lang]}</>}</p>
+
+  {lang === 'zh' && p.classificationZh && p.classificationZh.length > 0 && (
+    <div class="classification-row" aria-label="Journal and CCF classifications">
+      {p.classificationZh.map((item) => <span>{item}</span>)}
+    </div>
+  )}
+
   <div class="publication-actions">
     {p.links?.doi && <a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}
+    {p.links?.arxiv && <a href={p.links.arxiv} target="_blank" rel="noreferrer">arXiv ↗</a>}
     {p.links?.pdf && <a href={p.links.pdf} target="_blank" rel="noreferrer">PDF ↗</a>}
     {p.links?.code && <a href={p.links.code} target="_blank" rel="noreferrer">Code ↗</a>}
-    <a href={`/${lang}/publications/${p.slug}/`}>{ui.common.abstract[lang]} →</a>
+
+    {p.abstract && hasDetailPage && <a href={`/${lang}/publications/${p.slug}/`}>{ui.common.abstract[lang]} →</a>}
+    {!p.abstract && lockResearchAssets && (
+      <button class="publication-action-disabled" disabled title={p.unavailableNote?.[lang] ?? unavailable[lang]}>{ui.common.abstract[lang]}</button>
+    )}
+
     {p.bibtex && <button class="bibtex-button" data-bibtex={p.bibtex}>{ui.common.bibtex[lang]}</button>}
+    {!p.bibtex && lockResearchAssets && (
+      <button class="publication-action-disabled" disabled title={p.unavailableNote?.[lang] ?? unavailable[lang]}>{ui.common.bibtex[lang]}</button>
+    )}
+
+    {p.statusKind === 'accepted-unpublished' && hasDetailPage && (
+      <a href={`/${lang}/publications/${p.slug}/`}>{detailLabel[lang]} →</a>
+    )}
   </div>
 </article>
 <script is:inline>
