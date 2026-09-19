@@ -33,8 +33,9 @@ const { lang, title, description } = Astro.props as { lang: Lang; title: string;
     <div class="page-motif page-motif-a"></div>
     <div class="page-motif page-motif-b"></div>
     <div class="page-horizon"></div>
-    <div class="cursor-glow" data-cursor-glow aria-hidden="true"></div>
-    <div class="cursor-ring" data-cursor-ring aria-hidden="true"></div>
+    <div class="page-sakura page-sakura-a"></div>
+    <div class="page-sakura page-sakura-b"></div>
+    <div class="sakura-cursor-layer" data-sakura-layer aria-hidden="true"></div>
     <Header {lang} />
     <main><slot /></main>
     <Footer {lang} />
@@ -47,46 +48,45 @@ const { lang, title, description } = Astro.props as { lang: Lang; title: string;
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!reduceMotion && window.matchMedia('(pointer:fine)').matches) {
-        const glow = document.querySelector('[data-cursor-glow]');
-        const ring = document.querySelector('[data-cursor-ring]');
-        if (glow && ring) {
-          let mouseX = window.innerWidth / 2;
-          let mouseY = window.innerHeight / 2;
-          let ringX = mouseX;
-          let ringY = mouseY;
-          let active = false;
-          const syncHoverState = (event) => {
-            const interactive = event.target && event.target.closest('a, button, input, textarea, summary, [role="button"]');
+        const sakuraLayer = document.querySelector('[data-sakura-layer]');
+        if (sakuraLayer) {
+          let lastEmit = 0;
+          const interactiveSelector = 'a, button, input, textarea, summary, [role="button"]';
+          const emitPetal = (x, y, options = {}) => {
+            const petal = document.createElement('span');
+            petal.className = 'sakura-petal';
+            const size = options.size || 10 + Math.random() * 8;
+            const drift = options.drift || (Math.random() * 90 - 45);
+            const rotate = options.rotate || (Math.random() * 160 - 80);
+            const duration = options.duration || (1.3 + Math.random() * 0.8);
+            const hue = options.hue || (Math.random() > 0.55 ? 'soft' : 'base');
+            petal.style.left = `${x}px`;
+            petal.style.top = `${y}px`;
+            petal.style.setProperty('--petal-size', `${size}px`);
+            petal.style.setProperty('--petal-drift', `${drift}px`);
+            petal.style.setProperty('--petal-rotate', `${rotate}deg`);
+            petal.style.setProperty('--petal-duration', `${duration}s`);
+            petal.dataset.hue = hue;
+            sakuraLayer.appendChild(petal);
+            petal.addEventListener('animationend', () => petal.remove(), { once: true });
+          };
+          document.addEventListener('pointermove', (event) => {
+            const now = performance.now();
+            const interactive = event.target && event.target.closest(interactiveSelector);
             document.documentElement.classList.toggle('cursor-hover', !!interactive);
-          };
-          const updateTarget = (event) => {
-            mouseX = event.clientX;
-            mouseY = event.clientY;
-            glow.style.opacity = '1';
-            ring.style.opacity = '1';
-            if (!active) {
-              ringX = mouseX;
-              ringY = mouseY;
-              active = true;
+            if (now - lastEmit > 85) {
+              emitPetal(event.clientX, event.clientY, { drift: (Math.random() * 60 - 30), size: interactive ? 14 + Math.random() * 7 : 10 + Math.random() * 7, duration: interactive ? 1.8 + Math.random() * .4 : 1.2 + Math.random() * .7, hue: interactive ? 'bright' : 'base' });
+              lastEmit = now;
             }
-            syncHoverState(event);
-          };
-          document.addEventListener('pointermove', updateTarget);
-          document.addEventListener('pointerleave', () => {
-            glow.style.opacity = '0';
-            ring.style.opacity = '0';
-            document.documentElement.classList.remove('cursor-hover');
           });
-          document.addEventListener('pointerdown', () => document.documentElement.classList.add('cursor-down'));
+          document.addEventListener('pointerdown', (event) => {
+            document.documentElement.classList.add('cursor-down');
+            for (let i = 0; i < 6; i += 1) {
+              emitPetal(event.clientX + (Math.random() * 18 - 9), event.clientY + (Math.random() * 18 - 9), { size: 11 + Math.random() * 9, drift: (Math.random() * 120 - 60), rotate: (Math.random() * 220 - 110), duration: 1.4 + Math.random() * 0.9, hue: i % 2 === 0 ? 'bright' : 'soft' });
+            }
+          });
           document.addEventListener('pointerup', () => document.documentElement.classList.remove('cursor-down'));
-          const render = () => {
-            ringX += (mouseX - ringX) * 0.17;
-            ringY += (mouseY - ringY) * 0.17;
-            glow.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-            ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-            requestAnimationFrame(render);
-          };
-          requestAnimationFrame(render);
+          document.addEventListener('pointerleave', () => document.documentElement.classList.remove('cursor-hover'));
         }
       }
     </script>
