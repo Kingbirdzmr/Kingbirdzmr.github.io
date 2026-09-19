@@ -131,10 +131,11 @@ const t = {
           <h3>{t.scenes[1].title[lang]}</h3>
           <p>{t.scenes[1].desc[lang]}</p>
         </div>
-        <div class="expert-stage">
-          <div class="expert-instance expert-panel">
-            <small>instance</small>
-            <span>sᵢ</span>
+
+        <div class="expert-stage expert-stage-v2">
+          <aside class="expert-instance expert-panel expert-instance-v2">
+            <div class="expert-panel-kicker">INSTANCE</div>
+            <div class="expert-state-symbol">sᵢ</div>
             <small>{t.labels.state[lang]}</small>
             <div class="expert-state-list formula-text">
               <div><b>h</b><em>0.82</em></div>
@@ -142,41 +143,104 @@ const t = {
               <div><b>q</b><em>3</em></div>
               <div><b>γ</b><em>0.76</em></div>
             </div>
-            <div class="expert-mini-formula formula-text">min f(x; sᵢ)   s.t. g(x; sᵢ) ≤ 0</div>
-          </div>
-          <div class="expert-arrow"><i></i></div>
-          <div class="solver-box">
-            <div class="solver-header"><span>{t.labels.exact[lang]}</span><strong>MILP / MPC</strong></div>
-            <div class="solver-stage-grid">
-              <div class="solver-tree-panel">
-                <div class="solver-subtitle">Branch-and-bound / receding horizon</div>
-                <div class="solver-tree">
-                  <i class="tree-node root"></i><i class="tree-node n1"></i><i class="tree-node n2"></i><i class="tree-node n3"></i><i class="tree-node n4"></i>
-                  <b class="tree-edge e1"></b><b class="tree-edge e2"></b><b class="tree-edge e3"></b><b class="tree-edge e4"></b>
+            <div class="expert-mini-formula formula-text">
+              <span>minₓ f(x; sᵢ)</span>
+              <span>s.t. g(x; sᵢ) ≤ 0</span>
+            </div>
+          </aside>
+
+          <div class="expert-flow-arrow expert-flow-in" aria-hidden="true"><span></span><i></i></div>
+
+          <div class="solver-box solver-box-v2">
+            <div class="solver-header solver-header-v2">
+              <div>
+                <span>{t.labels.exact[lang]}</span>
+                <strong>Mixed-Integer Expert Solver</strong>
+              </div>
+              <div class="solver-mode-tabs"><b>MILP / MINLP</b><span>MPC horizon</span></div>
+            </div>
+
+            <div class="solver-workspace">
+              <div class="bb-panel">
+                <div class="solver-subtitle">Branch-and-Bound Search</div>
+                <svg class="bb-tree" viewBox="0 0 560 310" role="img" aria-label="Branch-and-bound tree">
+                  <g class="bb-edges">
+                    <path d="M280 34 L165 102"/><path d="M280 34 L395 102"/>
+                    <path d="M165 102 L92 180"/><path d="M165 102 L232 180"/>
+                    <path d="M395 102 L330 180"/><path d="M395 102 L470 180"/>
+                    <path d="M92 180 L58 258"/><path d="M92 180 L128 258"/>
+                    <path d="M330 180 L300 258"/><path d="M330 180 L365 258"/>
+                  </g>
+                  <g class="bb-branch-labels formula-text">
+                    <text x="202" y="64">y₃ = 0</text><text x="342" y="64">y₃ = 1</text>
+                    <text x="105" y="144">y₅ = 0</text><text x="204" y="144">y₅ = 1</text>
+                    <text x="347" y="144">y₂ = 0</text><text x="438" y="144">y₂ = 1</text>
+                  </g>
+                  <g class="bb-node" data-bb-node="0" transform="translate(280 34)"><circle r="22"/><text y="4">N0</text><text class="bb-bound" y="36">0.620</text></g>
+                  <g class="bb-node" data-bb-node="1" transform="translate(165 102)"><circle r="21"/><text y="4">N1</text><text class="bb-bound" y="35">0.731</text></g>
+                  <g class="bb-node" data-bb-node="2" transform="translate(395 102)"><circle r="21"/><text y="4">N2</text><text class="bb-bound" y="35">0.754</text></g>
+                  <g class="bb-node" data-bb-node="3" transform="translate(92 180)"><circle r="20"/><text y="4">N3</text><text class="bb-bound" y="34">0.812</text></g>
+                  <g class="bb-node" data-bb-node="4" transform="translate(232 180)"><circle r="20"/><text y="4">N4</text><text class="bb-bound" y="34">∞</text></g>
+                  <g class="bb-node" data-bb-node="5" transform="translate(330 180)"><circle r="20"/><text y="4">N5</text><text class="bb-bound" y="34">0.801</text></g>
+                  <g class="bb-node" data-bb-node="6" transform="translate(470 180)"><circle r="20"/><text y="4">N6</text><text class="bb-bound" y="34">0.990</text></g>
+                  <g class="bb-node leaf" data-bb-node="7" transform="translate(58 258)"><circle r="18"/><text y="4">N7</text><text class="bb-bound" y="32">1.013</text></g>
+                  <g class="bb-node leaf" data-bb-node="8" transform="translate(128 258)"><circle r="18"/><text y="4">N8</text><text class="bb-bound" y="32">0.984</text></g>
+                  <g class="bb-node leaf" data-bb-node="9" transform="translate(300 258)"><circle r="18"/><text y="4">N9</text><text class="bb-bound" y="32">0.991</text></g>
+                  <g class="bb-node leaf" data-bb-node="10" transform="translate(365 258)"><circle r="18"/><text y="4">N10</text><text class="bb-bound" y="32">0.981</text></g>
+                  <g class="bb-status-labels">
+                    <text x="206" y="209" class="bb-pruned-label">infeasible</text>
+                    <text x="442" y="209" class="bb-pruned-label">bound</text>
+                    <text x="96" y="293" class="bb-incumbent-label">incumbent</text>
+                  </g>
+                </svg>
+                <div class="bb-legend">
+                  <span><i class="legend-active"></i> active</span>
+                  <span><i class="legend-visited"></i> explored</span>
+                  <span><i class="legend-incumbent"></i> incumbent</span>
+                  <span><i class="legend-pruned"></i> pruned</span>
                 </div>
               </div>
-              <div class="solver-metrics-panel">
+
+              <aside class="solver-trace-panel">
                 <div class="solver-mini-metrics">
-                  <div><span>node</span><strong data-nodecount>01 / 32</strong></div>
-                  <div><span>incumbent</span><strong data-incumbent>1.310</strong></div>
-                  <div><span>best bound</span><strong data-bestbound>0.620</strong></div>
+                  <div><span>processed node</span><strong data-nodecount>01 / 32</strong></div>
+                  <div><span>incumbent UB</span><strong data-incumbent>1.310</strong></div>
+                  <div><span>best bound LB</span><strong data-bestbound>0.620</strong></div>
+                  <div><span>MIP gap</span><strong data-gap>52.7%</strong></div>
                 </div>
                 <div class="solver-gapbar"><i data-gapbar></i></div>
-                <div class="solver-iterations"><span>LB</span><em data-lb>0.620</em><span>UB</span><em data-ub>1.310</em><span>gap</span><em data-gap>52.7%</em></div>
+                <div class="bb-log" data-bb-log>
+                  <p><b>01</b><span>solve LP relaxation at N0</span></p>
+                  <p><b>02</b><span>branch on fractional y₃</span></p>
+                  <p><b>03</b><span>update incumbent</span></p>
+                  <p><b>04</b><span>prune by infeasibility / bound</span></p>
+                </div>
+                <div class="solver-iterations"><span>LB</span><em data-lb>0.620</em><span>UB</span><em data-ub>1.310</em><span>gap</span><em data-gap-bottom>52.7%</em></div>
+              </aside>
+            </div>
+
+            <div class="mpc-horizon-strip">
+              <div class="mpc-strip-head"><span>MPC receding horizon</span><b>k → k+H</b></div>
+              <div class="mpc-cells">
+                {Array.from({length:8}).map((_,i)=><div class="mpc-cell" data-mpc-cell={i}><small>{i===0?'k':`k+${i}`}</small><span></span><em></em></div>)}
               </div>
+              <div class="mpc-legend"><span><i></i> state xₜ</span><span><i></i> control uₜ</span><strong>apply first control → shift horizon</strong></div>
             </div>
           </div>
-          <div class="expert-arrow"><i></i></div>
-          <div class="expert-solution expert-panel">
-            <span>x*</span>
+
+          <div class="expert-flow-arrow expert-flow-out" aria-hidden="true"><span></span><i></i></div>
+
+          <aside class="expert-solution expert-panel expert-result-v2">
+            <div class="expert-panel-kicker">OPTIMUM</div>
+            <div class="expert-result-symbol">x*</div>
             <small>{t.labels.optimum[lang]}</small>
             <div class="solution-vector formula-text">[1, 0, 0.74, 0.21, 1]</div>
             <div class="solution-details">
-              <div><small>obj.</small><strong class="formula-text">0.984</strong></div>
-              <div><small>KKT / feas.</small><strong>✓</strong></div>
-              <div><small>solve time</small><strong>38.6s</strong></div>
+              <div><small>objective</small><strong class="formula-text">0.984</strong></div>
+              <div><small>feasible</small><strong>✓</strong></div>
+              <div><small>solve time</small><strong>38.6 s</strong></div>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
 
@@ -205,43 +269,100 @@ const t = {
           <h3>{t.scenes[3].title[lang]}</h3>
           <p>{t.scenes[3].desc[lang]}</p>
         </div>
-        <div class="training-stage">
-          <div class="training-target">
-            <small>expert target</small><strong class="formula-text" data-train-target>x* = [1, 0, 0.74, 0.21]</strong>
-            <small>{t.labels.predicted[lang]}</small><strong class="formula-text" data-train-pred>x̂ = [0.91, 0.08, 0.69, 0.26]</strong>
-            <div class="training-metric-grid">
+
+        <div class="training-stage training-stage-v2" data-train-phase="input">
+          <aside class="training-console">
+            <div class="training-console-head"><span>SUPERVISED IMITATION</span><b data-train-phase-label>FORWARD / INPUT</b></div>
+            <div class="target-pair">
+              <div><small>expert target</small><strong class="formula-text">x* = [1, 0, 0.74, 0.21]</strong></div>
+              <div><small>{t.labels.predicted[lang]}</small><strong class="formula-text" data-train-pred>x̂ = [0.91, 0.08, 0.69, 0.26]</strong></div>
+            </div>
+            <div class="training-metric-grid training-metric-grid-v2">
               <div><small>{t.labels.loss[lang]}</small><b data-train-loss>0.842</b></div>
               <div><small>epoch</small><b data-train-epoch>01 / 60</b></div>
-              <div><small>{t.labels.learnRate[lang]}</small><b data-train-lr>1e−3</b></div>
-              <div><small>{t.labels.batch[lang]}</small><b data-train-batch>64</b></div>
               <div><small>{t.labels.gradNorm[lang]}</small><b data-train-grad>1.82</b></div>
+              <div><small>{t.labels.learnRate[lang]}</small><b>1e−3</b></div>
             </div>
             <div class="train-equation formula-text">𝓛 = ‖x̂ − x*‖²₂ + λ·φ(x̂)</div>
-          </div>
-          <div class="network-stage">
-            <div class="network-labels"><span>{t.labels.features[lang]}</span><span>{t.labels.hidden1[lang]}</span><span>{t.labels.hidden2[lang]}</span><span>{t.labels.output[lang]}</span></div>
-            <svg class="network-svg" viewBox="0 0 660 260" role="img" aria-label="Animated neural network">
-              <g class="nn-edges nn-edges-forward">
-                {Array.from({length:6}).map((_,i) => Array.from({length:7}).map((__,j)=><line x1="70" y1={30+i*38} x2="245" y2={22+j*31}></line>))}
-                {Array.from({length:7}).map((_,i) => Array.from({length:6}).map((__,j)=><line x1="260" y1={22+i*31} x2="425" y2={38+j*31}></line>))}
-                {Array.from({length:6}).map((_,i) => Array.from({length:4}).map((__,j)=><line x1="440" y1={38+i*31} x2="600" y2={58+j*46}></line>))}
+            <div class="weight-update formula-text" data-weight-update>θ ← θ − η∇θ𝓛</div>
+            <div class="mini-batch-card">
+              <span>{t.labels.batch[lang]} Bₜ</span>
+              <div>{Array.from({length:6}).map((_,i)=><i style={`--batch:${i}`}></i>)}</div>
+              <small>64 expert state–solution pairs</small>
+            </div>
+          </aside>
+
+          <div class="network-stage network-stage-v2">
+            <div class="network-phase-bar">
+              <span data-phase-chip="input">01 input</span>
+              <span data-phase-chip="h1">02 hidden 1</span>
+              <span data-phase-chip="h2">03 hidden 2</span>
+              <span data-phase-chip="output">04 output</span>
+              <span data-phase-chip="loss">05 loss</span>
+              <span data-phase-chip="backward">06 backprop</span>
+            </div>
+
+            <div class="network-labels network-labels-v2"><span>{t.labels.features[lang]}</span><span>{t.labels.hidden1[lang]}</span><span>{t.labels.hidden2[lang]}</span><span>{t.labels.output[lang]}</span></div>
+
+            <svg class="network-svg network-svg-v2" viewBox="0 0 760 320" role="img" aria-label="Animated neural network forward and backward propagation">
+              <defs>
+                <filter id="nnGlow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              </defs>
+              <g class="nn-edge-group edge-input-h1">
+                {Array.from({length:6}).map((_,i) => Array.from({length:7}).map((__,j)=><line x1="80" y1={42+i*44} x2="285" y2={28+j*38}></line>))}
               </g>
-              <g class="nn-edges nn-edges-backward">
-                <path d="M606 58 C536 8, 456 8, 430 38"/><path d="M606 196 C530 240, 446 236, 430 193"/><path d="M425 131 C350 20,280 18,260 53"/><path d="M245 146 C170 228,95 226,70 182"/>
+              <g class="nn-edge-group edge-h1-h2">
+                {Array.from({length:7}).map((_,i) => Array.from({length:6}).map((__,j)=><line x1="300" y1={28+i*38} x2="505" y2={47+j*44}></line>))}
               </g>
-              <g class="nn-layer layer-input">{Array.from({length:6}).map((_,i)=><circle cx="70" cy={30+i*38} r="10"></circle>)}</g>
-              <g class="nn-layer layer-h1">{Array.from({length:7}).map((_,i)=><circle cx="252" cy={22+i*31} r="10"></circle>)}</g>
-              <g class="nn-layer layer-h2">{Array.from({length:6}).map((_,i)=><circle cx="432" cy={38+i*31} r="10"></circle>)}</g>
-              <g class="nn-layer layer-output">{Array.from({length:4}).map((_,i)=><circle cx="606" cy={58+i*46} r="11"></circle>)}</g>
-              <circle class="activation-dot dot-1" r="5"><animateMotion dur="1.5s" repeatCount="indefinite" path="M70 30 L252 53 L432 69 L606 58" /></circle>
-              <circle class="activation-dot dot-2" r="5"><animateMotion begin=".35s" dur="1.55s" repeatCount="indefinite" path="M70 106 L252 115 L432 100 L606 104" /></circle>
-              <circle class="activation-dot dot-3" r="5"><animateMotion begin=".7s" dur="1.7s" repeatCount="indefinite" path="M70 182 L252 177 L432 162 L606 150" /></circle>
-              <circle class="gradient-dot" r="4"><animateMotion dur="1.9s" repeatCount="indefinite" path="M606 150 C520 214,440 220,430 193 C350 232,280 228,260 177 C180 226,92 222,70 182" /></circle>
-              <circle class="gradient-dot" r="4"><animateMotion begin=".7s" dur="2.1s" repeatCount="indefinite" path="M606 58 C524 6,442 8,430 38 C350 10,280 14,260 53 C172 8,98 18,70 30" /></circle>
+              <g class="nn-edge-group edge-h2-out">
+                {Array.from({length:6}).map((_,i) => Array.from({length:4}).map((__,j)=><line x1="520" y1={47+i*44} x2="700" y2={78+j*58}></line>))}
+              </g>
+
+              <g class="nn-layer layer-input">
+                {Array.from({length:6}).map((_,i)=><g class="nn-neuron" data-layer="input" data-neuron={i}><circle cx="80" cy={42+i*44} r="13"></circle><text x="54" y={46+i*44} text-anchor="end">{['h','E','q','γ','τ','c'][i]}</text><text x="101" y={46+i*44}>{['.72','.18','.91','.43','.66','.27'][i]}</text></g>)}
+              </g>
+              <g class="nn-layer layer-h1">
+                {Array.from({length:7}).map((_,i)=><g class="nn-neuron" data-layer="h1" data-neuron={i}><circle cx="292" cy={28+i*38} r="12"></circle><text x="292" y={32+i*38} text-anchor="middle" class="nn-value">{['.81','.12','.64','.35','.77','.48','.22'][i]}</text></g>)}
+              </g>
+              <g class="nn-layer layer-h2">
+                {Array.from({length:6}).map((_,i)=><g class="nn-neuron" data-layer="h2" data-neuron={i}><circle cx="512" cy={47+i*44} r="12"></circle><text x="512" y={51+i*44} text-anchor="middle" class="nn-value">{['.62','.41','.33','.77','.29','.58'][i]}</text></g>)}
+              </g>
+              <g class="nn-layer layer-output">
+                {Array.from({length:4}).map((_,i)=><g class="nn-neuron output-neuron" data-layer="output" data-neuron={i}><circle cx="706" cy={78+i*58} r="14"></circle><text x="706" y={82+i*58} text-anchor="middle" class="nn-value">{['.91','.08','.69','.26'][i]}</text><text x="735" y={82+i*58}>{['ŷ₁','ŷ₂','ŷ₃','ŷ₄'][i]}</text></g>)}
+              </g>
+
+              <circle class="signal-dot sig-a" r="5" filter="url(#nnGlow)"><animateMotion dur="1.65s" repeatCount="indefinite" path="M80 42 L292 66 L512 91 L706 78" /></circle>
+              <circle class="signal-dot sig-b" r="5" filter="url(#nnGlow)"><animateMotion begin=".35s" dur="1.7s" repeatCount="indefinite" path="M80 130 L292 142 L512 179 L706 194" /></circle>
+              <circle class="signal-dot sig-c" r="5" filter="url(#nnGlow)"><animateMotion begin=".72s" dur="1.8s" repeatCount="indefinite" path="M80 262 L292 256 L512 223 L706 252" /></circle>
+              <circle class="gradient-dot grad-a" r="4"><animateMotion dur="2.1s" repeatCount="indefinite" path="M706 194 C625 278,548 274,512 223 C430 285,345 282,292 256 C210 292,126 286,80 262" /></circle>
+              <circle class="gradient-dot grad-b" r="4"><animateMotion begin=".65s" dur="2.2s" repeatCount="indefinite" path="M706 78 C618 4,548 7,512 47 C430 2,345 5,292 28 C205 5,126 12,80 42" /></circle>
             </svg>
-            <div class="activation-readout"><span class="formula-text">s = [0.72, 0.18, 0.91, 0.43, 0.66, 0.27]</span><strong>→</strong><span class="formula-text" data-hidden-values>h₁ = [0.88, 0.18, 0.60, 0.41, ⋯]</span><strong>→</strong><span class="formula-text" data-output-values>x̂ = [0.91, 0.08, 0.69, 0.26]</span></div>
-            <div class="training-readout-2 formula-text"><span data-hidden2-values>h₂ = [0.62, 0.41, 0.33, 0.77, ⋯]</span><span data-loss-formula>𝓛 = 0.842</span></div>
-            <div class="training-flow-legend"><span class="forward-key">● {t.labels.forward[lang]}</span><span class="backward-key">● {t.labels.backward[lang]}</span></div>
+
+            <div class="activation-probes">
+              <div><span>s</span><strong class="formula-text">[.72, .18, .91, .43, .66, .27]</strong></div>
+              <i>→</i>
+              <div><span>h₁ = σ(W₁s+b₁)</span><strong class="formula-text" data-hidden-values>[.81, .12, .64, .35, ⋯]</strong></div>
+              <i>→</i>
+              <div><span>h₂ = σ(W₂h₁+b₂)</span><strong class="formula-text" data-hidden2-values>[.62, .41, .33, .77, ⋯]</strong></div>
+              <i>→</i>
+              <div><span>x̂</span><strong class="formula-text" data-output-values>[.91, .08, .69, .26]</strong></div>
+            </div>
+
+            <div class="training-bottom-grid">
+              <div class="loss-chart-card">
+                <div class="loss-chart-head"><span>training loss</span><strong data-loss-chart-value>0.842</strong></div>
+                <svg class="loss-chart" viewBox="0 0 360 110" preserveAspectRatio="none">
+                  <path class="loss-gridline" d="M0 20 H360 M0 55 H360 M0 90 H360"/>
+                  <polyline data-loss-line points="0,18 0,18" />
+                  <circle data-loss-point cx="0" cy="18" r="4"/>
+                </svg>
+              </div>
+              <div class="gradient-card">
+                <div><span>{t.labels.forward[lang]}</span><strong class="forward-key">activation →</strong></div>
+                <div><span>{t.labels.backward[lang]}</span><strong class="backward-key">← ∇θ𝓛</strong></div>
+                <div><span>parameter update</span><strong class="formula-text" data-update-status>Wₗ, bₗ updated</strong></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -321,29 +442,60 @@ const t = {
       const lb = root.querySelector('[data-lb]');
       const ub = root.querySelector('[data-ub]');
       const gap = root.querySelector('[data-gap]');
-      const node = root.querySelector('[data-nodecount]');
+      const gapBottom = root.querySelector('[data-gap-bottom]');
+      const nodeCount = root.querySelector('[data-nodecount]');
       const incumbent = root.querySelector('[data-incumbent]');
       const bestbound = root.querySelector('[data-bestbound]');
       const gapbar = root.querySelector('[data-gapbar]');
-      if(lb) lb.textContent='0.620'; if(ub) ub.textContent='1.310'; if(gap) gap.textContent='52.7%';
-      if(node) node.textContent='01 / 32'; if(incumbent) incumbent.textContent='1.310'; if(bestbound) bestbound.textContent='0.620';
+      const bbNodes = [...root.querySelectorAll('[data-bb-node]')];
+      const logRows = [...root.querySelectorAll('[data-bb-log] p')];
+      const mpcCells = [...root.querySelectorAll('[data-mpc-cell]')];
+
+      bbNodes.forEach(n => n.classList.remove('active','visited','incumbent','pruned'));
+      logRows.forEach(r => r.classList.remove('active','done'));
+      mpcCells.forEach(c => c.classList.remove('active','used'));
+      if(lb) lb.textContent='0.620';
+      if(ub) ub.textContent='1.310';
+      if(gap) gap.textContent='52.7%';
+      if(gapBottom) gapBottom.textContent='52.7%';
+      if(nodeCount) nodeCount.textContent='01 / 32';
+      if(incumbent) incumbent.textContent='1.310';
+      if(bestbound) bestbound.textContent='0.620';
       if(gapbar) gapbar.style.width='18%';
+
       const seq = [
-        [1, .620, 1.310, '52.7%', '01 / 32'],
-        [7, .780, 1.120, '30.4%', '07 / 32'],
-        [16, .890, 1.020, '12.7%', '16 / 32'],
-        [24, .960, .990, '3.0%', '24 / 32'],
-        [32, .981, .984, '0.3%', '32 / 32']
+        { t:350,  active:0, visited:[],                 pruned:[],   incumbentNode:null, lb:.620, ub:1.310, gap:'52.7%', node:'01 / 32', log:0, mpc:0 },
+        { t:1050, active:1, visited:[0],                pruned:[],   incumbentNode:null, lb:.731, ub:1.310, gap:'44.2%', node:'07 / 32', log:1, mpc:1 },
+        { t:1800, active:2, visited:[0,1],              pruned:[4],  incumbentNode:null, lb:.754, ub:1.120, gap:'32.7%', node:'13 / 32', log:1, mpc:2 },
+        { t:2550, active:3, visited:[0,1,2,5],          pruned:[4,6],incumbentNode:null, lb:.812, ub:1.020, gap:'20.4%', node:'20 / 32', log:2, mpc:3 },
+        { t:3300, active:8, visited:[0,1,2,3,5,7],      pruned:[4,6],incumbentNode:8,    lb:.960, ub:.990,  gap:'3.0%',  node:'27 / 32', log:2, mpc:4 },
+        { t:4100, active:10,visited:[0,1,2,3,5,7,8,9],  pruned:[4,6],incumbentNode:8,    lb:.981, ub:.984,  gap:'0.3%',  node:'32 / 32', log:3, mpc:5 }
       ];
-      seq.forEach((v,i)=> localTimers.push(setTimeout(()=>{
-        if(lb) lb.textContent=v[1].toFixed(3);
-        if(ub) ub.textContent=v[2].toFixed(3);
-        if(gap) gap.textContent=v[3];
-        if(node) node.textContent=v[4];
-        if(incumbent) incumbent.textContent=v[2].toFixed(3);
-        if(bestbound) bestbound.textContent=v[1].toFixed(3);
-        if(gapbar) gapbar.style.width=`${18 + i*19}%`;
-      }, 500+i*620)));
+
+      seq.forEach((st) => localTimers.push(setTimeout(() => {
+        bbNodes.forEach((n, idx) => {
+          n.classList.toggle('visited', st.visited.includes(idx));
+          n.classList.toggle('pruned', st.pruned.includes(idx));
+          n.classList.toggle('active', idx === st.active);
+          n.classList.toggle('incumbent', idx === st.incumbentNode);
+        });
+        logRows.forEach((r, idx) => {
+          r.classList.toggle('active', idx === st.log);
+          r.classList.toggle('done', idx < st.log);
+        });
+        mpcCells.forEach((c, idx) => {
+          c.classList.toggle('used', idx < st.mpc);
+          c.classList.toggle('active', idx === st.mpc);
+        });
+        if(lb) lb.textContent=st.lb.toFixed(3);
+        if(ub) ub.textContent=st.ub.toFixed(3);
+        if(gap) gap.textContent=st.gap;
+        if(gapBottom) gapBottom.textContent=st.gap;
+        if(nodeCount) nodeCount.textContent=st.node;
+        if(incumbent) incumbent.textContent=st.ub.toFixed(3);
+        if(bestbound) bestbound.textContent=st.lb.toFixed(3);
+        if(gapbar) gapbar.style.width=`${Math.min(98,18 + (1-parseFloat(st.gap)/52.7)*80)}%`;
+      }, st.t)));
     }
     function animateDataset(){
       const count = root.querySelector('[data-sample-count]');
@@ -354,43 +506,96 @@ const t = {
       localTimers.push(setTimeout(tick,300));
     }
     function animateTraining(){
+      const stage = root.querySelector('.training-stage-v2');
+      const phaseLabel = root.querySelector('[data-train-phase-label]');
+      const phaseChips = [...root.querySelectorAll('[data-phase-chip]')];
       const loss = root.querySelector('[data-train-loss]');
       const epoch = root.querySelector('[data-train-epoch]');
       const hidden = root.querySelector('[data-hidden-values]');
       const hidden2 = root.querySelector('[data-hidden2-values]');
       const pred = root.querySelector('[data-train-pred]');
       const predOut = root.querySelector('[data-output-values]');
-      const lossFormula = root.querySelector('[data-loss-formula]');
       const grad = root.querySelector('[data-train-grad]');
+      const weightUpdate = root.querySelector('[data-weight-update]');
+      const updateStatus = root.querySelector('[data-update-status]');
+      const lossLine = root.querySelector('[data-loss-line]');
+      const lossPoint = root.querySelector('[data-loss-point]');
+      const lossChartValue = root.querySelector('[data-loss-chart-value]');
+      const neurons = [...root.querySelectorAll('.nn-neuron')];
+
+      const setPhase = (phase, labelText) => {
+        if(stage) stage.dataset.trainPhase=phase;
+        if(phaseLabel) phaseLabel.textContent=labelText;
+        phaseChips.forEach(chip => chip.classList.toggle('active', chip.dataset.phaseChip===phase));
+        neurons.forEach(n => n.classList.toggle('phase-active', n.dataset.layer===phase));
+      };
+
+      setPhase('input','FORWARD / INPUT');
       if(loss) loss.textContent='0.842';
       if(epoch) epoch.textContent='01 / 60';
-      if(hidden) hidden.textContent='h₁ = [0.81, 0.12, 0.64, 0.35, ⋯]';
-      if(hidden2) hidden2.textContent='h₂ = [0.62, 0.41, 0.33, 0.77, ⋯]';
+      if(hidden) hidden.textContent='[.81, .12, .64, .35, ⋯]';
+      if(hidden2) hidden2.textContent='[.62, .41, .33, .77, ⋯]';
       if(pred) pred.textContent='x̂ = [0.91, 0.08, 0.69, 0.26]';
-      if(predOut) predOut.textContent='x̂ = [0.91, 0.08, 0.69, 0.26]';
-      if(lossFormula) lossFormula.textContent='𝓛 = 0.842';
+      if(predOut) predOut.textContent='[.91, .08, .69, .26]';
       if(grad) grad.textContent='1.82';
+      if(weightUpdate) weightUpdate.classList.remove('pulse');
+      if(updateStatus) updateStatus.textContent='Wₗ, bₗ waiting';
+
+      const losses=[.842,.611,.428,.291,.173,.109,.071,.048];
+      const points=[];
+      const toPoint=(value,i)=>{
+        const x=10+i*(340/(losses.length-1));
+        const y=12+(value/.842)*82;
+        return [x,y];
+      };
+      if(lossLine) lossLine.setAttribute('points','10,94');
+      if(lossPoint){ lossPoint.setAttribute('cx','10'); lossPoint.setAttribute('cy','94'); }
+
+      const phaseTimeline = [
+        [250,'input','FORWARD / INPUT'],
+        [900,'h1','FORWARD / HIDDEN 1'],
+        [1500,'h2','FORWARD / HIDDEN 2'],
+        [2100,'output','FORWARD / OUTPUT'],
+        [2750,'loss','LOSS AGAINST x*'],
+        [3450,'backward','BACKPROPAGATION'],
+        [4350,'update','PARAMETER UPDATE'],
+        [5150,'input','NEXT MINI-BATCH']
+      ];
+      phaseTimeline.forEach(([delay,phase,text]) => localTimers.push(setTimeout(()=>{
+        setPhase(phase,text);
+        if(phase==='update'){
+          weightUpdate?.classList.add('pulse');
+          if(updateStatus) updateStatus.textContent='θ ← θ − η∇θ𝓛';
+        } else if(updateStatus && phase!=='backward') {
+          updateStatus.textContent=phase==='input'?'new batch loaded':'Wₗ, bₗ fixed during forward';
+        }
+      }, delay)));
+
       const seq = [
-        [1,.842,[0.81,0.12,0.64,0.35],[0.62,0.41,0.33,0.77],[0.91,0.08,0.69,0.26],1.82],
-        [9,.611,[0.83,0.16,0.61,0.41],[0.66,0.44,0.37,0.71],[0.95,0.05,0.71,0.24],1.37],
-        [17,.428,[0.84,0.18,0.60,0.43],[0.69,0.48,0.40,0.66],[0.97,0.03,0.72,0.23],1.02],
-        [25,.291,[0.86,0.20,0.58,0.44],[0.71,0.52,0.43,0.61],[0.99,0.02,0.73,0.22],0.74],
-        [33,.173,[0.87,0.18,0.59,0.42],[0.74,0.55,0.45,0.57],[1.00,0.01,0.73,0.22],0.53],
-        [41,.109,[0.88,0.18,0.60,0.41],[0.76,0.56,0.47,0.53],[1.00,0.00,0.74,0.21],0.34],
-        [49,.071,[0.88,0.18,0.60,0.41],[0.77,0.57,0.47,0.52],[1.00,0.00,0.74,0.21],0.21],
-        [57,.048,[0.88,0.18,0.60,0.41],[0.77,0.58,0.48,0.51],[1.00,0.00,0.74,0.21],0.16]
+        [1,.842,[.81,.12,.64,.35],[.62,.41,.33,.77],[.91,.08,.69,.26],1.82],
+        [9,.611,[.83,.16,.61,.41],[.66,.44,.37,.71],[.95,.05,.71,.24],1.37],
+        [17,.428,[.84,.18,.60,.43],[.69,.48,.40,.66],[.97,.03,.72,.23],1.02],
+        [25,.291,[.86,.20,.58,.44],[.71,.52,.43,.61],[.99,.02,.73,.22],.74],
+        [33,.173,[.87,.18,.59,.42],[.74,.55,.45,.57],[1.00,.01,.73,.22],.53],
+        [41,.109,[.88,.18,.60,.41],[.76,.56,.47,.53],[1.00,.00,.74,.21],.34],
+        [49,.071,[.88,.18,.60,.41],[.77,.57,.47,.52],[1.00,.00,.74,.21],.21],
+        [57,.048,[.88,.18,.60,.41],[.77,.58,.48,.51],[1.00,.00,.74,.21],.16]
       ];
       seq.forEach((v,i)=> localTimers.push(setTimeout(()=>{
         if(loss) loss.textContent=v[1].toFixed(3);
+        if(lossChartValue) lossChartValue.textContent=v[1].toFixed(3);
         if(epoch) epoch.textContent=String(v[0]).padStart(2,'0')+' / 60';
-        if(hidden) hidden.textContent=`h₁ = [${v[2][0].toFixed(2)}, ${v[2][1].toFixed(2)}, ${v[2][2].toFixed(2)}, ${v[2][3].toFixed(2)}, ⋯]`;
-        if(hidden2) hidden2.textContent=`h₂ = [${v[3][0].toFixed(2)}, ${v[3][1].toFixed(2)}, ${v[3][2].toFixed(2)}, ${v[3][3].toFixed(2)}, ⋯]`;
-        const predText = `x̂ = [${v[4][0].toFixed(2)}, ${v[4][1].toFixed(2)}, ${v[4][2].toFixed(2)}, ${v[4][3].toFixed(2)}]`;
-        if(pred) pred.textContent=predText;
+        if(hidden) hidden.textContent=`[${v[2][0].toFixed(2)}, ${v[2][1].toFixed(2)}, ${v[2][2].toFixed(2)}, ${v[2][3].toFixed(2)}, ⋯]`;
+        if(hidden2) hidden2.textContent=`[${v[3][0].toFixed(2)}, ${v[3][1].toFixed(2)}, ${v[3][2].toFixed(2)}, ${v[3][3].toFixed(2)}, ⋯]`;
+        const predText=`[${v[4][0].toFixed(2)}, ${v[4][1].toFixed(2)}, ${v[4][2].toFixed(2)}, ${v[4][3].toFixed(2)}]`;
+        if(pred) pred.textContent='x̂ = '+predText;
         if(predOut) predOut.textContent=predText;
-        if(lossFormula) lossFormula.textContent=`𝓛 = ${v[1].toFixed(3)}`;
         if(grad) grad.textContent=v[5].toFixed(2);
-      }, 350+i*640)));
+        const [x,y]=toPoint(v[1],i);
+        points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+        if(lossLine) lossLine.setAttribute('points',points.join(' '));
+        if(lossPoint){ lossPoint.setAttribute('cx',x.toFixed(1)); lossPoint.setAttribute('cy',y.toFixed(1)); }
+      }, 300+i*650)));
     }
     function animateRepair(){
       const rows=[...root.querySelectorAll('[data-repair-row]')];
