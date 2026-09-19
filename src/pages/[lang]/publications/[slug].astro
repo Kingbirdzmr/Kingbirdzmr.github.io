@@ -2,6 +2,7 @@
 import MainLayout from '../../../layouts/MainLayout.astro';
 import { publications } from '../../../data/publications';
 import { langs, ui } from '../../../i18n/ui';
+import PublicationMetrics from '../../../components/PublicationMetrics.astro';
 import type { Lang, Publication } from '../../../types';
 
 export function getStaticPaths(){
@@ -57,11 +58,7 @@ const publishableMetadata = p.statusKind !== 'accepted-unpublished';
     </p>
     <p class="venue publication-citation"><em>{p.venue}</em>{p.details && <>, {p.details[lang]}</>}</p>
 
-    {lang === 'zh' && p.classificationZh && p.classificationZh.length > 0 && (
-      <div class="classification-row detail-classification-row">
-        {p.classificationZh.map((item) => <span>{item}</span>)}
-      </div>
-    )}
+    <PublicationMetrics publication={p} {lang} detail />
 
     <div class="publication-actions detail-actions">
       {p.links?.doi && <a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}

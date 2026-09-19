@@ -20,6 +20,7 @@ export type Publication = {
   venue: string;
   details?: Localized;
   classificationZh?: string[];
+  impactFactor?: { value: number; year: number };
   status?: Localized;
   statusKind?: PublicationStatusKind;
   abstract?: Localized;

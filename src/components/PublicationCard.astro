@@ -1,6 +1,7 @@
 ---
 import type { Lang, Publication } from '../types';
 import { ui } from '../i18n/ui';
+import PublicationMetrics from './PublicationMetrics.astro';
 const { publication: p, lang, index } = Astro.props as { publication: Publication; lang: Lang; index?: number };
 const me = 'Mingrui Zheng';
 const typeLabel = {
@@ -46,11 +47,7 @@ const lockResearchAssets = p.statusKind === 'under-review' || p.statusKind === '
   {lang !== 'en' && <p class="publication-original-title">{p.title.en}</p>}
   <p class="venue publication-citation"><em>{p.venue}</em>{p.details && <>, {p.details[lang]}</>}</p>
 
-  {lang === 'zh' && p.classificationZh && p.classificationZh.length > 0 && (
-    <div class="classification-row" aria-label="Journal and CCF classifications">
-      {p.classificationZh.map((item) => <span>{item}</span>)}
-    </div>
-  )}
+  <PublicationMetrics publication={p} {lang} />
 
   <div class="publication-actions">
     {p.links?.doi && <a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}

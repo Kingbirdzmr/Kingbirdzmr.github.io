@@ -6,6 +6,7 @@ const L = (en: string, zh: string, ja: string): Localized => ({ en, zh, ja });
 // Chinese-only journal quartiles / CCF classifications are taken from the 2026.10 report.
 // A name listed in correspondingAuthors is rendered with a superscript * on the website.
 // Under-review papers intentionally have no detail page, abstract, or BibTeX entry.
+// impactFactor stores the latest available 2025 Journal Impact Factor (JCR 2025, released in 2026).
 export const publications: Publication[] = [
   // Journal Papers
   {
@@ -22,6 +23,7 @@ export const publications: Publication[] = [
     authors: ['Mingrui Zheng', 'Tianrui Feng', 'Tengjiao He'],
     correspondingAuthors: ['Tengjiao He'],
     venue: 'Information',
+    impactFactor: { value: 4.3, year: 2025 },
     details: L('Vol. 16, No. 2: 158 (2025)', '第16卷，第2期，158（2025）', 'Vol. 16, No. 2, 158 (2025)'),
     abstract: L(
       'This work studies fair and secure data collection in an energy-harvesting IoT network with a server UAV and an eavesdropping UAV. It formulates the max-min secrecy-rate problem as a mixed-integer nonlinear program, derives a mixed-integer linear reformulation, and proposes the Fly Nearest Location heuristic for lower-complexity operation. The reported results show that the heuristic attains about 78.15% of the MILP benchmark on average.',
@@ -57,6 +59,7 @@ export const publications: Publication[] = [
     authors: ['Zhiwei Lin', 'Mingrui Zheng', 'Zebin Huang', 'Shuaiyu Zhou'],
     correspondingAuthors: ['Mingrui Zheng'],
     venue: 'IEEE Wireless Communications Letters',
+    impactFactor: { value: 5.1, year: 2025 },
     details: L('Vol. 15, pp. 835–839 (2026)', '第15卷，835–839页（2026）', 'Vol. 15, pp. 835–839 (2026)'),
     classificationZh: ['中科院二区期刊'],
     abstract: L(
@@ -93,6 +96,7 @@ export const publications: Publication[] = [
     authors: ['Tengjiao He', 'Mingrui Zheng', 'Kwan-Wu Chin', 'Tianle Liu', 'Yizhou Luo'],
     correspondingAuthors: ['Tengjiao He'],
     venue: 'IEEE Transactions on Industrial Informatics',
+    impactFactor: { value: 9.8, year: 2025 },
     details: L('Vol. 22, No. 4, pp. 2875–2885 (2026)', '第22卷，第4期，2875–2885页（2026）', 'Vol. 22, No. 4, pp. 2875–2885 (2026)'),
     classificationZh: ['中科院一区 Top 期刊'],
     abstract: L(
@@ -129,6 +133,7 @@ export const publications: Publication[] = [
     authors: ['Benyu Chen', 'Tengjiao He', 'Mingrui Zheng', 'Junfei Zhan', 'Bing He'],
     correspondingAuthors: ['Tengjiao He'],
     venue: 'IEEE Internet of Things Journal',
+    impactFactor: { value: 8.7, year: 2025 },
     details: L('Vol. 13, No. 9, pp. 19616–19628 (2026)', '第13卷，第9期，19616–19628页（2026）', 'Vol. 13, No. 9, pp. 19616–19628 (2026)'),
     classificationZh: ['中科院一区 Top 期刊'],
     abstract: L(
@@ -165,6 +170,7 @@ export const publications: Publication[] = [
     authors: ['Zebin Huang', 'Mingrui Zheng', 'Hao Li', 'Yefeng Wu'],
     correspondingAuthors: ['Mingrui Zheng'],
     venue: 'IEEE Transactions on Vehicular Technology',
+    impactFactor: { value: 7.5, year: 2025 },
     details: L('Early Access (2026)', 'Early Access（2026）', 'Early Access（2026）'),
     classificationZh: ['中科院二区 Top 期刊'],
     abstract: L(
@@ -192,6 +198,7 @@ export const publications: Publication[] = [
     authors: ['Mingrui Zheng', 'Koichi Kobayashi', 'Yuh Yamashita', 'Hao Li', 'Tengjiao He'],
     correspondingAuthors: ['Mingrui Zheng'],
     venue: 'IEEE Internet of Things Journal',
+    impactFactor: { value: 8.7, year: 2025 },
     details: L('Accepted (2026)', '已录用（2026）', '採択済み（2026）'),
     classificationZh: ['中科院一区 Top 期刊'],
     abstract: L(
@@ -218,6 +225,7 @@ export const publications: Publication[] = [
     ),
     authors: ['Mingrui Zheng', 'Tengjiao He', 'Hao Li', 'Koichi Kobayashi', 'Yizhou Luo'],
     venue: 'IEEE Transactions on Mobile Computing',
+    impactFactor: { value: 8.8, year: 2025 },
     details: L('2026', '2026', '2026'),
     classificationZh: ['中科院一区 Top 期刊', '计算机网络 CCF-A 期刊'],
     tags: ['GNN', 'VNF', 'UAV', 'Edge Computing']

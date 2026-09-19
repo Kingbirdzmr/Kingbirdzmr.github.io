@@ -1,0 +1,36 @@
+---
+import type { Lang, Publication } from '../types';
+const { publication: p, lang, detail = false } = Astro.props as { publication: Publication; lang: Lang; detail?: boolean };
+
+const jifTone = (value: number) => {
+  if (value >= 8) return 'rank-elite';
+  if (value >= 6) return 'rank-strong';
+  if (value >= 4) return 'rank-solid';
+  return 'rank-base';
+};
+
+const classificationTone = (label: string) => {
+  if (/CCF-A|一区\s*Top|一区Top/.test(label)) return 'rank-elite';
+  if (/CCF-B|二区\s*Top|二区Top/.test(label)) return 'rank-strong';
+  if (/CCF-C|二区/.test(label)) return 'rank-solid';
+  return 'rank-base';
+};
+
+const hasJif = p.type === 'journal' && p.impactFactor;
+const hasZhRanks = lang === 'zh' && p.classificationZh && p.classificationZh.length > 0;
+---
+{(hasJif || hasZhRanks) && (
+  <div class:list={['publication-rank-row', detail && 'detail-rank-row']} aria-label="Journal metrics and rankings">
+    {hasJif && (
+      <span
+        class:list={['publication-rank-badge', 'rank-jif', jifTone(p.impactFactor!.value)]}
+        title={`Journal Impact Factor · JCR ${p.impactFactor!.year}`}
+      >
+        IF {p.impactFactor!.value.toFixed(1)}
+      </span>
+    )}
+    {hasZhRanks && p.classificationZh!.map((item) => (
+      <span class:list={['publication-rank-badge', classificationTone(item)]}>{item}</span>
+    ))}
+  </div>
+)}

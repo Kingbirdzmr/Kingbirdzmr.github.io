@@ -59,3 +59,56 @@ html.home-intro-active{overflow:hidden}
 @media(max-width:1050px){.research-vision,.research-section-split{grid-template-columns:1fr;gap:18px}.research-theme-grid{grid-template-columns:repeat(2,1fr)}.method-toolbox-grid{grid-template-columns:1fr}.selected-project-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.research-question-grid{grid-template-columns:1fr}.research-question-grid li:last-child{grid-column:auto}.research-theme-grid,.research-cluster:nth-child(2) .research-theme-grid{grid-template-columns:1fr}.research-cluster{padding:20px}.research-cluster-head{grid-template-columns:52px 1fr}.project-publication-line{grid-template-columns:1fr;gap:2px}}
 @media(max-width:520px){.research-vision,.research-core-section,.research-themes-section,.research-methods-section{padding:40px 0 70px}.research-question-grid li{min-height:auto;padding:22px}.research-question-grid p{margin-top:18px;font-size:.94rem}.research-theme-card{min-height:auto}.method-toolbox-card{min-height:auto}.selected-project-card{min-height:auto;padding:22px}}
+
+/* Publication JIF / ranking badges (latest JCR value + zh-only CAS/CCF labels) */
+.publication-rank-row{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:13px;
+}
+.publication-rank-badge{
+  --rank-color:var(--accent);
+  --rank-bg:color-mix(in srgb,var(--rank-color) 8%,var(--surface));
+  display:inline-flex;
+  align-items:center;
+  min-height:27px;
+  padding:4px 9px;
+  border:1px solid color-mix(in srgb,var(--rank-color) 52%,var(--line));
+  border-radius:999px;
+  background:var(--rank-bg);
+  color:color-mix(in srgb,var(--rank-color) 88%,var(--text));
+  font-size:.68rem;
+  font-weight:790;
+  letter-spacing:.015em;
+  line-height:1.25;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rank-color) 4%,transparent);
+}
+.publication-rank-badge.rank-jif{
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.035em;
+}
+.publication-rank-badge.rank-elite{
+  --rank-color:#e6b85c;
+  --rank-bg:color-mix(in srgb,#e6b85c 10%,var(--surface));
+}
+.publication-rank-badge.rank-strong{
+  --rank-color:#9b8cff;
+  --rank-bg:color-mix(in srgb,#9b8cff 9%,var(--surface));
+}
+.publication-rank-badge.rank-solid{
+  --rank-color:#53c7e8;
+  --rank-bg:color-mix(in srgb,#53c7e8 8%,var(--surface));
+}
+.publication-rank-badge.rank-base{
+  --rank-color:#79a8d8;
+  --rank-bg:color-mix(in srgb,#79a8d8 7%,var(--surface));
+}
+.detail-rank-row{margin:18px 0 0}
+
+/* supersede the older one-color classification chips */
+.classification-row{display:none}
+
+@media(max-width:650px){
+  .publication-rank-badge{font-size:.65rem;padding:4px 8px}
+}
