@@ -1,33 +1,63 @@
 ---
-import type { Lang } from '../types';
-import { researchKeywords } from '../data/profile';
+import type { Lang, Localized } from '../types';
 const { lang } = Astro.props as { lang: Lang };
+const L = (en:string, zh:string, ja:string): Localized => ({ en, zh, ja });
+
+const copy = {
+  eyebrow: L('RESEARCH LOOP','研究闭环','研究ループ'),
+  title: L('Autonomous Networked Systems','自主网络化系统','自律ネットワークシステム'),
+  comm: L('Sense & Communicate','感知与通信','センシング・通信'),
+  commDesc: L('Wireless links · sensing · information sharing','无线连接 · 感知 · 信息共享','無線通信・センシング・情報共有'),
+  learn: L('Learn & Optimize','学习与优化','学習・最適化'),
+  learnDesc: L('GNN · LLM · MILP · resource allocation','GNN · LLM · MILP · 资源分配','GNN・LLM・MILP・資源配分'),
+  control: L('Control & Act','控制与执行','制御・実行'),
+  controlDesc: L('MPC · planning · safe autonomy','MPC · 规划 · 安全自主','MPC・計画・安全な自律性'),
+  feedback: L('Closed-loop feedback: control needs reshape what should be communicated and computed.','闭环反馈：控制需求反过来决定什么信息值得传输、什么计算值得执行。','閉ループフィードバック：制御要求が、何を通信し何を計算すべきかを再構成します。'),
+  security: L('Security & Resilience','安全与韧性','セキュリティ・レジリエンス'),
+  edge: L('Edge Intelligence','边缘智能','エッジ知能'),
+  uav: L('Multi-UAV & IoT','多无人机与物联网','マルチUAV・IoT')
+};
 ---
-<div class="research-graph" aria-label="Research constellation">
-  <svg viewBox="0 0 620 500" role="img">
-    <defs>
-      <linearGradient id="lineGlow" x1="0" x2="1">
-        <stop offset="0" stop-color="currentColor" stop-opacity=".15" />
-        <stop offset=".5" stop-color="currentColor" stop-opacity=".75" />
-        <stop offset="1" stop-color="currentColor" stop-opacity=".15" />
-      </linearGradient>
-    </defs>
-    <g class="graph-lines">
-      <path d="M310 85 L155 190 L210 350 L400 370 L475 205 Z"/>
-      <path d="M155 190 L475 205"/>
-      <path d="M210 350 L310 85"/>
-      <path d="M400 370 L310 85"/>
-      <path d="M210 350 L475 205"/>
-    </g>
-    {[
-      [310,85,0],[155,190,1],[475,205,2],[210,350,3],[400,370,4],[310,245,5]
-    ].map(([x,y,i]) => (
-      <g class={`graph-node node-${i}`} transform={`translate(${x} ${y})`} tabindex="0">
-        <circle class="node-halo" r="44" />
-        <circle class="node-shell" r="34" />
-        <circle class="node-core" r="8" />
-        <text y="58" text-anchor="middle">{researchKeywords[i].label[lang]}</text>
-      </g>
-    ))}
-  </svg>
+<div class="research-loop" aria-label={copy.title[lang]}>
+  <header class="research-loop-head">
+    <p class="eyebrow">{copy.eyebrow[lang]}</p>
+    <h3>{copy.title[lang]}</h3>
+  </header>
+
+  <div class="research-loop-flow" role="img" aria-label={`${copy.comm[lang]} → ${copy.learn[lang]} → ${copy.control[lang]}`}>
+    <article class="research-loop-stage stage-comm">
+      <span class="research-loop-index">01</span>
+      <strong>{copy.comm[lang]}</strong>
+      <small>{copy.commDesc[lang]}</small>
+    </article>
+
+    <div class="research-loop-arrow" aria-hidden="true"><span></span><b>→</b></div>
+
+    <article class="research-loop-stage stage-learn">
+      <span class="research-loop-index">02</span>
+      <strong>{copy.learn[lang]}</strong>
+      <small>{copy.learnDesc[lang]}</small>
+    </article>
+
+    <div class="research-loop-arrow" aria-hidden="true"><span></span><b>→</b></div>
+
+    <article class="research-loop-stage stage-control">
+      <span class="research-loop-index">03</span>
+      <strong>{copy.control[lang]}</strong>
+      <small>{copy.controlDesc[lang]}</small>
+    </article>
+  </div>
+
+  <div class="research-loop-feedback" aria-hidden="true">
+    <span class="feedback-line"></span>
+    <span class="feedback-pulse"></span>
+    <b>↶</b>
+  </div>
+  <p class="research-loop-feedback-copy">{copy.feedback[lang]}</p>
+
+  <div class="research-loop-pillars">
+    <span>{copy.security[lang]}</span>
+    <span>{copy.edge[lang]}</span>
+    <span>{copy.uav[lang]}</span>
+  </div>
 </div>
