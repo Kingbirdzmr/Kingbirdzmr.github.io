@@ -258,7 +258,7 @@ export const publications: Publication[] = [
       'GaussLink：受限带宽下面向安全多无人机探索的控制导向3D高斯地图共享',
       'GaussLink：帯域制約下の安全なマルチUAV探索に向けた制御指向3D Gaussianマップ共有'
     ),
-    authors: ['Mingrui Zheng', 'Hao Li', 'Koichi Kobayashi', 'A. Yonezawa', 'Yuh Yamashita', 'Tengjiao He'],
+    authors: ['Mingrui Zheng', 'Hao Li', 'Koichi Kobayashi', 'Ansei Yonezawa', 'Yuh Yamashita', 'Tengjiao He'],
     correspondingAuthors: ['Mingrui Zheng'],
     venue: '2027 IEEE International Conference on Robotics and Automation (ICRA 2027)',
     details: L('2027', '2027', '2027'),
