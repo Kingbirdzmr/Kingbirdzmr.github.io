@@ -575,3 +575,17 @@ html[data-theme="light"] .system-canvas,html[data-theme="light"] .solver-box,htm
 .bb-log p b{text-align:center}
 .bb-log p span{min-width:0;text-align:left;line-height:1.35}
 @media(max-width:1180px){.bb-tree{width:min(100%,560px)!important}.bb-legend{gap:10px!important}.solver-trace-panel .solver-iterations>div{padding:5px 4px}}
+
+/* v1.8.5 — let the interactive viewport grow with tall scenes */
+.demo-viewport{transition:height .32s cubic-bezier(.2,.8,.2,1)}
+.optimization-demo[data-step="1"] .demo-viewport{min-height:780px}
+.optimization-demo[data-step="3"] .demo-viewport{min-height:760px}
+@media(max-width:1050px){
+  .optimization-demo[data-step="1"] .demo-viewport{min-height:1120px}
+  .optimization-demo[data-step="3"] .demo-viewport{min-height:1080px}
+}
+@media(max-width:760px){
+  .optimization-demo[data-step="1"] .demo-viewport{min-height:1500px}
+  .optimization-demo[data-step="3"] .demo-viewport{min-height:1320px}
+}
+@media(prefers-reduced-motion:reduce){.demo-viewport{transition:none!important}}

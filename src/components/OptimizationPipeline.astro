@@ -429,6 +429,7 @@ const t = {
     const playBtn = root.querySelector('[data-demo-play]');
     const pauseBtn = root.querySelector('[data-demo-pause]');
     const replayBtn = root.querySelector('[data-demo-replay]');
+    const viewport = root.querySelector('.demo-viewport');
     const stageData = JSON.parse(root.dataset.stageData || 'null');
     const fallback = [...buttons].map((button, i) => ({ short: button.querySelector('b')?.textContent || '', title: scenes[i]?.querySelector('h3')?.textContent || '', desc: scenes[i]?.querySelector('.scene-copy>p:last-child')?.textContent || '' }));
     const data = stageData || fallback;
@@ -441,6 +442,26 @@ const t = {
 
     const clearLocal = () => { localTimers.forEach(clearTimeout); localTimers = []; };
     const clearMain = () => { if (timer) clearTimeout(timer); timer = null; };
+
+    function syncViewportHeight(){
+      const scene = scenes[index];
+      if (!viewport || !scene) return;
+      // Reset first so a previously taller scene does not keep the next scene artificially tall.
+      viewport.style.height = '';
+      requestAnimationFrame(() => {
+        const viewportRect = viewport.getBoundingClientRect();
+        const sceneStyle = getComputedStyle(scene);
+        const paddingBottom = parseFloat(sceneStyle.paddingBottom) || 0;
+        const minHeight = parseFloat(getComputedStyle(viewport).minHeight) || 620;
+        let contentBottom = 0;
+        [...scene.children].forEach((child) => {
+          const rect = child.getBoundingClientRect();
+          contentBottom = Math.max(contentBottom, rect.bottom - viewportRect.top);
+        });
+        const desired = Math.ceil(contentBottom + paddingBottom + 10);
+        viewport.style.height = `${Math.max(minHeight, desired)}px`;
+      });
+    }
 
     function animateExpert(){
       const lb = root.querySelector('[data-lb]');
@@ -693,6 +714,7 @@ const t = {
       void root.offsetWidth;
       scenes[index]?.classList.add('is-active');
       buttons.forEach((button,j)=>button.classList.toggle('active',j===index));
+      requestAnimationFrame(syncViewportHeight);
       if(label) label.textContent=data[index]?.short || '';
       if(progress) progress.style.width=`${((index+1)/scenes.length)*100}%`;
       if(capIndex) capIndex.textContent=String(index+1).padStart(2,'0');
@@ -707,6 +729,12 @@ const t = {
     playBtn?.addEventListener('click',()=>{ playing=true; show(index,true); });
     pauseBtn?.addEventListener('click',()=>{ playing=false; clearMain(); });
     replayBtn?.addEventListener('click',()=>{ playing=true; show(0,true); });
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(syncViewportHeight, 120);
+    });
 
     const observer=new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
