@@ -80,6 +80,7 @@ export const publications: Publication[] = [
     slug: 'malware-aware-uav-solar-iot',
     year: 2026,
     type: 'journal',
+    featured: true,
     statusKind: 'published',
     title: L(
       'Malware Aware UAV-Assisted Data Collection and Processing in Solar-Powered IoT Networks',

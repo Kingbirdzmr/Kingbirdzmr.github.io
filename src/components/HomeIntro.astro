@@ -1,0 +1,49 @@
+---
+import type { Lang } from '../types';
+import { profile } from '../data/profile';
+const { lang } = Astro.props as { lang: Lang };
+const label = {
+  en: 'ACADEMIC HOMEPAGE',
+  zh: '个人学术主页',
+  ja: '個人学術ホームページ'
+};
+---
+<div class="home-intro" data-home-intro aria-hidden="true">
+  <div class="home-intro-inner">
+    <svg class="home-intro-constellation" viewBox="0 0 260 150" role="presentation">
+      <g class="intro-links">
+        <path d="M42 88 L92 42 L148 72 L211 36" />
+        <path d="M42 88 L116 120 L148 72 L219 111" />
+        <path d="M92 42 L116 120" />
+        <path d="M148 72 L211 36 L219 111" />
+      </g>
+      <g class="intro-nodes">
+        <circle cx="42" cy="88" r="5" />
+        <circle cx="92" cy="42" r="5" />
+        <circle cx="116" cy="120" r="5" />
+        <circle cx="148" cy="72" r="7" />
+        <circle cx="211" cy="36" r="5" />
+        <circle cx="219" cy="111" r="5" />
+      </g>
+    </svg>
+    <p class="home-intro-kicker">COMMUNICATION · CONTROL · INTELLIGENCE</p>
+    <div class="home-intro-name"><span>MINGRUI</span><span>ZHENG</span></div>
+    <div class="home-intro-rule"></div>
+    <p class="home-intro-localized">{profile.displayName[lang]} · {label[lang]}</p>
+  </div>
+</div>
+<script is:inline>
+  const intro = document.querySelector('[data-home-intro]');
+  if (intro) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) intro.remove();
+    else {
+      document.documentElement.classList.add('home-intro-active');
+      window.setTimeout(() => {
+        intro.classList.add('is-leaving');
+        document.documentElement.classList.remove('home-intro-active');
+      }, 1750);
+      window.setTimeout(() => intro.remove(), 2250);
+    }
+  }
+</script>

@@ -1,7 +1,6 @@
 ---
 import type { Lang } from '../types';
 import { languageNames, langs, ui } from '../i18n/ui';
-import { profile } from '../data/profile';
 const { lang } = Astro.props as { lang: Lang };
 const path = Astro.url.pathname;
 const nav = [
@@ -12,6 +11,7 @@ const nav = [
   ['notes', ui.nav.notes[lang]],
   ['cv', ui.nav.cv[lang]]
 ];
+const homeLabel = { en: 'Home Page', zh: '主页', ja: 'ホーム' } as const;
 const languagePath = (target: Lang) => {
   const parts = path.split('/').filter(Boolean);
   if (parts.length && langs.includes(parts[0] as Lang)) parts[0] = target;
@@ -20,7 +20,7 @@ const languagePath = (target: Lang) => {
 };
 ---
 <header class="site-header" data-header>
-  <a class="brand" href={`/${lang}/`} aria-label={`${profile.name} home`}>
+  <a class="brand" href={`/${lang}/`} aria-label={homeLabel[lang]}>
     <span class="brand-mark" aria-hidden="true">
       <img
         class="brand-logo"
@@ -31,7 +31,7 @@ const languagePath = (target: Lang) => {
       />
       <span class="brand-logo-fallback" hidden>HU</span>
     </span>
-    <span class="brand-name">{profile.displayName[lang]}</span>
+    <span class="brand-name">{homeLabel[lang]}</span>
   </a>
   <nav class="main-nav" aria-label="Main navigation">
     {nav.map(([slug, label]) => <a href={`/${lang}/${slug}/`} class:list={{active: path.includes(`/${slug}/`)}}>{label}</a>)}
