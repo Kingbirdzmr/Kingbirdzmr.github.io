@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { Project, SelectedProject } from '../types';
 
 export const projects: Project[] = [
   {
@@ -130,3 +130,96 @@ export const projects: Project[] = [
     tags: ['SensorLLM', 'Wearable Computing', 'Lightweight AI']
   }
 ];
+
+export const selectedProjects = [
+  {
+    slug: 'malware-aware-uav-iot',
+    title: {
+      en: 'Malware-Aware UAV-Assisted Solar-Powered IoT',
+      zh: '恶意软件感知的无人机辅助太阳能物联网',
+      ja: 'マルウェア認識型UAV支援・太陽光発電IoT'
+    },
+    summary: {
+      en: 'A UAV-assisted secure data-collection framework that jointly coordinates mobility, communication, processing, and energy while filtering malware-contaminated traffic at the edge.',
+      zh: '面向太阳能供电物联网的无人机辅助安全数据采集框架，联合协调移动、通信、处理与能量，并在边缘侧过滤恶意软件污染流量。',
+      ja: '太陽光発電IoTを対象に、UAVの移動・通信・処理・エネルギーを統合し、エッジ側でマルウェア汚染トラフィックを除去する安全なデータ収集フレームワークです。'
+    },
+    tags: ['UAV', 'IoT', 'Malware', 'MILP'],
+    publicationSlug: 'malware-aware-uav-solar-iot'
+  },
+  {
+    slug: 'distributed-mpc-smart-agriculture',
+    title: {
+      en: 'Distributed MPC for DDoS-Resilient Multi-UAV Smart Agriculture',
+      zh: '面向DDoS韧性多无人机智慧农业的分布式MPC',
+      ja: 'DDoS耐性マルチUAVスマート農業向け分散MPC'
+    },
+    summary: {
+      en: 'A distributed model predictive control framework that couples communication and control decisions across multiple UAVs while maintaining service under DDoS attacks.',
+      zh: '面向多无人机智慧农业网络的分布式模型预测控制框架，在DDoS攻击下联合通信与控制决策并维持系统服务。',
+      ja: 'マルチUAVスマート農業ネットワークを対象に、DDoS攻撃下でもサービスを維持しながら通信と制御を統合する分散モデル予測制御フレームワークです。'
+    },
+    tags: ['Distributed MPC', 'DDoS', 'Multi-UAV', 'IoT'],
+    publicationSlug: 'distributed-mpc-ddos-uav-iot'
+  },
+  {
+    slug: 'doc2control-project',
+    title: {
+      en: 'Doc2Control: LLM-Guided Scheduling and Control',
+      zh: 'Doc2Control：大语言模型引导的调度与控制',
+      ja: 'Doc2Control：LLM誘導型スケジューリング・制御'
+    },
+    summary: {
+      en: 'A language-to-control pipeline that turns high-level task descriptions into structured scheduling and receding-horizon control decisions for UAV-assisted campus vehicles.',
+      zh: '将高层自然语言任务描述转化为结构化调度和滚动时域控制决策，用于无人机辅助校园车辆系统。',
+      ja: '高レベルの自然言語タスク記述を構造化されたスケジューリングとリシーディングホライズン制御へ変換する、UAV支援キャンパス車両向けパイプラインです。'
+    },
+    tags: ['LLM', 'Scheduling', 'Control', 'UAV'],
+    publicationSlug: 'doc2control'
+  },
+  {
+    slug: 'secure-vehicle-platoons-project',
+    title: {
+      en: 'Risk-Aware Secure Vehicle Platoons',
+      zh: '风险感知的安全车辆编队',
+      ja: 'リスク認識型セキュア車両隊列'
+    },
+    summary: {
+      en: 'A communication–control co-design framework that explicitly accounts for authentication delay, attack uncertainty, and control risk in connected vehicle platoons.',
+      zh: '面向车联网编队的通信—控制协同设计框架，显式考虑认证时延、攻击不确定性与控制风险。',
+      ja: '接続車両隊列を対象に、認証遅延、攻撃不確実性、制御リスクを明示的に扱う通信・制御協調設計フレームワークです。'
+    },
+    tags: ['Vehicle Platoons', 'Risk', 'Security', 'Control'],
+    publicationSlug: 'risk-aware-secure-vehicle-platoons'
+  },
+  {
+    slug: 'gima-project',
+    title: {
+      en: 'GIMA: GNN-Assisted VNF-Aware UAV Deployment',
+      zh: 'GIMA：GNN辅助的VNF感知无人机部署',
+      ja: 'GIMA：GNN支援VNF認識型UAV配置'
+    },
+    summary: {
+      en: 'A learning-augmented optimization framework for post-disaster UAV edge computing that uses graph neural networks to accelerate VNF-aware deployment and scheduling decisions.',
+      zh: '面向灾后无人机边缘计算的学习增强优化框架，利用图神经网络加速VNF感知的部署与调度决策。',
+      ja: '災害後UAVエッジコンピューティングを対象に、グラフニューラルネットワークでVNF認識型配置・スケジューリングを高速化する学習拡張型最適化フレームワークです。'
+    },
+    tags: ['GNN', 'VNF', 'Edge Computing', 'UAV'],
+    publicationSlug: 'gima-uav-edge-computing'
+  },
+  {
+    slug: 'gausslink-project',
+    title: {
+      en: 'GaussLink: Control-Oriented 3D Gaussian Map Sharing',
+      zh: 'GaussLink：面向控制的3D高斯地图共享',
+      ja: 'GaussLink：制御指向3D Gaussianマップ共有'
+    },
+    summary: {
+      en: 'A communication-efficient multi-UAV exploration framework that prioritizes control-relevant 3D Gaussian map information under limited bandwidth and safety constraints.',
+      zh: '面向受限带宽和安全约束的多无人机探索框架，优先传输与控制决策最相关的3D高斯地图信息。',
+      ja: '帯域制約と安全制約の下で、制御判断に重要な3D Gaussianマップ情報を優先共有する通信効率型マルチUAV探索フレームワークです。'
+    },
+    tags: ['3D Gaussian', 'Multi-UAV', 'Mapping', 'Safety'],
+    publicationSlug: 'gausslink'
+  }
+] satisfies SelectedProject[];

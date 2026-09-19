@@ -46,3 +46,11 @@ export type Project = {
   metrics?: { value: string; label: Localized }[];
   featured?: boolean;
 };
+
+export type SelectedProject = {
+  slug: string;
+  title: Localized;
+  summary: Localized;
+  tags: string[];
+  publicationSlug: string;
+};

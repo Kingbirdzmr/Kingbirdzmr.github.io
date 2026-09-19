@@ -3,24 +3,171 @@ import MainLayout from '../../layouts/MainLayout.astro';
 import { langPaths, isLang } from '../../utils/routes';
 import { profile } from '../../data/profile';
 import { projects } from '../../data/projects';
-import type { Lang } from '../../types';
+import type { Lang, Localized } from '../../types';
+
 export function getStaticPaths(){ return langPaths(); }
-const param = Astro.params.lang;if(!isLang(param)) return Astro.redirect('/en/');const lang: Lang = param;
+const param = Astro.params.lang;
+if(!isLang(param)) return Astro.redirect('/en/');
+const lang: Lang = param;
+const L = (en:string, zh:string, ja:string): Localized => ({en, zh, ja});
+
 const copy = {
-  title: {en:'Research',zh:'研究',ja:'研究'},
-  intro: {en:'I work at the intersection of communication, control, optimization, learning, and security. The common goal is to make autonomous networked systems more efficient, scalable, and resilient.',zh:'我的研究位于通信、控制、优化、学习与安全的交叉地带，核心目标是让自主网络化系统更加高效、可扩展且具有韧性。',ja:'通信・制御・最適化・学習・セキュリティの交差領域を研究しています。自律ネットワークシステムをより効率的、スケーラブル、かつレジリエントにすることが共通目標です。'},
-  questions: {en:'Representative questions',zh:'代表性问题',ja:'代表的な問い'}
+  title: L('Research','研究','研究'),
+  intro: L(
+    'My research asks how autonomous networked systems can make reliable decisions when communication, computation, energy, and time are all limited.',
+    '我的研究关注一个核心问题：当通信、计算、能量和时间都受到约束时，自主网络化系统如何仍然做出可靠、安全且高效的决策。',
+    '私の研究は、通信・計算・エネルギー・時間がすべて制約される状況でも、自律ネットワークシステムが信頼性の高い、安全かつ効率的な意思決定を行うにはどうすべきか、という問いを中心にしています。'
+  ),
+  vision: L('Research Vision','研究愿景','研究ビジョン'),
+  visionText: L(
+    'I study communication, control, optimization, learning, and security as coupled components of one decision-making system. Rather than optimizing each layer in isolation, my goal is to build methods that understand which information matters to control, which computations are worth performing, and how limited resources should be allocated under uncertainty and attacks.',
+    '我将通信、控制、优化、学习与安全视为同一个决策系统中的耦合组成部分，而不是彼此独立的模块。我的目标不是分别优化每一层，而是让系统理解哪些信息真正影响控制、哪些计算值得执行，以及在不确定性和攻击存在时有限资源应如何分配。',
+    '通信、制御、最適化、学習、セキュリティを個別の層ではなく、一つの意思決定システムを構成する相互依存要素として扱います。各層を独立に最適化するのではなく、制御に本当に重要な情報は何か、どの計算を実行する価値があるか、不確実性や攻撃下で限られた資源をどう配分すべきかを理解する手法の構築を目指します。'
+  ),
+  questions: L('Core Research Questions','核心研究问题','中核研究課題'),
+  questionsIntro: L(
+    'Five questions connect most of my current work and define the direction of my doctoral research.',
+    '以下五个问题贯穿我目前的大部分工作，也构成博士阶段研究的主要主线。',
+    '以下の5つの問いは、現在の研究の多くをつなぎ、博士課程における研究の方向性を形作っています。'
+  ),
+  themes: L('Research Themes','研究主题','研究テーマ'),
+  themesIntro: L(
+    'The questions above are developed through eight connected research themes, organized into three broader clusters.',
+    '上述问题通过八个相互关联的研究主题展开，并归纳为三个更高层次的研究集群。',
+    '上記の問いを、相互に関連する8つの研究テーマとして展開し、3つの大きなクラスターに整理しています。'
+  ),
+  methods: L('Methodological Toolbox','方法工具箱','方法論ツールボックス'),
+  methodsIntro: L(
+    'I combine model-based optimization and control with learning-based acceleration and networked-system modeling.',
+    '我的方法体系将模型驱动的优化与控制、学习驱动的加速方法以及网络化系统建模结合起来。',
+    'モデルベースの最適化・制御、学習による高速化、ネットワーク化システムのモデリングを組み合わせています。'
+  )
 };
+
 const questions = [
-  {en:'How should wireless resources be allocated according to control urgency?',zh:'如何根据控制紧迫性分配无线资源？',ja:'制御の緊急度に応じて無線資源をどのように割り当てるべきか。'},
-  {en:'How can uncertainty and attacks be integrated into predictive control?',zh:'如何将不确定性与攻击纳入预测控制？',ja:'不確実性と攻撃を予測制御へどう統合するか。'},
-  {en:'How can learning accelerate hard optimization without sacrificing feasibility?',zh:'如何利用学习加速困难优化，同时不牺牲可行性？',ja:'実行可能性を損なわずに学習で難しい最適化をどう高速化するか。'}
+  L(
+    'How can communication decisions be made control-aware, so that limited wireless resources are allocated according to their actual impact on closed-loop performance rather than conventional communication metrics alone?',
+    '在通信资源受限、网络时延和不确定性并存的情况下，如何让通信决策真正服务于闭环控制性能，而不是单纯优化吞吐量或频谱效率？',
+    '限られた無線資源を、従来の通信指標だけでなく閉ループ制御性能への実際の影響に基づいて割り当てるには、通信と制御をどのように協調設計すべきか？'
+  ),
+  L(
+    'How can multiple UAVs jointly sense, communicate, plan, and control under bandwidth, energy, sensing, and computing constraints while maintaining safety and scalability?',
+    '在带宽、能量、感知范围和计算资源均受限的环境中，多无人机如何协同感知、通信、规划与控制，并实现安全且可扩展的自主决策？',
+    '帯域、エネルギー、センシング範囲、計算資源が制約される環境において、複数UAVが安全性とスケーラビリティを保ちながら、センシング・通信・計画・制御をどのように協調できるか？'
+  ),
+  L(
+    'How can learning models such as graph neural networks and large language models accelerate complex optimization while preserving feasibility, safety, and constraint satisfaction?',
+    '如何利用图神经网络、大语言模型等学习方法加速复杂组合优化，同时保留传统优化方法在可行性、安全性和约束满足方面的保证？',
+    'グラフニューラルネットワークや大規模言語モデルなどの学習手法を用いて複雑な最適化を高速化しつつ、実行可能性、安全性、制約充足をどのように保証できるか？'
+  ),
+  L(
+    'How can communication, control, and resource scheduling be jointly designed so that autonomous networked systems remain safe and operational under cyber attacks, eavesdropping, and model uncertainty?',
+    '当网络化自主系统遭受DDoS、恶意软件、窃听或模型不确定性影响时，如何联合设计通信、控制与资源调度，使系统在攻击和扰动下仍保持安全与服务连续性？',
+    'DDoS、マルウェア、盗聴、モデル不確実性などが存在する状況でも自律ネットワークシステムの安全性と継続運用を維持するために、通信・制御・資源スケジューリングをどのように統合設計すべきか？'
+  ),
+  L(
+    'When communication, computation, energy, and time are all scarce, how should an intelligent system determine what information to transmit, what tasks to compute, and which decisions require immediate action?',
+    '当通信、计算、能量和时间都成为稀缺资源时，智能系统应该如何判断“什么信息值得传、什么任务值得算、什么决策需要立即执行”？',
+    '通信・計算・エネルギー・時間がすべて限られる状況で、知的システムは「何を送るべきか、何を計算すべきか、どの判断を即時に実行すべきか」をどのように決定すべきか？'
+  )
+];
+
+const clusters = [
+  {
+    number: 'A',
+    title: L('Autonomous Networked Systems','自主网络化系统','自律ネットワークシステム'),
+    description: L('Communication, control, mobility, and resilience for connected autonomous systems.','面向互联自主系统的通信、控制、移动与韧性设计。','接続型自律システムの通信・制御・移動・レジリエンス設計。'),
+    slugs: ['communication-control-codesign','multi-uav-autonomy','cyber-physical-security']
+  },
+  {
+    number: 'B',
+    title: L('Learning & Optimization','学习与优化','学習・最適化'),
+    description: L('Learning methods that accelerate or structure difficult optimization and control decisions.','利用学习方法加速或结构化复杂的优化与控制决策。','学習手法を用いて複雑な最適化・制御意思決定を高速化・構造化します。'),
+    slugs: ['learning-optimization','llm-guided-control']
+  },
+  {
+    number: 'C',
+    title: L('Networked Intelligence','网络化智能','ネットワーク知能'),
+    description: L('Edge intelligence, secure wireless systems, and lightweight sensing under resource constraints.','面向资源受限环境的边缘智能、安全无线系统与轻量感知。','資源制約下のエッジ知能、セキュア無線システム、軽量センシング。'),
+    slugs: ['uav-edge-vnf','secure-energy-aware-iot','intelligent-sensing']
+  }
+];
+
+const toolbox = [
+  {
+    title: L('Optimization & Control','优化与控制','最適化・制御'),
+    items: ['Model Predictive Control (MPC)','Distributed MPC','MILP / MINLP','Risk-Aware & Robust Optimization','Sample Average Approximation']
+  },
+  {
+    title: L('Learning & AI','学习与人工智能','学習・AI'),
+    items: ['Graph Neural Networks','Imitation Learning','LLM-Guided Optimization','DNN Split Inference','Mixture of Experts']
+  },
+  {
+    title: L('Networked Systems','网络化系统','ネットワークシステム'),
+    items: ['Multi-UAV Systems','Edge Computing & VNF','Physical-Layer Security','Energy Harvesting','3D Gaussian Mapping']
+  }
 ];
 ---
 <MainLayout {lang} title={`${copy.title[lang]} | ${profile.name}`} description={copy.intro[lang]}>
-  <section class="page-hero section-shell"><p class="eyebrow">RESEARCH</p><h1>{copy.title[lang]}</h1><p>{copy.intro[lang]}</p></section>
-  <section class="section-shell research-question-box"><h2>{copy.questions[lang]}</h2><ol>{questions.map((q,i)=><li><span>{String(i+1).padStart(2,'0')}</span>{q[lang]}</li>)}</ol></section>
-  <section class="section-shell research-detail-list">
-    {projects.map((p,i)=><article id={p.slug} data-reveal><div class="research-number">{String(i+1).padStart(2,'0')}</div><div><p class="eyebrow">{p.eyebrow[lang]}</p><h2>{p.title[lang]}</h2><p>{p.summary[lang]}</p><div class="tag-row">{p.tags.map(t=><span>{t}</span>)}</div></div></article>)}
+  <section class="page-hero section-shell research-hero">
+    <p class="eyebrow">RESEARCH AGENDA</p>
+    <h1>{copy.title[lang]}</h1>
+    <p>{copy.intro[lang]}</p>
+  </section>
+
+  <section class="section-shell research-vision" data-reveal>
+    <div class="research-section-heading">
+      <p class="eyebrow">01 / VISION</p>
+      <h2>{copy.vision[lang]}</h2>
+    </div>
+    <p class="research-vision-copy">{copy.visionText[lang]}</p>
+  </section>
+
+  <section class="section-shell research-core-section" data-reveal>
+    <div class="research-section-split">
+      <div><p class="eyebrow">02 / QUESTIONS</p><h2>{copy.questions[lang]}</h2></div>
+      <p>{copy.questionsIntro[lang]}</p>
+    </div>
+    <ol class="research-question-grid">
+      {questions.map((q,i)=><li><span class="research-question-index">Q{String(i+1).padStart(2,'0')}</span><p>{q[lang]}</p></li>)}
+    </ol>
+  </section>
+
+  <section class="section-shell research-themes-section" data-reveal>
+    <div class="research-section-split">
+      <div><p class="eyebrow">03 / THEMES</p><h2>{copy.themes[lang]}</h2></div>
+      <p>{copy.themesIntro[lang]}</p>
+    </div>
+    <div class="research-cluster-list">
+      {clusters.map(cluster => (
+        <section class="research-cluster">
+          <header class="research-cluster-head">
+            <span>{cluster.number}</span>
+            <div><h3>{cluster.title[lang]}</h3><p>{cluster.description[lang]}</p></div>
+          </header>
+          <div class="research-theme-grid">
+            {cluster.slugs.map(slug => {
+              const theme = projects.find(p => p.slug === slug)!;
+              return <article class="research-theme-card" id={theme.slug}>
+                <p class="eyebrow">{theme.eyebrow[lang]}</p>
+                <h4>{theme.title[lang]}</h4>
+                <p>{theme.summary[lang]}</p>
+                <div class="tag-row">{theme.tags.map(tag => <span>{tag}</span>)}</div>
+              </article>;
+            })}
+          </div>
+        </section>
+      ))}
+    </div>
+  </section>
+
+  <section class="section-shell research-methods-section" data-reveal>
+    <div class="research-section-split">
+      <div><p class="eyebrow">04 / METHODS</p><h2>{copy.methods[lang]}</h2></div>
+      <p>{copy.methodsIntro[lang]}</p>
+    </div>
+    <div class="method-toolbox-grid">
+      {toolbox.map((group,index)=><article class="method-toolbox-card"><span>0{index+1}</span><h3>{group.title[lang]}</h3><ul>{group.items.map(item => <li>{item}</li>)}</ul></article>)}
+    </div>
   </section>
 </MainLayout>
