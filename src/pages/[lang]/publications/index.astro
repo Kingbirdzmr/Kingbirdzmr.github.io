@@ -1,0 +1,27 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import PublicationCard from '../../../components/PublicationCard.astro';
+import { publications } from '../../../data/publications';
+import { profile } from '../../../data/profile';
+import { langPaths,isLang } from '../../../utils/routes';
+import type { Lang } from '../../../types';
+export function getStaticPaths(){return langPaths();}const param=Astro.params.lang;if(!isLang(param))return Astro.redirect('/en/');const lang:Lang=param;
+const heading={en:'Publications',zh:'论文',ja:'研究業績'};
+const intro={en:'Peer-reviewed journal and conference papers, preprints, and selected manuscripts.',zh:'同行评审期刊论文、会议论文、预印本及代表性研究成果。',ja:'査読付き論文、国際会議論文、プレプリントおよび主な研究成果。'};
+---
+<MainLayout {lang} title={`${heading[lang]} | ${profile.name}`} description={intro[lang]}>
+<section class="page-hero section-shell"><p class="eyebrow">PUBLICATIONS</p><h1>{heading[lang]}</h1><p>{intro[lang]}</p></section>
+<section class="section-shell filters" aria-label="Publication filters"><button class="active" data-filter="all">All</button><button data-filter="journal">Journal</button><button data-filter="conference">Conference</button><button data-filter="preprint">Preprint</button></section>
+<section class="section-shell publication-years">
+  {[...new Set(publications.map(p=>p.year))].sort((a,b)=>b-a).map(year => <div class="year-block" data-year-block><div class="year-label">{year}</div><div class="publication-list">{publications.filter(p=>p.year===year).map(publication=><PublicationCard {publication} {lang}/>)}</div></div>)}
+</section>
+<script is:inline>
+  const buttons=[...document.querySelectorAll('[data-filter]')];
+  const cards=[...document.querySelectorAll('.publication-card')];
+  buttons.forEach(btn=>btn.addEventListener('click',()=>{
+    buttons.forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+    const f=btn.dataset.filter;cards.forEach(card=>card.hidden=f!=='all'&&card.dataset.type!==f);
+    document.querySelectorAll('[data-year-block]').forEach(block=>{block.hidden=!block.querySelector('.publication-card:not([hidden])')});
+  }));
+</script>
+</MainLayout>

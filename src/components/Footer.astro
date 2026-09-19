@@ -1,0 +1,28 @@
+---
+import type { Lang } from '../types';
+import { profile } from '../data/profile';
+import { ui } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const year = new Date().getFullYear();
+const links = [
+  profile.github && ['GitHub', profile.github],
+  profile.scholar && ['Google Scholar', profile.scholar],
+  profile.orcid && ['ORCID', profile.orcid],
+  profile.email && ['Email', `mailto:${profile.email}`]
+].filter(Boolean) as string[][];
+---
+<footer class="site-footer">
+  <div>
+    <div class="footer-name">{profile.name}</div>
+    <p>{profile.statement[lang]}</p>
+  </div>
+  <div class="footer-links">
+    {links.map(([label, href]) => <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">{label}</a>)}
+    <a href={`/${lang}/cv/`}>CV</a>
+  </div>
+  <div class="footer-meta">
+    <span>© {year} {profile.name}</span>
+    <span>Astro · GitHub Pages</span>
+    <a href="#top">↑ {ui.common.backTop[lang]}</a>
+  </div>
+</footer>

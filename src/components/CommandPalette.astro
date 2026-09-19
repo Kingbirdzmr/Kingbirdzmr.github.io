@@ -1,0 +1,42 @@
+---
+import type { Lang } from '../types';
+import { ui } from '../i18n/ui';
+import { publications } from '../data/publications';
+import { projects } from '../data/projects';
+const { lang } = Astro.props as { lang: Lang };
+const entries = [
+  { type: ui.nav.research[lang], title: ui.nav.research[lang], href: `/${lang}/research/` },
+  { type: ui.nav.publications[lang], title: ui.nav.publications[lang], href: `/${lang}/publications/` },
+  { type: ui.nav.cv[lang], title: ui.nav.cv[lang], href: `/${lang}/cv/` },
+  ...publications.map((p) => ({ type: ui.nav.publications[lang], title: p.title[lang], href: `/${lang}/publications/${p.slug}/` })),
+  ...projects.map((p) => ({ type: ui.nav.projects[lang], title: p.title, href: `/${lang}/projects/#${p.slug}` }))
+];
+---
+<dialog class="command-dialog" id="command-palette">
+  <div class="command-shell">
+    <div class="command-head">
+      <span>⌕</span>
+      <input id="command-input" type="search" autocomplete="off" placeholder={ui.common.openSearch[lang]} />
+      <kbd>Esc</kbd>
+    </div>
+    <div class="command-list" id="command-list">
+      {entries.map((e) => <a href={e.href} data-search={`${e.type} ${e.title}`.toLowerCase()}><span>{e.type}</span><strong>{e.title}</strong><em>↗</em></a>)}
+    </div>
+  </div>
+</dialog>
+<script is:inline>
+  const dialog = document.getElementById('command-palette');
+  const input = document.getElementById('command-input');
+  const items = [...document.querySelectorAll('#command-list a')];
+  function openPalette(){ dialog?.showModal(); setTimeout(() => input?.focus(), 20); }
+  document.querySelector('.search-trigger')?.addEventListener('click', openPalette);
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
+    if (e.key === 'Escape' && dialog?.open) dialog.close();
+  });
+  dialog?.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+  input?.addEventListener('input', () => {
+    const q = input.value.toLowerCase().trim();
+    items.forEach((item) => { item.hidden = q && !item.dataset.search.includes(q); });
+  });
+</script>

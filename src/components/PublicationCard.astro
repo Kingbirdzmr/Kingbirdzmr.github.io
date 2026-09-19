@@ -1,0 +1,32 @@
+---
+import type { Lang, Publication } from '../types';
+import { ui } from '../i18n/ui';
+const { publication: p, lang, detailed = false } = Astro.props as { publication: Publication; lang: Lang; detailed?: boolean };
+const me = 'Mingrui Zheng';
+---
+<article class="publication-card" data-type={p.type} data-year={p.year}>
+  <div class="publication-meta"><span>{p.type.toUpperCase()}</span><span>{p.year}</span>{p.status && <span>{p.status[lang]}</span>}</div>
+  <h3><a href={`/${lang}/publications/${p.slug}/`}>{p.title[lang]}</a></h3>
+  <p class="authors">
+    {p.authors.map((a, i) => <>{i > 0 && ', '}{a === me ? <strong>{a}</strong> : a}</>)}
+  </p>
+  <p class="venue">{p.venue}</p>
+  <div class="tag-row">{p.tags.map((tag) => <span>{tag}</span>)}</div>
+  <div class="publication-actions">
+    {p.links?.doi && <a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}
+    {p.links?.pdf && <a href={p.links.pdf} target="_blank" rel="noreferrer">PDF ↗</a>}
+    {p.links?.code && <a href={p.links.code} target="_blank" rel="noreferrer">Code ↗</a>}
+    <a href={`/${lang}/publications/${p.slug}/`}>{ui.common.abstract[lang]} →</a>
+    {p.bibtex && <button class="bibtex-button" data-bibtex={p.bibtex}>{ui.common.bibtex[lang]}</button>}
+  </div>
+</article>
+<script is:inline>
+  document.addEventListener('click', async (e) => {
+    const button = e.target.closest?.('.bibtex-button');
+    if (!button) return;
+    await navigator.clipboard.writeText(button.dataset.bibtex || '');
+    const old = button.textContent;
+    button.textContent = 'Copied ✓';
+    setTimeout(() => button.textContent = old, 1200);
+  });
+</script>

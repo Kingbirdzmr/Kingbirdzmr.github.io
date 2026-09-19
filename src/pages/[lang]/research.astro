@@ -1,0 +1,26 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { langPaths, isLang } from '../../utils/routes';
+import { profile } from '../../data/profile';
+import { projects } from '../../data/projects';
+import type { Lang } from '../../types';
+export function getStaticPaths(){ return langPaths(); }
+const param = Astro.params.lang;if(!isLang(param)) return Astro.redirect('/en/');const lang: Lang = param;
+const copy = {
+  title: {en:'Research',zh:'研究',ja:'研究'},
+  intro: {en:'I work at the intersection of communication, control, optimization, learning, and security. The common goal is to make autonomous networked systems more efficient, scalable, and resilient.',zh:'我的研究位于通信、控制、优化、学习与安全的交叉地带，核心目标是让自主网络化系统更加高效、可扩展且具有韧性。',ja:'通信・制御・最適化・学習・セキュリティの交差領域を研究しています。自律ネットワークシステムをより効率的、スケーラブル、かつレジリエントにすることが共通目標です。'},
+  questions: {en:'Representative questions',zh:'代表性问题',ja:'代表的な問い'}
+};
+const questions = [
+  {en:'How should wireless resources be allocated according to control urgency?',zh:'如何根据控制紧迫性分配无线资源？',ja:'制御の緊急度に応じて無線資源をどのように割り当てるべきか。'},
+  {en:'How can uncertainty and attacks be integrated into predictive control?',zh:'如何将不确定性与攻击纳入预测控制？',ja:'不確実性と攻撃を予測制御へどう統合するか。'},
+  {en:'How can learning accelerate hard optimization without sacrificing feasibility?',zh:'如何利用学习加速困难优化，同时不牺牲可行性？',ja:'実行可能性を損なわずに学習で難しい最適化をどう高速化するか。'}
+];
+---
+<MainLayout {lang} title={`${copy.title[lang]} | ${profile.name}`} description={copy.intro[lang]}>
+  <section class="page-hero section-shell"><p class="eyebrow">RESEARCH</p><h1>{copy.title[lang]}</h1><p>{copy.intro[lang]}</p></section>
+  <section class="section-shell research-question-box"><h2>{copy.questions[lang]}</h2><ol>{questions.map((q,i)=><li><span>{String(i+1).padStart(2,'0')}</span>{q[lang]}</li>)}</ol></section>
+  <section class="section-shell research-detail-list">
+    {projects.map((p,i)=><article id={p.slug} data-reveal><div class="research-number">{String(i+1).padStart(2,'0')}</div><div><p class="eyebrow">{p.eyebrow[lang]}</p><h2>{p.title}</h2><p>{p.summary[lang]}</p><div class="tag-row">{p.tags.map(t=><span>{t}</span>)}</div></div></article>)}
+  </section>
+</MainLayout>

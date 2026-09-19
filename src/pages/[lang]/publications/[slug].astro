@@ -1,0 +1,33 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import { publications } from '../../../data/publications';
+import { langs, ui } from '../../../i18n/ui';
+import type { Lang } from '../../../types';
+export function getStaticPaths(){return langs.flatMap(lang=>publications.map(p=>({params:{lang,slug:p.slug},props:{publication:p,lang}})));}
+const { publication:p, lang } = Astro.props;
+const desc = p.abstract?.[lang] ?? p.title[lang];
+const doi = p.links?.doi?.replace('https://doi.org/','');
+---
+<MainLayout {lang} title={`${p.title[lang]} | Mingrui Zheng`} description={desc}>
+  <Fragment slot="head">
+    <meta name="citation_title" content={p.title.en} />
+    {p.authors.map((author) => <meta name="citation_author" content={author} />)}
+    <meta name="citation_publication_date" content={String(p.year)} />
+    {p.type === 'journal' ? <meta name="citation_journal_title" content={p.venue} /> : <meta name="citation_conference_title" content={p.venue} />}
+    {doi && <meta name="citation_doi" content={doi} />}
+    {p.links?.pdf && <meta name="citation_pdf_url" content={new URL(p.links.pdf, Astro.site)} />}
+  </Fragment>
+  <section class="publication-detail section-shell">
+    <a class="back-link" href={`/${lang}/publications/`}>← {ui.nav.publications[lang]}</a>
+    <div class="publication-meta"><span>{p.type.toUpperCase()}</span><span>{p.year}</span>{p.status&&<span>{p.status[lang]}</span>}</div>
+    <h1>{p.title[lang]}</h1>
+    <p class="authors">{p.authors.join(', ')}</p><p class="venue">{p.venue}</p>
+    <div class="tag-row">{p.tags.map(tag=><span>{tag}</span>)}</div>
+    <div class="publication-actions detail-actions">{p.links?.doi&&<a href={p.links.doi} target="_blank" rel="noreferrer">DOI ↗</a>}{p.links?.pdf&&<a href={p.links.pdf}>PDF ↗</a>}{p.links?.code&&<a href={p.links.code}>Code ↗</a>}</div>
+    <div class="detail-grid">
+      <article><p class="eyebrow">ABSTRACT</p><h2>{ui.common.abstract[lang]}</h2><p>{p.abstract?.[lang]}</p></article>
+      {p.bibtex&&<aside><p class="eyebrow">CITATION</p><h2>BibTeX</h2><pre><code>{p.bibtex}</code></pre><button class="copy-citation" data-bibtex={p.bibtex}>{ui.common.copy[lang]}</button></aside>}
+    </div>
+  </section>
+  <script is:inline>document.querySelector('.copy-citation')?.addEventListener('click',async(e)=>{const b=e.currentTarget;await navigator.clipboard.writeText(b.dataset.bibtex||'');b.textContent='Copied ✓';});</script>
+</MainLayout>

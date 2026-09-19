@@ -1,0 +1,32 @@
+---
+import type { Lang } from '../types';
+import { researchKeywords } from '../data/profile';
+const { lang } = Astro.props as { lang: Lang };
+---
+<div class="research-graph" aria-label="Research constellation">
+  <svg viewBox="0 0 620 500" role="img">
+    <defs>
+      <linearGradient id="lineGlow" x1="0" x2="1">
+        <stop offset="0" stop-color="currentColor" stop-opacity=".15" />
+        <stop offset=".5" stop-color="currentColor" stop-opacity=".75" />
+        <stop offset="1" stop-color="currentColor" stop-opacity=".15" />
+      </linearGradient>
+    </defs>
+    <g class="graph-lines">
+      <path d="M310 85 L155 190 L210 350 L400 370 L475 205 Z"/>
+      <path d="M155 190 L475 205"/>
+      <path d="M210 350 L310 85"/>
+      <path d="M400 370 L310 85"/>
+      <path d="M210 350 L475 205"/>
+    </g>
+    {[
+      [310,85,0],[155,190,1],[475,205,2],[210,350,3],[400,370,4],[310,245,5]
+    ].map(([x,y,i]) => (
+      <g class={`graph-node node-${i}`} transform={`translate(${x} ${y})`} tabindex="0">
+        <circle r="34" />
+        <circle class="node-core" r="8" />
+        <text y="58" text-anchor="middle">{researchKeywords[i].label[lang]}</text>
+      </g>
+    ))}
+  </svg>
+</div>

@@ -1,0 +1,15 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projects } from '../../data/projects';
+import { profile } from '../../data/profile';
+import { langPaths,isLang } from '../../utils/routes';
+import type { Lang } from '../../types';
+export function getStaticPaths(){return langPaths();}const param=Astro.params.lang;if(!isLang(param))return Astro.redirect('/en/');const lang:Lang=param;
+const heading={en:'Projects & Research Themes',zh:'项目与研究主题',ja:'プロジェクト・研究テーマ'};
+const intro={en:'A structured view of the research themes that connect my papers and ongoing work.',zh:'以项目形式组织论文与持续研究工作，展示不同研究主题之间的联系。',ja:'論文と進行中の研究をつなぐテーマを、プロジェクト単位で整理しています。'};
+---
+<MainLayout {lang} title={`${heading[lang]} | ${profile.name}`} description={intro[lang]}>
+<section class="page-hero section-shell"><p class="eyebrow">PROJECTS</p><h1>{heading[lang]}</h1><p>{intro[lang]}</p></section>
+<section class="section-shell project-grid project-page-grid">{projects.map((project,index)=><ProjectCard {project} {lang} {index}/>)}</section>
+</MainLayout>

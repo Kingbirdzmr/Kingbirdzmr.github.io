@@ -1,0 +1,62 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import ResearchGraph from '../../components/ResearchGraph.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import PublicationCard from '../../components/PublicationCard.astro';
+import { langPaths, isLang } from '../../utils/routes';
+import { profile, researchKeywords } from '../../data/profile';
+import { projects } from '../../data/projects';
+import { publications } from '../../data/publications';
+import { news } from '../../data/news';
+import { ui } from '../../i18n/ui';
+import type { Lang } from '../../types';
+export function getStaticPaths(){ return langPaths(); }
+const param = Astro.params.lang;
+if (!isLang(param)) return Astro.redirect('/en/');
+const lang: Lang = param;
+const title = `${profile.name} | Academic Homepage`;
+const description = profile.statement[lang];
+---
+<MainLayout {lang} {title} {description}>
+  <section class="hero section-shell">
+    <div class="hero-copy" data-reveal>
+      <p class="kicker">COMMUNICATION · CONTROL · INTELLIGENCE</p>
+      <h1><span>MINGRUI</span><span>ZHENG</span></h1>
+      <p class="native-name">{profile.nativeName}</p>
+      <p class="role">{profile.role[lang]}</p>
+      <p class="affiliation">{profile.affiliation[lang]}</p>
+      <p class="statement">{profile.statement[lang]}</p>
+      <div class="hero-actions">
+        <a class="primary-button" href={`/${lang}/research/`}>{ui.nav.research[lang]} →</a>
+        <a class="ghost-button" href={`/${lang}/publications/`}>{ui.nav.publications[lang]}</a>
+        <a class="ghost-button" href={`/${lang}/cv/`}>CV</a>
+      </div>
+      <div class="keyword-strip">{researchKeywords.map((k) => <span>{k.label[lang]}</span>)}</div>
+    </div>
+    <div data-reveal class="hero-visual"><ResearchGraph {lang} /></div>
+  </section>
+
+  <section class="section-shell split-heading" data-reveal>
+    <div><p class="eyebrow">01 / RESEARCH</p><h2>{ui.common.selectedResearch[lang]}</h2></div>
+    <p>{profile.statement[lang]}</p>
+  </section>
+  <section class="section-shell project-grid">
+    {projects.filter(p=>p.featured).map((project, index) => <div data-reveal><ProjectCard {project} {lang} {index} /></div>)}
+  </section>
+
+  <section class="section-shell publication-section" data-reveal>
+    <div class="section-heading-row"><div><p class="eyebrow">02 / PUBLICATIONS</p><h2>{ui.common.selectedPublications[lang]}</h2></div><a href={`/${lang}/publications/`}>{ui.common.viewAll[lang]} →</a></div>
+    <div class="publication-list">{publications.filter(p=>p.featured).slice(0,4).map((publication) => <PublicationCard {publication} {lang} />)}</div>
+  </section>
+
+  <section class="section-shell news-now-grid">
+    <div class="news-panel" data-reveal>
+      <p class="eyebrow">03 / NEWS</p><h2>{ui.common.latestNews[lang]}</h2>
+      <div class="news-list">{news.slice(0,5).map(n => <article><time>{n.date}</time><p>{n.text[lang]}</p></article>)}</div>
+    </div>
+    <aside class="now-panel" data-reveal>
+      <p class="eyebrow">NOW</p><h2>{ui.common.current[lang]}</h2>
+      <dl><div><dt>{ui.common.researchOn[lang]}</dt><dd>{ui.common.researchNow[lang]}</dd></div><div><dt>{ui.common.basedIn[lang]}</dt><dd>{ui.common.sapporo[lang]}</dd></div></dl>
+    </aside>
+  </section>
+</MainLayout>

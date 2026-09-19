@@ -1,0 +1,54 @@
+---
+import type { Lang } from '../types';
+import { languageNames, langs, ui } from '../i18n/ui';
+import { profile } from '../data/profile';
+const { lang } = Astro.props as { lang: Lang };
+const path = Astro.url.pathname;
+const nav = [
+  ['research', ui.nav.research[lang]],
+  ['publications', ui.nav.publications[lang]],
+  ['projects', ui.nav.projects[lang]],
+  ['experience', ui.nav.experience[lang]],
+  ['notes', ui.nav.notes[lang]],
+  ['cv', ui.nav.cv[lang]]
+];
+const languagePath = (target: Lang) => {
+  const parts = path.split('/').filter(Boolean);
+  if (parts.length && langs.includes(parts[0] as Lang)) parts[0] = target;
+  else parts.unshift(target);
+  return '/' + parts.join('/') + '/';
+};
+---
+<header class="site-header" data-header>
+  <a class="brand" href={`/${lang}/`} aria-label={`${profile.name} home`}>
+    <span class="brand-mark">{profile.initials}</span>
+    <span class="brand-name">{profile.name}</span>
+  </a>
+  <nav class="main-nav" aria-label="Main navigation">
+    {nav.map(([slug, label]) => <a href={`/${lang}/${slug}/`} class:list={{active: path.includes(`/${slug}/`)}}>{label}</a>)}
+  </nav>
+  <div class="header-actions">
+    <button class="icon-button search-trigger" aria-label={ui.common.openSearch[lang]} title="Ctrl / Cmd + K">⌘K</button>
+    <button class="icon-button theme-toggle" aria-label="Toggle theme" title="Dark / Light">◐</button>
+    <div class="lang-switcher" aria-label="Language switcher">
+      {langs.map((l) => <a href={languagePath(l)} class:list={{active: l === lang}}>{languageNames[l]}</a>)}
+    </div>
+    <button class="menu-button" aria-label="Toggle menu" aria-expanded="false">☰</button>
+  </div>
+</header>
+<script is:inline>
+  const root = document.documentElement;
+  const saved = localStorage.getItem('theme');
+  if (saved) root.dataset.theme = saved;
+  document.querySelector('.theme-toggle')?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('theme', next);
+  });
+  const menu = document.querySelector('.menu-button');
+  menu?.addEventListener('click', () => {
+    const header = document.querySelector('[data-header]');
+    const open = header?.classList.toggle('menu-open') ?? false;
+    menu.setAttribute('aria-expanded', String(open));
+  });
+</script>

@@ -1,0 +1,6 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';import {profile} from '../../data/profile';import {langPaths,isLang} from '../../utils/routes';import type{Lang}from'../../types';
+export function getStaticPaths(){return langPaths();}const param=Astro.params.lang;if(!isLang(param))return Astro.redirect('/en/');const lang:Lang=param;
+const h={en:'Research Notes',zh:'学术笔记',ja:'研究ノート'};const p={en:'Short technical notes on control, optimization, wireless systems, and research workflow will live here.',zh:'这里将用于记录控制、优化、无线系统与科研工作流相关的技术笔记。',ja:'制御、最適化、無線システム、研究ワークフローに関する短い技術ノートを掲載します。'};
+---
+<MainLayout {lang} title={`${h[lang]} | ${profile.name}`} description={p[lang]}><section class="page-hero section-shell"><p class="eyebrow">NOTES</p><h1>{h[lang]}</h1><p>{p[lang]}</p></section><section class="section-shell empty-state"><div>∿</div><h2>Coming soon</h2><p>{p[lang]}</p></section></MainLayout>
