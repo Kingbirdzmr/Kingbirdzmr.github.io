@@ -162,7 +162,7 @@ export const publications: Publication[] = [
       'Doc2Control：面向无人机辅助校园车辆的大语言模型引导调度与控制',
       'Doc2Control：UAV支援キャンパス車両のためのLLM誘導型スケジューリングと制御'
     ),
-    authors: ['Zebin Huang', 'Mingrui Zheng', 'Hao Li', 'YeFeng Wu'],
+    authors: ['Zebin Huang', 'Mingrui Zheng', 'Hao Li', 'Yefeng Wu'],
     correspondingAuthors: ['Mingrui Zheng'],
     venue: 'IEEE Transactions on Vehicular Technology',
     details: L('Early Access (2026)', 'Early Access（2026）', 'Early Access（2026）'),
