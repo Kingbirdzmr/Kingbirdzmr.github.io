@@ -21,6 +21,6 @@ const questions = [
   <section class="page-hero section-shell"><p class="eyebrow">RESEARCH</p><h1>{copy.title[lang]}</h1><p>{copy.intro[lang]}</p></section>
   <section class="section-shell research-question-box"><h2>{copy.questions[lang]}</h2><ol>{questions.map((q,i)=><li><span>{String(i+1).padStart(2,'0')}</span>{q[lang]}</li>)}</ol></section>
   <section class="section-shell research-detail-list">
-    {projects.map((p,i)=><article id={p.slug} data-reveal><div class="research-number">{String(i+1).padStart(2,'0')}</div><div><p class="eyebrow">{p.eyebrow[lang]}</p><h2>{p.title}</h2><p>{p.summary[lang]}</p><div class="tag-row">{p.tags.map(t=><span>{t}</span>)}</div></div></article>)}
+    {projects.map((p,i)=><article id={p.slug} data-reveal><div class="research-number">{String(i+1).padStart(2,'0')}</div><div><p class="eyebrow">{p.eyebrow[lang]}</p><h2>{p.title[lang]}</h2><p>{p.summary[lang]}</p><div class="tag-row">{p.tags.map(t=><span>{t}</span>)}</div></div></article>)}
   </section>
 </MainLayout>

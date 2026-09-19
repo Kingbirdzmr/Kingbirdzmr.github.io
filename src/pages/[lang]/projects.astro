@@ -2,14 +2,161 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import { projects } from '../../data/projects';
+import { publications } from '../../data/publications';
 import { profile } from '../../data/profile';
 import { langPaths,isLang } from '../../utils/routes';
-import type { Lang } from '../../types';
-export function getStaticPaths(){return langPaths();}const param=Astro.params.lang;if(!isLang(param))return Astro.redirect('/en/');const lang:Lang=param;
-const heading={en:'Projects & Research Themes',zh:'项目与研究主题',ja:'プロジェクト・研究テーマ'};
-const intro={en:'A structured view of the research themes that connect my papers and ongoing work.',zh:'以项目形式组织论文与持续研究工作，展示不同研究主题之间的联系。',ja:'論文と進行中の研究をつなぐテーマを、プロジェクト単位で整理しています。'};
+import type { Lang, Localized } from '../../types';
+
+export function getStaticPaths(){return langPaths();}
+const param=Astro.params.lang;
+if(!isLang(param))return Astro.redirect('/en/');
+const lang:Lang=param;
+
+const L = (en:string, zh:string, ja:string): Localized => ({en,zh,ja});
+const copy = {
+  heading: L('Research Portfolio & Projects','研究项目与主题','研究ポートフォリオ・プロジェクト'),
+  intro: L(
+    'A portfolio view of my research directions, publication output, academic visibility, and collaboration network.',
+    '从研究方向、科研产出、学术影响与合作网络四个维度展示我的研究工作。',
+    '研究テーマ、研究成果、学術的可視性、共同研究ネットワークの4つの観点から研究活動をまとめています。'
+  ),
+  overview: L('Research at a Glance','研究概览','研究概要'),
+  overviewIntro: L('Current snapshot based on the publication list and public research-profile metrics.','基于当前论文列表与公开学术主页数据的研究概览。','現在の論文リストと公開研究プロフィール指標に基づくスナップショットです。'),
+  peerReviewed: L('Peer-reviewed papers','已发表/已录用论文','査読付き論文'),
+  reads: L('ResearchGate reads','ResearchGate 阅读量','ResearchGate 閲覧数'),
+  citations: L('ResearchGate citations','ResearchGate 引用量','ResearchGate 被引用数'),
+  collaborators: L('Collaborators','合作者','共同研究者'),
+  output: L('Research Output','科研产出','研究成果'),
+  outputIntro: L('Under-review manuscripts are shown separately and are not counted as publication output.','在审论文单独列出，不计入发文量。','査読中の原稿は別枠で表示し、研究成果数には含めていません。'),
+  category: L('Category','类别','区分'),
+  count: L('Count','数量','件数'),
+  note: L('Status / note','状态 / 说明','状態 / 備考'),
+  journals: L('Journal papers','期刊论文','学術雑誌論文'),
+  conferences: L('Conference papers','会议论文','国際会議論文'),
+  preprints: L('Preprints','预印本','プレプリント'),
+  patents: L('Patents','专利','特許'),
+  underReview: L('Under review','在审论文','査読中'),
+  journalNote: L('Published, Early Access, or accepted','已发表、在线发表或已录用','掲載済み、オンライン公開、または採択済み'),
+  confNote: L('Accepted; proceedings may be forthcoming','已录用；部分尚未见刊','採択済み。一部はプロシーディングス未刊行'),
+  preprintNote: L('Not included in peer-reviewed paper count','不计入同行评审论文发文量','査読付き論文数には含めない'),
+  patentNote: L('Under examination','审查中','審査中'),
+  reviewNote: L('Excluded from publication count','不计入发文量','研究成果数から除外'),
+  impact: L('Visibility & Impact','阅读与引用','可視性・インパクト'),
+  metric: L('Metric','指标','指標'),
+  value: L('Value','数值','値'),
+  source: L('Source','来源','出典'),
+  rgReads: L('Publication reads','论文阅读量','論文閲覧数'),
+  rgCitations: L('Citations','引用量','被引用数'),
+  sourceNote: L('Public ResearchGate profile; values can change as the profile is updated.','公开 ResearchGate 主页；数值会随平台更新而变化。','公開ResearchGateプロフィール。数値はプロフィール更新に伴って変動します。'),
+  checked: L('Checked Sep. 2026','2026年9月更新','2026年9月確認'),
+  network: L('Collaboration Network','合作网络','共同研究ネットワーク'),
+  networkIntro: L('Co-authors appearing in the current publication, preprint, patent, and under-review manuscript list.','当前期刊、会议、预印本、专利及在审论文列表中出现的合作者。','現在の学術雑誌、国際会議、プレプリント、特許、査読中原稿に含まれる共同研究者です。'),
+  works: L('works','项合作','件'),
+  themes: L('Research Themes','研究主题','研究テーマ'),
+  themesIntro: L('The portfolio now spans eight connected directions rather than four isolated topics.','目前的研究体系由八个相互关联的方向组成，而不是彼此割裂的四个主题。','現在の研究ポートフォリオは、独立した4テーマではなく、相互に関連する8つの方向から構成されています。')
+};
+
+const peerReviewed = publications.filter(p => (p.type === 'journal' || p.type === 'conference') && p.statusKind !== 'under-review');
+const journalCount = peerReviewed.filter(p => p.type === 'journal').length;
+const conferenceCount = peerReviewed.filter(p => p.type === 'conference').length;
+const preprintCount = publications.filter(p => p.type === 'preprint').length;
+const patentCount = publications.filter(p => p.type === 'patent').length;
+const underReviewCount = publications.filter(p => p.statusKind === 'under-review').length;
+
+const collaboratorCounts = new Map<string, number>();
+for (const publication of publications) {
+  for (const author of new Set(publication.authors)) {
+    if (author === 'Mingrui Zheng') continue;
+    collaboratorCounts.set(author, (collaboratorCounts.get(author) ?? 0) + 1);
+  }
+}
+const collaborators = [...collaboratorCounts.entries()]
+  .map(([name, count]) => ({ name, count }))
+  .sort((a,b) => b.count - a.count || a.name.localeCompare(b.name));
+const initials = (name:string) => {
+  const parts = name.replace(/\./g,'').trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0].slice(0,2).toUpperCase();
+  return `${parts[0][0] ?? ''}${parts[parts.length-1][0] ?? ''}`.toUpperCase();
+};
+
+const impact = {
+  reads: 27,
+  citations: 5,
+  sourceUrl: 'https://www.researchgate.net/profile/Mingrui-Zheng-2'
+};
 ---
-<MainLayout {lang} title={`${heading[lang]} | ${profile.name}`} description={intro[lang]}>
-<section class="page-hero section-shell"><p class="eyebrow">PROJECTS</p><h1>{heading[lang]}</h1><p>{intro[lang]}</p></section>
-<section class="section-shell project-grid project-page-grid">{projects.map((project,index)=><ProjectCard {project} {lang} {index}/>)}</section>
+<MainLayout {lang} title={`${copy.heading[lang]} | ${profile.name}`} description={copy.intro[lang]}>
+  <section class="page-hero section-shell project-portfolio-hero">
+    <p class="eyebrow">PROJECTS / PORTFOLIO</p>
+    <h1>{copy.heading[lang]}</h1>
+    <p>{copy.intro[lang]}</p>
+  </section>
+
+  <section class="section-shell portfolio-section" data-reveal>
+    <div class="portfolio-section-heading">
+      <div><p class="eyebrow">01 / OVERVIEW</p><h2>{copy.overview[lang]}</h2></div>
+      <p>{copy.overviewIntro[lang]}</p>
+    </div>
+    <div class="portfolio-metric-grid">
+      <article class="portfolio-metric-card"><strong>{peerReviewed.length}</strong><span>{copy.peerReviewed[lang]}</span></article>
+      <article class="portfolio-metric-card"><strong>{impact.reads}+</strong><span>{copy.reads[lang]}</span></article>
+      <article class="portfolio-metric-card"><strong>{impact.citations}+</strong><span>{copy.citations[lang]}</span></article>
+      <article class="portfolio-metric-card"><strong>{collaborators.length}</strong><span>{copy.collaborators[lang]}</span></article>
+    </div>
+  </section>
+
+  <section class="section-shell portfolio-two-column" data-reveal>
+    <article class="portfolio-panel">
+      <div class="portfolio-panel-head"><p class="eyebrow">02 / OUTPUT</p><h2>{copy.output[lang]}</h2><p>{copy.outputIntro[lang]}</p></div>
+      <div class="portfolio-table-wrap">
+        <table class="portfolio-table">
+          <thead><tr><th>{copy.category[lang]}</th><th>{copy.count[lang]}</th><th>{copy.note[lang]}</th></tr></thead>
+          <tbody>
+            <tr><td>{copy.journals[lang]}</td><td>{journalCount}</td><td>{copy.journalNote[lang]}</td></tr>
+            <tr><td>{copy.conferences[lang]}</td><td>{conferenceCount}</td><td>{copy.confNote[lang]}</td></tr>
+            <tr><td>{copy.preprints[lang]}</td><td>{preprintCount}</td><td>{copy.preprintNote[lang]}</td></tr>
+            <tr><td>{copy.patents[lang]}</td><td>{patentCount}</td><td>{copy.patentNote[lang]}</td></tr>
+            <tr class="portfolio-table-muted"><td>{copy.underReview[lang]}</td><td>{underReviewCount}</td><td>{copy.reviewNote[lang]}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="portfolio-panel">
+      <div class="portfolio-panel-head"><p class="eyebrow">03 / IMPACT</p><h2>{copy.impact[lang]}</h2></div>
+      <div class="portfolio-table-wrap">
+        <table class="portfolio-table impact-table">
+          <thead><tr><th>{copy.metric[lang]}</th><th>{copy.value[lang]}</th><th>{copy.source[lang]}</th></tr></thead>
+          <tbody>
+            <tr><td>{copy.rgReads[lang]}</td><td class="impact-value">{impact.reads}+</td><td><a href={impact.sourceUrl} target="_blank" rel="noreferrer">ResearchGate ↗</a></td></tr>
+            <tr><td>{copy.rgCitations[lang]}</td><td class="impact-value">{impact.citations}+</td><td><a href={impact.sourceUrl} target="_blank" rel="noreferrer">ResearchGate ↗</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="portfolio-source-note">{copy.checked[lang]} · {copy.sourceNote[lang]}</p>
+    </article>
+  </section>
+
+  <section class="section-shell portfolio-section collaboration-section" data-reveal>
+    <div class="portfolio-section-heading">
+      <div><p class="eyebrow">04 / NETWORK</p><h2>{copy.network[lang]}</h2></div>
+      <p>{copy.networkIntro[lang]}</p>
+    </div>
+    <div class="collaborator-grid">
+      {collaborators.map(person => (
+        <article class="collaborator-card">
+          <div class="collaborator-avatar" aria-hidden="true">{initials(person.name)}</div>
+          <div class="collaborator-copy"><strong>{person.name}</strong><span>{person.count} {copy.works[lang]}</span></div>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="section-shell portfolio-section research-theme-section" data-reveal>
+    <div class="portfolio-section-heading">
+      <div><p class="eyebrow">05 / THEMES</p><h2>{copy.themes[lang]}</h2></div>
+      <p>{copy.themesIntro[lang]}</p>
+    </div>
+    <div class="project-grid project-page-grid">{projects.map((project,index)=><ProjectCard {project} {lang} {index}/>)}</div>
+  </section>
 </MainLayout>

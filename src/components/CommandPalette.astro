@@ -9,7 +9,7 @@ const entries = [
   { type: ui.nav.publications[lang], title: ui.nav.publications[lang], href: `/${lang}/publications/` },
   { type: ui.nav.cv[lang], title: ui.nav.cv[lang], href: `/${lang}/cv/` },
   ...publications.map((p) => ({ type: ui.nav.publications[lang], title: p.title[lang], href: p.detailPage === false ? `/${lang}/publications/#${p.type}` : `/${lang}/publications/${p.slug}/` })),
-  ...projects.map((p) => ({ type: ui.nav.projects[lang], title: p.title, href: `/${lang}/projects/#${p.slug}` }))
+  ...projects.map((p) => ({ type: ui.nav.projects[lang], title: p.title[lang], href: `/${lang}/projects/#${p.slug}` }))
 ];
 ---
 <dialog class="command-dialog" id="command-palette">

@@ -39,7 +39,7 @@ export type Publication = {
 
 export type Project = {
   slug: string;
-  title: string;
+  title: Localized;
   eyebrow: Localized;
   summary: Localized;
   tags: string[];
