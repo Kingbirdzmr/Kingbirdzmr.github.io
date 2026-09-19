@@ -30,6 +30,12 @@ const copy = {
     '以下五个问题贯穿我目前的大部分工作，也构成博士阶段研究的主要主线。',
     '以下の5つの問いは、現在の研究の多くをつなぎ、博士課程における研究の方向性を形作っています。'
   ),
+  pipeline: L('Optimization-to-Learning Pipeline','优化到学习求解的流程','最適化から学習解法へのパイプライン'),
+  pipelineIntro: L(
+    'A recurring pattern in my research is to formulate an optimization problem, solve it with exact algorithms to generate expert solutions, distill the structure into a neural model, and then repair the prediction so that it remains feasible and close to the optimum.',
+    '我在很多工作中都遵循这样一个流程：先建立优化问题，再用精确算法生成专家解；随后把专家决策蒸馏为神经网络模型，并对预测解进行规范化与修复，使其既满足约束，又尽量接近最优解。',
+    '私の研究では、まず最適化問題を定式化し、厳密アルゴリズムで専門家解を生成し、その構造をニューラルモデルへ蒸留し、最後に予測解を正規化・修復して実行可能かつ最適解に近い解へ整える、という流れを繰り返し用います。'
+  ),
   themes: L('Research Themes','研究主题','研究テーマ'),
   themesIntro: L(
     'The questions above are developed through eight connected research themes, organized into three broader clusters.',
@@ -71,6 +77,65 @@ const questions = [
     '通信・計算・エネルギー・時間がすべて限られる状況で、知的システムは「何を送るべきか、何を計算すべきか、どの判断を即時に実行すべきか」をどのように決定すべきか？'
   )
 ];
+
+
+const pipelineData = {
+  problemTitle: L('Optimization problem', '最优化问题', '最適化問題'),
+  problemBody: L(
+    'Define state, objective, and constraints: allocate communication, control, motion, and computation variables to minimize cost or maximize utility under energy, latency, capacity, and safety constraints.',
+    '定义状态、目标与约束：联合决定通信、控制、运动与计算变量，在能量、时延、容量与安全约束下最小化代价或最大化效用。',
+    '状態・目的関数・制約を定義し、エネルギー・遅延・容量・安全制約の下で、通信・制御・移動・計算の変数を同時に決定します。'
+  ),
+  exactTitle: L('Exact / expert solver', '精确 / 专家求解器', '厳密 / 専門家ソルバ'),
+  exactBody: L(
+    'Use MPC, MILP/MINLP, dynamic programming, or decomposition algorithms to compute optimal or near-optimal expert decisions x*.',
+    '使用 MPC、MILP/MINLP、动态规划或分解算法，求得最优或近最优的专家决策 x*。',
+    'MPC、MILP/MINLP、動的計画法、分解法などを用いて、最適または準最適な専門家解 x* を求めます。'
+  ),
+  datasetTitle: L('Expert dataset', '专家数据集', '専門家データセット'),
+  datasetBody: L(
+    'Collect context–solution pairs D = {(s, x*)}: system states, channel conditions, task graphs, topology features, and their corresponding expert solutions.',
+    '构建情境—解对 D = {(s, x*)}：包括系统状态、信道条件、任务图、拓扑特征，以及对应的专家最优解。',
+    '文脈–解のペア D = {(s, x*)} を構築します。システム状態、チャネル条件、タスクグラフ、トポロジ特徴と、それに対応する専門家解を含みます。'
+  ),
+  trainTitle: L('Training objective', '训练目标', '学習目的'),
+  trainBody: L(
+    'Train the model by minimizing imitation loss + regularization + constraint-aware penalties, so that the network learns the structure of the expert solution map.',
+    '通过最小化模仿损失 + 正则项 + 约束感知惩罚项来训练模型，使网络学习专家解映射的结构。',
+    '模倣損失 + 正則化 + 制約認識型ペナルティを最小化し、専門家解写像の構造をネットワークに学習させます。'
+  ),
+  predictTitle: L('Neural prediction', '神经网络预测', 'ニューラル予測'),
+  predictBody: L(
+    'Given a new state s, the trained network outputs a fast candidate solution x-hat. This stage replaces heavy optimization at deployment time.',
+    '对于新的状态 s，训练后的网络快速输出候选解 x̂。该阶段在部署时替代了高开销优化。',
+    '新しい状態 s に対して、学習済みネットワークは高速な候補解 x̂ を出力します。実行時には重い最適化の代替となります。'
+  ),
+  repairTitle: L('Normalization / feasibility repair', '规范化 / 可行性修复', '正規化 / 実行可能化修復'),
+  repairBody: L(
+    'Project, clip, round, rebalance, or run a lightweight repair layer so that the candidate satisfies hard constraints and can be safely executed.',
+    '通过投影、截断、取整、再平衡或轻量修复层，使候选解满足硬约束并可安全执行。',
+    '射影、クリッピング、丸め、再配分、軽量な修復層を用いて、候補解をハード制約に適合させ安全に実行可能にします。'
+  ),
+  compareTitle: L('Comparison with optimal solution', '与最优解对比', '最適解との比較'),
+  compareBody: L(
+    'Evaluate optimality gap, feasibility, runtime, and robustness. The target is a solver that is much faster than exact optimization while remaining near-optimal.',
+    '从最优性差距、可行性、运行时间与鲁棒性四个方面比较。目标是显著快于精确优化，同时保持近最优性能。',
+    '最適性ギャップ、実行可能性、計算時間、ロバスト性を比較します。厳密最適化より大幅に高速でありながら、最適解に近い性能を保つことが目標です。'
+  ),
+  nnLabels: {
+    input: L('Input features', '输入特征', '入力特徴'),
+    hidden1: L('Hidden layer 1', '隐藏层 1', '中間層 1'),
+    hidden2: L('Hidden layer 2', '隐藏层 2', '中間層 2'),
+    output: L('Output neurons', '输出神经元', '出力ニューロン'),
+    vector: L('Solution vector', '解向量', '解ベクトル')
+  },
+  compareBullets: [
+    L('Optimality gap: f(x-tilde) - f(x*)', '最优性差距：f(x̃) - f(x*)', '最適性ギャップ：f(x̃) - f(x*)'),
+    L('Feasibility: all hard constraints satisfied', '可行性：满足全部硬约束', '実行可能性：すべてのハード制約を満たす'),
+    L('Runtime: milliseconds vs. seconds/minutes', '速度：毫秒级 vs. 秒/分钟级', '計算時間：ミリ秒級 vs. 秒 / 分級'),
+    L('Generalization under unseen system states', '对未见状态的泛化能力', '未知状態に対する汎化性能')
+  ]
+};
 
 const clusters = [
   {
@@ -133,9 +198,109 @@ const toolbox = [
     </ol>
   </section>
 
+  <section class="section-shell ai-pipeline-section" data-reveal>
+    <div class="research-section-split">
+      <div><p class="eyebrow">03 / PIPELINE</p><h2>{copy.pipeline[lang]}</h2></div>
+      <p>{copy.pipelineIntro[lang]}</p>
+    </div>
+
+    <div class="pipeline-flow-grid">
+      <article class="pipeline-card problem-card">
+        <span class="pipeline-step">01</span>
+        <p class="eyebrow">FORMULATE</p>
+        <h3>{pipelineData.problemTitle[lang]}</h3>
+        <p>{pipelineData.problemBody[lang]}</p>
+        <div class="problem-formula">
+          <span>min / max &nbsp; f(x; s)</span>
+          <span>s.t. &nbsp; g(x; s) ≤ 0</span>
+          <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; h(x; s) = 0</span>
+        </div>
+      </article>
+
+      <div class="pipeline-arrow arrow-right arrow-a"><span></span></div>
+
+      <article class="pipeline-card exact-card">
+        <span class="pipeline-step">02A</span>
+        <p class="eyebrow">EXPERT SOLVER</p>
+        <h3>{pipelineData.exactTitle[lang]}</h3>
+        <p>{pipelineData.exactBody[lang]}</p>
+        <div class="mini-tags"><span>MPC</span><span>MILP</span><span>MINLP</span><span>DP</span></div>
+      </article>
+
+      <div class="pipeline-arrow arrow-right arrow-b"><span></span></div>
+
+      <article class="pipeline-card compare-card">
+        <span class="pipeline-step">05</span>
+        <p class="eyebrow">EVALUATE</p>
+        <h3>{pipelineData.compareTitle[lang]}</h3>
+        <p>{pipelineData.compareBody[lang]}</p>
+        <ul class="compare-bullets">
+          {pipelineData.compareBullets.map(item => <li>{item[lang]}</li>)}
+        </ul>
+      </article>
+
+      <div class="pipeline-arrow arrow-down arrow-c"><span></span></div>
+      <div class="pipeline-arrow arrow-down arrow-d"><span></span></div>
+      <div class="pipeline-arrow arrow-left arrow-e"><span></span></div>
+
+      <article class="pipeline-card dataset-card">
+        <span class="pipeline-step">02B</span>
+        <p class="eyebrow">DATASET</p>
+        <h3>{pipelineData.datasetTitle[lang]}</h3>
+        <p>{pipelineData.datasetBody[lang]}</p>
+        <div class="dataset-strip">
+          <div><strong>s₁</strong><span>x*₁</span></div>
+          <div><strong>s₂</strong><span>x*₂</span></div>
+          <div><strong>s₃</strong><span>x*₃</span></div>
+          <div><strong>⋯</strong><span>⋯</span></div>
+        </div>
+      </article>
+
+      <div class="pipeline-arrow arrow-right arrow-f"><span></span></div>
+
+      <article class="pipeline-card nn-card">
+        <span class="pipeline-step">03</span>
+        <p class="eyebrow">LEARN</p>
+        <h3>{pipelineData.predictTitle[lang]}</h3>
+        <p>{pipelineData.trainBody[lang]}</p>
+        <div class="nn-legend">
+          <span>{pipelineData.nnLabels.input[lang]}</span>
+          <span>{pipelineData.nnLabels.hidden1[lang]}</span>
+          <span>{pipelineData.nnLabels.hidden2[lang]}</span>
+          <span>{pipelineData.nnLabels.output[lang]}</span>
+        </div>
+        <div class="nn-network" aria-label="Neural network flow">
+          <div class="nn-column">{Array.from({length:4}).map(() => <span class="nn-node"></span>)}</div>
+          <div class="nn-column">{Array.from({length:5}).map(() => <span class="nn-node"></span>)}</div>
+          <div class="nn-column">{Array.from({length:5}).map(() => <span class="nn-node"></span>)}</div>
+          <div class="nn-column">{Array.from({length:3}).map(() => <span class="nn-node out"></span>)}</div>
+          <svg viewBox="0 0 360 150" preserveAspectRatio="none" class="nn-links">
+            {Array.from({length:4}).map((_,i) => Array.from({length:5}).map((__,j) => <line x1={30} y1={25+i*30} x2={125} y2={15+j*27}></line>))}
+            {Array.from({length:5}).map((_,i) => Array.from({length:5}).map((__,j) => <line x1={140} y1={15+i*27} x2={235} y2={15+j*27}></line>))}
+            {Array.from({length:5}).map((_,i) => Array.from({length:3}).map((__,j) => <line x1={250} y1={15+i*27} x2={330} y2={42+j*30}></line>))}
+          </svg>
+        </div>
+        <div class="nn-equation">x̂ = NN(s; θ), &nbsp; θ ← arg min <em>L</em><sub>imit.</sub> + λ<em>L</em><sub>reg.</sub> + μ<em>L</em><sub>cons.</sub></div>
+      </article>
+
+      <div class="pipeline-arrow arrow-right arrow-g"><span></span></div>
+
+      <article class="pipeline-card repair-card">
+        <span class="pipeline-step">04</span>
+        <p class="eyebrow">REPAIR</p>
+        <h3>{pipelineData.repairTitle[lang]}</h3>
+        <p>{pipelineData.repairBody[lang]}</p>
+        <div class="repair-stream">
+          <span>x̂</span><span>projection</span><span>rounding</span><span>repair LP</span><span>x̃</span>
+        </div>
+        <div class="repair-note">{pipelineData.predictBody[lang]}</div>
+      </article>
+    </div>
+  </section>
+
   <section class="section-shell research-themes-section" data-reveal>
     <div class="research-section-split">
-      <div><p class="eyebrow">03 / THEMES</p><h2>{copy.themes[lang]}</h2></div>
+      <div><p class="eyebrow">04 / THEMES</p><h2>{copy.themes[lang]}</h2></div>
       <p>{copy.themesIntro[lang]}</p>
     </div>
     <div class="research-cluster-list">
@@ -163,7 +328,7 @@ const toolbox = [
 
   <section class="section-shell research-methods-section" data-reveal>
     <div class="research-section-split">
-      <div><p class="eyebrow">04 / METHODS</p><h2>{copy.methods[lang]}</h2></div>
+      <div><p class="eyebrow">05 / METHODS</p><h2>{copy.methods[lang]}</h2></div>
       <p>{copy.methodsIntro[lang]}</p>
     </div>
     <div class="method-toolbox-grid">
