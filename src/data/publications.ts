@@ -13,6 +13,7 @@ export const publications: Publication[] = [
     year: 2025,
     type: 'journal',
     statusKind: 'published',
+    status: L('Published', '已发表', '掲載済み'),
     title: L(
       'Max-Min Secrecy Rate for UAV-Assisted Energy Harvesting IoT Networks',
       '无人机辅助能量采集物联网中的最大最小保密速率',
@@ -47,6 +48,7 @@ export const publications: Publication[] = [
     year: 2026,
     type: 'journal',
     statusKind: 'published',
+    status: L('Published', '已发表', '掲載済み'),
     title: L(
       'Risk-Aware Joint Communication and Control Resource Allocation for Secure Vehicle Platoons',
       '面向安全车辆编队的风险感知通信与控制联合资源分配',
@@ -82,6 +84,7 @@ export const publications: Publication[] = [
     type: 'journal',
     featured: true,
     statusKind: 'published',
+    status: L('Published', '已发表', '掲載済み'),
     title: L(
       'Malware Aware UAV-Assisted Data Collection and Processing in Solar-Powered IoT Networks',
       '太阳能供电物联网中面向恶意软件感知的无人机辅助数据采集与处理',
@@ -117,6 +120,7 @@ export const publications: Publication[] = [
     year: 2026,
     type: 'journal',
     statusKind: 'published',
+    status: L('Published', '已发表', '掲載済み'),
     title: L(
       'Joint Function Configuration and Multislot Offloading in Solar-Powered Serverless Edge Computing',
       '太阳能供电无服务器边缘计算中的函数配置与多时隙卸载联合优化',
@@ -152,7 +156,7 @@ export const publications: Publication[] = [
     year: 2026,
     type: 'journal',
     statusKind: 'early-access',
-    status: L('Early Access', 'Early Access / 在线发表', 'Early Access / オンライン公開'),
+    status: L('Early Access', '在线发表', 'オンライン公開'),
     title: L(
       'Doc2Control: LLM-Guided Scheduling and Control for UAV-Assisted Campus Vehicles',
       'Doc2Control：面向无人机辅助校园车辆的大语言模型引导调度与控制',

@@ -83,3 +83,4 @@ git push
 ## 5. Design notes
 
 The site intentionally avoids a portrait. Identity is carried by typography, the MZ monogram, research graph, structured research cards, and publication metadata.
+
