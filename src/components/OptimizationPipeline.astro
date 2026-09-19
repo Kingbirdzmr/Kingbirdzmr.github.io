@@ -274,21 +274,21 @@ const t = {
           <aside class="training-console">
             <div class="training-console-head"><span>SUPERVISED IMITATION</span><b data-train-phase-label>FORWARD / INPUT</b></div>
             <div class="target-pair">
-              <div><small>expert target</small><strong class="formula-text">x* = [1, 0, 0.74, 0.21]</strong></div>
+              <div><small>expert target</small><strong class="formula-text" data-train-target>x* = [1, 0, 0.74, 0.21]</strong></div>
               <div><small>{t.labels.predicted[lang]}</small><strong class="formula-text" data-train-pred>x̂ = [0.91, 0.08, 0.69, 0.26]</strong></div>
             </div>
             <div class="training-metric-grid training-metric-grid-v2">
               <div><small>{t.labels.loss[lang]}</small><b data-train-loss>0.842</b></div>
               <div><small>epoch</small><b data-train-epoch>01 / 60</b></div>
               <div><small>{t.labels.gradNorm[lang]}</small><b data-train-grad>1.82</b></div>
-              <div><small>{t.labels.learnRate[lang]}</small><b>1e−3</b></div>
+              <div><small>{t.labels.learnRate[lang]}</small><b data-train-lr>1e−3</b></div>
             </div>
             <div class="train-equation formula-text">𝓛 = ‖x̂ − x*‖²₂ + λ·φ(x̂)</div>
             <div class="weight-update formula-text" data-weight-update>θ ← θ − η∇θ𝓛</div>
             <div class="mini-batch-card">
               <span>{t.labels.batch[lang]} Bₜ</span>
               <div>{Array.from({length:6}).map((_,i)=><i style={`--batch:${i}`}></i>)}</div>
-              <small>64 expert state–solution pairs</small>
+              <small data-train-batch-caption>64 expert state–solution pairs</small>
             </div>
           </aside>
 
@@ -339,7 +339,7 @@ const t = {
             </svg>
 
             <div class="activation-probes">
-              <div><span>s</span><strong class="formula-text">[.72, .18, .91, .43, .66, .27]</strong></div>
+              <div><span>s</span><strong class="formula-text" data-input-values>[.72, .18, .91, .43, .66, .27]</strong></div>
               <i>→</i>
               <div><span>h₁ = σ(W₁s+b₁)</span><strong class="formula-text" data-hidden-values>[.81, .12, .64, .35, ⋯]</strong></div>
               <i>→</i>
@@ -428,7 +428,7 @@ const t = {
     const stageData = JSON.parse(root.dataset.stageData || 'null');
     const fallback = [...buttons].map((button, i) => ({ short: button.querySelector('b')?.textContent || '', title: scenes[i]?.querySelector('h3')?.textContent || '', desc: scenes[i]?.querySelector('.scene-copy>p:last-child')?.textContent || '' }));
     const data = stageData || fallback;
-    const durations = [4300, 5000, 4600, 6800, 5600, 5000];
+    const durations = [4300, 5600, 4600, 14500, 5600, 5000];
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let index = 0;
     let playing = !reduce;
@@ -515,13 +515,42 @@ const t = {
       const hidden2 = root.querySelector('[data-hidden2-values]');
       const pred = root.querySelector('[data-train-pred]');
       const predOut = root.querySelector('[data-output-values]');
+      const target = root.querySelector('[data-train-target]');
+      const inputReadout = root.querySelector('[data-input-values]');
       const grad = root.querySelector('[data-train-grad]');
+      const lr = root.querySelector('[data-train-lr]');
+      const batchCaption = root.querySelector('[data-train-batch-caption]');
       const weightUpdate = root.querySelector('[data-weight-update]');
       const updateStatus = root.querySelector('[data-update-status]');
       const lossLine = root.querySelector('[data-loss-line]');
       const lossPoint = root.querySelector('[data-loss-point]');
       const lossChartValue = root.querySelector('[data-loss-chart-value]');
       const neurons = [...root.querySelectorAll('.nn-neuron')];
+      const inputTexts = [...root.querySelectorAll('.layer-input .nn-neuron text:last-child')];
+      const h1Texts = [...root.querySelectorAll('.layer-h1 .nn-value')];
+      const h2Texts = [...root.querySelectorAll('.layer-h2 .nn-value')];
+      const outTexts = [...root.querySelectorAll('.layer-output .nn-value')];
+
+      const presets = [
+        {
+          input:[.72,.18,.91,.43,.66,.27], target:[1,0,.74,.21], startPred:[.91,.08,.69,.26],
+          h1:[.81,.12,.64,.35,.77,.48,.22], h2:[.62,.41,.33,.77,.29,.58],
+          losses:[.842,.611,.428,.291,.173,.109,.071,.048], grads:[1.82,1.37,1.02,.74,.53,.34,.21,.16],
+          lr:'1e−3', batch:64
+        },
+        {
+          input:[.48,.62,.34,.77,.51,.19], target:[0,1,.58,.36], startPred:[.14,.82,.49,.44],
+          h1:[.56,.73,.21,.68,.31,.82,.44], h2:[.41,.67,.52,.28,.75,.39],
+          losses:[.731,.548,.376,.244,.151,.092,.061,.039], grads:[1.56,1.22,.91,.66,.47,.31,.19,.13],
+          lr:'8e−4', batch:48
+        },
+        {
+          input:[.83,.27,.56,.31,.72,.44], target:[1,1,.42,.18], startPred:[.88,.86,.50,.25],
+          h1:[.74,.33,.69,.24,.58,.71,.36], h2:[.70,.36,.61,.45,.32,.66],
+          losses:[.668,.489,.337,.219,.138,.086,.054,.035], grads:[1.43,1.08,.82,.59,.42,.28,.18,.12],
+          lr:'6e−4', batch:96
+        }
+      ];
 
       const setPhase = (phase, labelText) => {
         if(stage) stage.dataset.trainPhase=phase;
@@ -529,73 +558,92 @@ const t = {
         phaseChips.forEach(chip => chip.classList.toggle('active', chip.dataset.phaseChip===phase));
         neurons.forEach(n => n.classList.toggle('phase-active', n.dataset.layer===phase));
       };
+      const vec = (arr) => '[' + arr.map(v => Number(v).toFixed(2)).join(', ') + ']';
+      const updateNeuronColumn = (nodes, values) => nodes.forEach((node,i)=>{ if(node && values[i]!==undefined) node.textContent=Number(values[i]).toFixed(2).replace(/^0/,''); });
+      let cycle = 0;
 
-      setPhase('input','FORWARD / INPUT');
-      if(loss) loss.textContent='0.842';
-      if(epoch) epoch.textContent='01 / 60';
-      if(hidden) hidden.textContent='[.81, .12, .64, .35, ⋯]';
-      if(hidden2) hidden2.textContent='[.62, .41, .33, .77, ⋯]';
-      if(pred) pred.textContent='x̂ = [0.91, 0.08, 0.69, 0.26]';
-      if(predOut) predOut.textContent='[.91, .08, .69, .26]';
-      if(grad) grad.textContent='1.82';
-      if(weightUpdate) weightUpdate.classList.remove('pulse');
-      if(updateStatus) updateStatus.textContent='Wₗ, bₗ waiting';
+      const runCycle = () => {
+        const cfg = presets[cycle % presets.length];
+        const cycleOffset = cycle * 60;
+        const finalPred = cfg.target.map((t,i)=> Math.max(0, Math.min(1, t + (i%2===0?.01:-.01))));
+        const points=[];
+        const toPoint=(value,i)=>{
+          const x=10+i*(340/(cfg.losses.length-1));
+          const y=12+(value/cfg.losses[0])*82;
+          return [x,y];
+        };
 
-      const losses=[.842,.611,.428,.291,.173,.109,.071,.048];
-      const points=[];
-      const toPoint=(value,i)=>{
-        const x=10+i*(340/(losses.length-1));
-        const y=12+(value/.842)*82;
-        return [x,y];
+        setPhase('input','FORWARD / INPUT');
+        if(target) target.textContent='x* = '+vec(cfg.target);
+        if(inputReadout) inputReadout.textContent=vec(cfg.input);
+        if(pred) pred.textContent='x̂ = '+vec(cfg.startPred);
+        if(predOut) predOut.textContent=vec(cfg.startPred);
+        if(loss) loss.textContent=cfg.losses[0].toFixed(3);
+        if(lossChartValue) lossChartValue.textContent=cfg.losses[0].toFixed(3);
+        if(epoch) epoch.textContent=String(cycleOffset+1).padStart(2,'0')+' / ∞';
+        if(grad) grad.textContent=cfg.grads[0].toFixed(2);
+        if(lr) lr.textContent=cfg.lr;
+        if(batchCaption) batchCaption.textContent=`${cfg.batch} expert state–solution pairs`;
+        if(hidden) hidden.textContent=vec(cfg.h1.slice(0,4)) + ' …';
+        if(hidden2) hidden2.textContent=vec(cfg.h2.slice(0,4)) + ' …';
+        updateNeuronColumn(inputTexts,cfg.input);
+        updateNeuronColumn(h1Texts,cfg.h1);
+        updateNeuronColumn(h2Texts,cfg.h2);
+        updateNeuronColumn(outTexts,cfg.startPred);
+        if(weightUpdate) weightUpdate.classList.remove('pulse');
+        if(updateStatus) updateStatus.textContent='new mini-batch loaded';
+        if(lossLine) lossLine.setAttribute('points','10,94');
+        if(lossPoint){ lossPoint.setAttribute('cx','10'); lossPoint.setAttribute('cy','94'); }
+
+        const phaseTimeline = [
+          [180,'input','FORWARD / INPUT'],
+          [700,'h1','FORWARD / HIDDEN 1'],
+          [1220,'h2','FORWARD / HIDDEN 2'],
+          [1740,'output','FORWARD / OUTPUT'],
+          [2260,'loss','LOSS AGAINST x*'],
+          [2780,'backward','BACKPROPAGATION'],
+          [3380,'update','PARAMETER UPDATE'],
+          [4040,'input','NEXT MINI-BATCH']
+        ];
+        phaseTimeline.forEach(([delay,phase,text]) => localTimers.push(setTimeout(()=>{
+          setPhase(phase,text);
+          if(phase==='update'){
+            weightUpdate?.classList.add('pulse');
+            if(updateStatus) updateStatus.textContent='θ ← θ − η∇θ𝓛';
+          } else {
+            weightUpdate?.classList.remove('pulse');
+            if(updateStatus) updateStatus.textContent=phase==='backward'?'∇θ𝓛 propagating':'Wₗ, bₗ fixed during forward';
+          }
+        }, delay)));
+
+        cfg.losses.forEach((value,i)=> localTimers.push(setTimeout(()=>{
+          const r=i/(cfg.losses.length-1);
+          const predVals=cfg.startPred.map((p,j)=> p+(finalPred[j]-p)*r);
+          const h1Vals=cfg.h1.map((v,j)=> Math.max(0,Math.min(1,v+(j%2===0?.025:-.018)*r)));
+          const h2Vals=cfg.h2.map((v,j)=> Math.max(0,Math.min(1,v+(j%2===0?.018:-.014)*r)));
+          if(loss) loss.textContent=value.toFixed(3);
+          if(lossChartValue) lossChartValue.textContent=value.toFixed(3);
+          if(epoch) epoch.textContent=String(cycleOffset+1+i*8).padStart(2,'0')+' / ∞';
+          if(hidden) hidden.textContent=vec(h1Vals.slice(0,4))+' …';
+          if(hidden2) hidden2.textContent=vec(h2Vals.slice(0,4))+' …';
+          if(pred) pred.textContent='x̂ = '+vec(predVals);
+          if(predOut) predOut.textContent=vec(predVals);
+          if(grad) grad.textContent=cfg.grads[i].toFixed(2);
+          updateNeuronColumn(h1Texts,h1Vals);
+          updateNeuronColumn(h2Texts,h2Vals);
+          updateNeuronColumn(outTexts,predVals);
+          const [x,y]=toPoint(value,i);
+          points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+          if(lossLine) lossLine.setAttribute('points',points.join(' '));
+          if(lossPoint){ lossPoint.setAttribute('cx',x.toFixed(1)); lossPoint.setAttribute('cy',y.toFixed(1)); }
+        }, 260+i*500)));
+
+        localTimers.push(setTimeout(()=>{
+          cycle += 1;
+          if(scenes[index]?.classList.contains('scene-train') && scenes[index]?.classList.contains('is-active')) runCycle();
+        }, 4700));
       };
-      if(lossLine) lossLine.setAttribute('points','10,94');
-      if(lossPoint){ lossPoint.setAttribute('cx','10'); lossPoint.setAttribute('cy','94'); }
-
-      const phaseTimeline = [
-        [250,'input','FORWARD / INPUT'],
-        [900,'h1','FORWARD / HIDDEN 1'],
-        [1500,'h2','FORWARD / HIDDEN 2'],
-        [2100,'output','FORWARD / OUTPUT'],
-        [2750,'loss','LOSS AGAINST x*'],
-        [3450,'backward','BACKPROPAGATION'],
-        [4350,'update','PARAMETER UPDATE'],
-        [5150,'input','NEXT MINI-BATCH']
-      ];
-      phaseTimeline.forEach(([delay,phase,text]) => localTimers.push(setTimeout(()=>{
-        setPhase(phase,text);
-        if(phase==='update'){
-          weightUpdate?.classList.add('pulse');
-          if(updateStatus) updateStatus.textContent='θ ← θ − η∇θ𝓛';
-        } else if(updateStatus && phase!=='backward') {
-          updateStatus.textContent=phase==='input'?'new batch loaded':'Wₗ, bₗ fixed during forward';
-        }
-      }, delay)));
-
-      const seq = [
-        [1,.842,[.81,.12,.64,.35],[.62,.41,.33,.77],[.91,.08,.69,.26],1.82],
-        [9,.611,[.83,.16,.61,.41],[.66,.44,.37,.71],[.95,.05,.71,.24],1.37],
-        [17,.428,[.84,.18,.60,.43],[.69,.48,.40,.66],[.97,.03,.72,.23],1.02],
-        [25,.291,[.86,.20,.58,.44],[.71,.52,.43,.61],[.99,.02,.73,.22],.74],
-        [33,.173,[.87,.18,.59,.42],[.74,.55,.45,.57],[1.00,.01,.73,.22],.53],
-        [41,.109,[.88,.18,.60,.41],[.76,.56,.47,.53],[1.00,.00,.74,.21],.34],
-        [49,.071,[.88,.18,.60,.41],[.77,.57,.47,.52],[1.00,.00,.74,.21],.21],
-        [57,.048,[.88,.18,.60,.41],[.77,.58,.48,.51],[1.00,.00,.74,.21],.16]
-      ];
-      seq.forEach((v,i)=> localTimers.push(setTimeout(()=>{
-        if(loss) loss.textContent=v[1].toFixed(3);
-        if(lossChartValue) lossChartValue.textContent=v[1].toFixed(3);
-        if(epoch) epoch.textContent=String(v[0]).padStart(2,'0')+' / 60';
-        if(hidden) hidden.textContent=`[${v[2][0].toFixed(2)}, ${v[2][1].toFixed(2)}, ${v[2][2].toFixed(2)}, ${v[2][3].toFixed(2)}, ⋯]`;
-        if(hidden2) hidden2.textContent=`[${v[3][0].toFixed(2)}, ${v[3][1].toFixed(2)}, ${v[3][2].toFixed(2)}, ${v[3][3].toFixed(2)}, ⋯]`;
-        const predText=`[${v[4][0].toFixed(2)}, ${v[4][1].toFixed(2)}, ${v[4][2].toFixed(2)}, ${v[4][3].toFixed(2)}]`;
-        if(pred) pred.textContent='x̂ = '+predText;
-        if(predOut) predOut.textContent=predText;
-        if(grad) grad.textContent=v[5].toFixed(2);
-        const [x,y]=toPoint(v[1],i);
-        points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-        if(lossLine) lossLine.setAttribute('points',points.join(' '));
-        if(lossPoint){ lossPoint.setAttribute('cx',x.toFixed(1)); lossPoint.setAttribute('cy',y.toFixed(1)); }
-      }, 300+i*650)));
+      runCycle();
     }
     function animateRepair(){
       const rows=[...root.querySelectorAll('[data-repair-row]')];

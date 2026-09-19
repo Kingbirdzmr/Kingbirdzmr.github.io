@@ -520,3 +520,39 @@ html[data-theme="light"] .system-canvas,html[data-theme="light"] .solver-box,htm
 @media(max-width:1180px){.expert-stage-v2{grid-template-columns:140px 24px minmax(0,1fr) 24px 150px}.solver-workspace{grid-template-columns:1.35fr .85fr}.bb-tree{height:250px}.expert-result-v2 .solution-vector{white-space:normal}.training-stage-v2{grid-template-columns:210px 1fr}.network-svg-v2{height:270px}}
 @media(max-width:1050px){.scene-expert,.scene-train{grid-template-columns:1fr}.scene-expert .scene-copy>p:last-child,.scene-train .scene-copy>p:last-child{max-width:760px}.expert-stage-v2{grid-template-columns:1fr}.expert-flow-arrow{height:24px;width:2px;margin:auto;background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 8%,transparent),var(--accent),color-mix(in srgb,var(--accent) 8%,transparent))}.expert-flow-arrow i{top:0;left:50%;transform:translateX(-50%)}.scene-expert.is-active .expert-flow-arrow i{animation:expertFlowMobile 1.75s linear infinite}.expert-stage-v2 .expert-panel{min-height:auto}.solver-box-v2{min-height:auto}.training-stage-v2{grid-template-columns:1fr}.training-console{display:grid;grid-template-columns:1fr 1fr;align-items:start}.training-console-head,.mini-batch-card{grid-column:1/-1}.weight-update{align-self:end}}
 @media(max-width:760px){.solver-workspace{grid-template-columns:1fr}.bb-tree{height:235px}.mpc-cells{grid-template-columns:repeat(4,1fr)}.mpc-legend{flex-wrap:wrap}.mpc-legend strong{margin-left:0;width:100%}.training-console{grid-template-columns:1fr}.target-pair,.training-metric-grid-v2{grid-column:1}.network-phase-bar{grid-template-columns:repeat(3,1fr)}.network-svg-v2{height:260px}.activation-probes{grid-template-columns:1fr}.activation-probes i{transform:rotate(90deg);text-align:center}.training-bottom-grid{grid-template-columns:1fr}.bb-branch-labels,.bb-status-labels{display:none}}
+
+/* v1.8.3 — expert scene full-width layout + looping training */
+.scene-expert{grid-template-columns:1fr!important;gap:18px!important;align-content:start;padding-top:30px!important}
+.scene-expert .scene-copy{display:grid;grid-template-columns:86px minmax(260px,.72fr) minmax(360px,1fr);gap:0 20px;align-items:center;padding:0 6px 8px!important}
+.scene-expert .scene-copy .scene-number{grid-row:1/4;align-self:start;font-size:4.1rem;margin-top:-4px}
+.scene-expert .scene-copy .eyebrow{margin:0 0 3px}
+.scene-expert .scene-copy h3{margin:.1rem 0 0;font-size:clamp(1.7rem,2.1vw,2.45rem);max-width:none}
+.scene-expert .scene-copy>p:last-child{grid-column:3;grid-row:1/4;max-width:none!important;margin:0!important;align-self:center;font-size:.82rem;line-height:1.75}
+.expert-stage-v2{grid-template-columns:180px 20px minmax(0,1fr) 20px 180px!important;gap:10px!important;align-items:stretch;width:100%;min-width:0}
+.expert-stage-v2 .expert-panel{min-height:430px!important;padding:16px!important}
+.solver-box-v2{min-height:430px!important;padding:15px 17px!important}
+.solver-workspace{grid-template-columns:minmax(0,1.7fr) minmax(190px,.62fr)!important;gap:12px!important}
+.bb-tree{height:242px!important}
+.mpc-horizon-strip{margin-top:10px!important;padding:8px 10px!important}
+.mpc-cell{height:32px!important}
+.expert-result-v2 .solution-details{gap:7px!important}
+
+/* make the training scene full-width too, so the loop reads as a real process */
+.scene-train{grid-template-columns:1fr!important;gap:18px!important;align-content:start;padding-top:30px!important}
+.scene-train .scene-copy{display:grid;grid-template-columns:86px minmax(260px,.72fr) minmax(360px,1fr);gap:0 20px;align-items:center;padding:0 6px 8px!important}
+.scene-train .scene-copy .scene-number{grid-row:1/4;align-self:start;font-size:4.1rem;margin-top:-4px}
+.scene-train .scene-copy .eyebrow{margin:0 0 3px}.scene-train .scene-copy h3{margin:.1rem 0 0;font-size:clamp(1.7rem,2.1vw,2.45rem);max-width:none}
+.scene-train .scene-copy>p:last-child{grid-column:3;grid-row:1/4;max-width:none!important;margin:0!important;align-self:center;font-size:.82rem;line-height:1.75}
+.training-stage-v2{grid-template-columns:250px minmax(0,1fr)!important;gap:16px!important}
+.network-svg-v2{height:320px!important}
+
+@media(max-width:1050px){
+  .scene-expert .scene-copy,.scene-train .scene-copy{grid-template-columns:68px 1fr;gap:0 14px}
+  .scene-expert .scene-copy>p:last-child,.scene-train .scene-copy>p:last-child{grid-column:2;grid-row:auto;margin-top:8px!important}
+  .expert-stage-v2{grid-template-columns:1fr!important}.expert-flow-arrow{height:24px!important;width:2px!important;margin:auto!important}
+  .training-stage-v2{grid-template-columns:1fr!important}
+}
+@media(max-width:680px){
+  .scene-expert .scene-copy,.scene-train .scene-copy{grid-template-columns:54px 1fr}
+  .scene-expert .scene-copy .scene-number,.scene-train .scene-copy .scene-number{font-size:2.8rem}
+}
