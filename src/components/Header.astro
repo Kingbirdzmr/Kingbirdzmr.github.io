@@ -21,8 +21,17 @@ const languagePath = (target: Lang) => {
 ---
 <header class="site-header" data-header>
   <a class="brand" href={`/${lang}/`} aria-label={`${profile.name} home`}>
-    <span class="brand-mark">{profile.initials}</span>
-    <span class="brand-name">{profile.name}</span>
+    <span class="brand-mark" aria-hidden="true">
+      <img
+        class="brand-logo"
+        src="/brand/hokudai-symbol.png"
+        alt=""
+        loading="eager"
+        onerror="this.hidden=true; this.nextElementSibling.hidden=false;"
+      />
+      <span class="brand-logo-fallback" hidden>HU</span>
+    </span>
+    <span class="brand-name">{profile.displayName[lang]}</span>
   </a>
   <nav class="main-nav" aria-label="Main navigation">
     {nav.map(([slug, label]) => <a href={`/${lang}/${slug}/`} class:list={{active: path.includes(`/${slug}/`)}}>{label}</a>)}

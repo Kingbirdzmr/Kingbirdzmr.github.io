@@ -1,8 +1,23 @@
 import type { Localized } from '../types';
 
 export const profile = {
+  // Canonical English name used for metadata / document titles.
   name: 'Mingrui Zheng',
-  nativeName: '郑铭睿',
+
+  // Name shown in the site header for each language.
+  displayName: {
+    en: 'Mingrui Zheng',
+    zh: '郑铭睿',
+    ja: '鄭　銘睿'
+  } satisfies Localized,
+
+  // Smaller name shown below the large hero title.
+  nativeName: {
+    en: '郑铭睿',
+    zh: '郑铭睿',
+    ja: '鄭　銘睿'
+  } satisfies Localized,
+
   initials: 'MZ',
   role: {
     en: 'Ph.D. Student · Systems Science and Informatics',
