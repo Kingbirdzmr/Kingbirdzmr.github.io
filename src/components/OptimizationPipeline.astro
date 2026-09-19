@@ -1,0 +1,346 @@
+---
+import type { Lang } from '../types';
+const { lang } = Astro.props as { lang: Lang };
+const L = (en:string, zh:string, ja:string) => ({ en, zh, ja });
+
+const t = {
+  eyebrow: L('RESEARCH WORKFLOW','研究流程','研究ワークフロー'),
+  title: L('From optimization model to deployable AI solver','从最优化模型到可部署的 AI 求解器','最適化モデルから実運用可能なAIソルバへ'),
+  intro: L(
+    'The animation below shows the workflow I repeatedly use in learning-augmented optimization: formulate the problem, obtain expert solutions with an exact solver, learn the solution map with a neural network, repair the prediction to satisfy hard constraints, and compare it with the optimum.',
+    '下面的动画展示了我在学习增强优化中反复使用的一条主线：提出最优化问题，用精确算法获取专家最优解，利用神经网络学习“状态→解”的映射，对预测解进行规范化与可行性修复，最后与最优解比较。',
+    '以下のアニメーションは、学習拡張型最適化で繰り返し用いる流れを示します。最適化問題を定式化し、厳密ソルバで専門家解を取得し、ニューラルネットワークで「状態→解」の写像を学習し、予測解を制約に適合するよう修復した後、最適解と比較します。'
+  ),
+  play: L('Play','播放','再生'),
+  pause: L('Pause','暂停','一時停止'),
+  replay: L('Replay','重播','リプレイ'),
+  current: L('Current stage','当前阶段','現在の段階'),
+  scenes: [
+    { key:'formulate', short:L('Formulate','建模','定式化'), title:L('Formulate the optimization problem','提出最优化问题','最適化問題を定式化'), desc:L('Convert a networked-system task into decision variables, objective functions, and hard constraints.','把网络化系统任务转化为决策变量、目标函数和硬约束。','ネットワーク化システムの課題を、意思決定変数・目的関数・ハード制約へ変換します。') },
+    { key:'expert', short:L('Expert solver','专家求解','専門家ソルバ'), title:L('Compute expert optimal solutions','用精确算法求专家解','厳密アルゴリズムで専門家解を求める'), desc:L('Solve representative instances with MPC, MILP/MINLP, decomposition, or other exact/near-exact algorithms.','用 MPC、MILP/MINLP、分解等精确或近精确算法求解代表性实例。','MPC、MILP/MINLP、分解法などの厳密・準厳密アルゴリズムで代表的なインスタンスを解きます。') },
+    { key:'dataset', short:L('Expert dataset','专家数据集','専門家データ'), title:L('Build the expert dataset','构建专家数据集','専門家データセットを構築'), desc:L('Pair every system state s with its expert solution x* to create supervised training data.','将每个系统状态 s 与对应的专家解 x* 配对，得到监督学习数据集。','各システム状態 s と専門家解 x* を対応付け、教師あり学習データを構築します。') },
+    { key:'train', short:L('Train network','训练网络','ネットワーク学習'), title:L('Learn the state-to-solution map','训练神经网络学习状态到解的映射','状態から解への写像を学習'), desc:L('Forward activations produce a candidate solution; the expert target generates loss; gradients propagate backward to update weights.','前向传播生成候选解，专家解作为监督目标计算损失，再通过反向传播更新权重。','順伝播で候補解を生成し、専門家解との損失を計算し、逆伝播で重みを更新します。') },
+    { key:'repair', short:L('Repair','可行性修复','実行可能化'), title:L('Normalize and repair the predicted solution','规范化预测解并修复约束','予測解を正規化・修復'), desc:L('Projection, clipping, rounding, rebalancing, or a lightweight repair problem converts x-hat into a feasible x-tilde.','通过投影、截断、取整、再平衡或轻量修复问题，将 x̂ 转换为满足约束的 x̃。','射影、クリッピング、丸め、再配分、軽量修復問題により x̂ を実行可能な x̃ に変換します。') },
+    { key:'compare', short:L('Compare','最优性对比','最適解比較'), title:L('Compare with the optimal solution','与最优解进行对比','最適解と比較'), desc:L('Measure optimality gap, feasibility, latency, and robustness: the goal is near-optimal quality at dramatically lower online cost.','比较最优性差距、可行性、时延与鲁棒性：目标是在显著降低在线求解开销的同时保持近最优质量。','最適性ギャップ、実行可能性、遅延、ロバスト性を比較し、オンライン計算量を大幅に削減しつつ準最適性能を維持します。') }
+  ],
+  labels: {
+    state: L('system state s','系统状态 s','システム状態 s'),
+    objective: L('objective','目标','目的関数'),
+    constraints: L('constraints','约束','制約'),
+    exact: L('exact / expert solver','精确 / 专家求解器','厳密 / 専門家ソルバ'),
+    optimum: L('optimal solution x*','最优解 x*','最適解 x*'),
+    samples: L('expert samples','专家样本','専門家サンプル'),
+    train: L('train','训练','学習'),
+    val: L('validation','验证','検証'),
+    test: L('test','测试','テスト'),
+    features: L('input features','输入特征','入力特徴'),
+    hidden1: L('hidden layer 1','隐藏层 1','中間層 1'),
+    hidden2: L('hidden layer 2','隐藏层 2','中間層 2'),
+    output: L('output neurons','输出神经元','出力ニューロン'),
+    forward: L('forward pass','前向传播','順伝播'),
+    loss: L('imitation + constraint loss','模仿 + 约束损失','模倣 + 制約損失'),
+    backward: L('backpropagation','反向传播','逆伝播'),
+    candidate: L('candidate x-hat','候选解 x̂','候補解 x̂'),
+    repair: L('feasibility repair','可行性修复','実行可能化修復'),
+    feasible: L('feasible x-tilde','可行解 x̃','実行可能解 x̃'),
+    violated: L('violated','违反','違反'),
+    satisfied: L('satisfied','满足','満足'),
+    metric: L('metric','指标','指標'),
+    exactCol: L('Exact','精确算法','厳密解法'),
+    aiCol: L('AI + Repair','AI + 修复','AI + 修復'),
+    gap: L('Optimality gap','最优性差距','最適性ギャップ'),
+    feasibleRate: L('Feasibility','可行性','実行可能性'),
+    runtime: L('Online runtime','在线求解时间','オンライン計算時間'),
+    optimumQuality: L('reference optimum','最优基准','最適基準'),
+    nearOptimal: L('near-optimal','近最优','準最適'),
+    slow: L('heavy optimization','高开销求解','高計算コスト'),
+    fast: L('fast inference','快速推理','高速推論'),
+    repairOps: [L('projection','投影','射影'),L('clipping','截断','クリッピング'),L('rounding','取整','丸め'),L('repair LP','修复 LP','修復 LP')]
+  }
+};
+---
+<section class="section-shell optimization-demo-section" data-reveal>
+  <div class="research-section-split optimization-demo-heading">
+    <div><p class="eyebrow">03 / INTERACTIVE METHOD</p><h2>{t.title[lang]}</h2></div>
+    <p>{t.intro[lang]}</p>
+  </div>
+
+  <div class="optimization-demo" data-optimization-demo data-step="0">
+    <div class="optimization-demo-topbar">
+      <div class="demo-status">
+        <span class="demo-live-dot"></span>
+        <span>{t.current[lang]}</span>
+        <strong data-stage-label>{t.scenes[0].short[lang]}</strong>
+      </div>
+      <div class="demo-controls" aria-label="Animation controls">
+        <button type="button" data-demo-play aria-label={t.play[lang]}>▶ <span>{t.play[lang]}</span></button>
+        <button type="button" data-demo-pause aria-label={t.pause[lang]}>Ⅱ <span>{t.pause[lang]}</span></button>
+        <button type="button" data-demo-replay aria-label={t.replay[lang]}>↻ <span>{t.replay[lang]}</span></button>
+      </div>
+    </div>
+
+    <div class="demo-progress-rail" aria-hidden="true"><span data-demo-progress></span></div>
+
+    <nav class="demo-stage-nav" aria-label="Animation stages">
+      {t.scenes.map((scene, i) => (
+        <button type="button" data-demo-step={i} class={i === 0 ? 'active' : ''}>
+          <span>{String(i + 1).padStart(2,'0')}</span>
+          <b>{scene.short[lang]}</b>
+        </button>
+      ))}
+    </nav>
+
+    <div class="demo-viewport">
+      <div class="demo-scene scene-formulate is-active" data-scene="0">
+        <div class="scene-copy">
+          <span class="scene-number">01</span>
+          <p class="eyebrow">FORMULATE</p>
+          <h3>{t.scenes[0].title[lang]}</h3>
+          <p>{t.scenes[0].desc[lang]}</p>
+        </div>
+        <div class="formulate-stage">
+          <div class="system-canvas">
+            <span class="uav-symbol uav-a">UAV</span>
+            <span class="uav-symbol uav-b">UAV</span>
+            <span class="device-symbol dev-a">D1</span><span class="device-symbol dev-b">D2</span><span class="device-symbol dev-c">D3</span>
+            <span class="system-link link-1"></span><span class="system-link link-2"></span><span class="system-link link-3"></span><span class="system-link link-4"></span>
+            <span class="packet packet-a"></span><span class="packet packet-b"></span>
+          </div>
+          <div class="model-stack">
+            <div><small>{t.labels.state[lang]}</small><strong>s = [h, E, q, γ, …]</strong></div>
+            <div><small>{t.labels.objective[lang]}</small><strong>min&nbsp; f(x; s)</strong></div>
+            <div><small>{t.labels.constraints[lang]}</small><strong>g(x;s) ≤ 0 &nbsp; · &nbsp; h(x;s)=0</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-scene scene-expert" data-scene="1">
+        <div class="scene-copy">
+          <span class="scene-number">02</span>
+          <p class="eyebrow">EXPERT SOLVER</p>
+          <h3>{t.scenes[1].title[lang]}</h3>
+          <p>{t.scenes[1].desc[lang]}</p>
+        </div>
+        <div class="expert-stage">
+          <div class="expert-instance"><span>sᵢ</span><small>{t.labels.state[lang]}</small></div>
+          <div class="expert-arrow"><i></i></div>
+          <div class="solver-box">
+            <div class="solver-header"><span>{t.labels.exact[lang]}</span><strong>MILP / MPC</strong></div>
+            <div class="solver-tree">
+              <i class="tree-node root"></i><i class="tree-node n1"></i><i class="tree-node n2"></i><i class="tree-node n3"></i><i class="tree-node n4"></i>
+              <b class="tree-edge e1"></b><b class="tree-edge e2"></b><b class="tree-edge e3"></b><b class="tree-edge e4"></b>
+            </div>
+            <div class="solver-iterations"><span>LB</span><em data-lb>0.62</em><span>UB</span><em data-ub>1.31</em><span>gap</span><em data-gap>52.7%</em></div>
+          </div>
+          <div class="expert-arrow"><i></i></div>
+          <div class="expert-solution"><span>x*</span><small>{t.labels.optimum[lang]}</small><div class="solution-vector">[1, 0, .74, .21, 1]</div></div>
+        </div>
+      </div>
+
+      <div class="demo-scene scene-dataset" data-scene="2">
+        <div class="scene-copy">
+          <span class="scene-number">03</span>
+          <p class="eyebrow">EXPERT DATA</p>
+          <h3>{t.scenes[2].title[lang]}</h3>
+          <p>{t.scenes[2].desc[lang]}</p>
+        </div>
+        <div class="dataset-stage">
+          <div class="dataset-table">
+            <div class="dataset-head"><span>#</span><span>s</span><span>x*</span><span>split</span></div>
+            {Array.from({length:7}).map((_,i) => (
+              <div class="dataset-row" style={`--row:${i}`}><span>{String(i+1).padStart(2,'0')}</span><span>[{(0.12+i*.09).toFixed(2)}, {(0.81-i*.07).toFixed(2)}, …]</span><span>[{i%2}, {(0.67+i*.03).toFixed(2)}, …]</span><span>{i<5?t.labels.train[lang]:i===5?t.labels.val[lang]:t.labels.test[lang]}</span></div>
+            ))}
+          </div>
+          <div class="dataset-counter"><strong data-sample-count>0</strong><span>{t.labels.samples[lang]}</span><small>D = &#123;(sᵢ, xᵢ*)&#125;</small></div>
+        </div>
+      </div>
+
+      <div class="demo-scene scene-train" data-scene="3">
+        <div class="scene-copy">
+          <span class="scene-number">04</span>
+          <p class="eyebrow">TRAIN</p>
+          <h3>{t.scenes[3].title[lang]}</h3>
+          <p>{t.scenes[3].desc[lang]}</p>
+        </div>
+        <div class="training-stage">
+          <div class="training-target">
+            <small>expert target</small><strong>x* = [1, 0, .74]</strong>
+            <small>{t.labels.loss[lang]}</small><b data-train-loss>0.842</b>
+            <small>epoch</small><b data-train-epoch>01 / 60</b>
+          </div>
+          <div class="network-stage">
+            <div class="network-labels"><span>{t.labels.features[lang]}</span><span>{t.labels.hidden1[lang]}</span><span>{t.labels.hidden2[lang]}</span><span>{t.labels.output[lang]}</span></div>
+            <svg class="network-svg" viewBox="0 0 660 260" role="img" aria-label="Animated neural network">
+              <g class="nn-edges nn-edges-forward">
+                {Array.from({length:5}).map((_,i) => Array.from({length:6}).map((__,j)=><line x1="70" y1={36+i*46} x2="245" y2={24+j*40}></line>))}
+                {Array.from({length:6}).map((_,i) => Array.from({length:6}).map((__,j)=><line x1="260" y1={24+i*40} x2="425" y2={24+j*40}></line>))}
+                {Array.from({length:6}).map((_,i) => Array.from({length:3}).map((__,j)=><line x1="440" y1={24+i*40} x2="600" y2={76+j*54}></line>))}
+              </g>
+              <g class="nn-edges nn-edges-backward">
+                <path d="M606 76 C530 8, 440 8, 430 24"/><path d="M606 130 C530 236, 440 236, 430 224"/><path d="M425 104 C350 8,270 8,260 24"/><path d="M245 144 C170 246,95 246,70 220"/>
+              </g>
+              <g class="nn-layer layer-input">{Array.from({length:5}).map((_,i)=><circle cx="70" cy={36+i*46} r="10"></circle>)}</g>
+              <g class="nn-layer layer-h1">{Array.from({length:6}).map((_,i)=><circle cx="252" cy={24+i*40} r="10"></circle>)}</g>
+              <g class="nn-layer layer-h2">{Array.from({length:6}).map((_,i)=><circle cx="432" cy={24+i*40} r="10"></circle>)}</g>
+              <g class="nn-layer layer-output">{Array.from({length:3}).map((_,i)=><circle cx="606" cy={76+i*54} r="11"></circle>)}</g>
+              <circle class="activation-dot dot-1" r="5"><animateMotion dur="1.5s" repeatCount="indefinite" path="M70 36 L252 64 L432 104 L606 130" /></circle>
+              <circle class="activation-dot dot-2" r="5"><animateMotion begin=".45s" dur="1.5s" repeatCount="indefinite" path="M70 128 L252 144 L432 144 L606 184" /></circle>
+              <circle class="activation-dot dot-3" r="5"><animateMotion begin=".8s" dur="1.5s" repeatCount="indefinite" path="M70 220 L252 224 L432 184 L606 76" /></circle>
+              <circle class="gradient-dot" r="4"><animateMotion dur="1.9s" repeatCount="indefinite" path="M606 130 C530 236,440 236,430 224 C350 250,270 250,260 224 C170 246,95 246,70 220" /></circle>
+            </svg>
+            <div class="activation-readout"><span>s = [.72, .18, .91, .43, .66]</span><strong>→</strong><span data-hidden-values>h₁ = [.81, .12, .64, …]</span><strong>→</strong><span>x̂ = [.91, .08, .69]</span></div>
+            <div class="training-flow-legend"><span class="forward-key">● {t.labels.forward[lang]}</span><span class="backward-key">● {t.labels.backward[lang]}</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-scene scene-repair" data-scene="4">
+        <div class="scene-copy">
+          <span class="scene-number">05</span>
+          <p class="eyebrow">FEASIBILITY</p>
+          <h3>{t.scenes[4].title[lang]}</h3>
+          <p>{t.scenes[4].desc[lang]}</p>
+        </div>
+        <div class="repair-stage">
+          <div class="candidate-vector"><small>{t.labels.candidate[lang]}</small><strong>x̂ = [1.08, −0.04, 0.73, 1.27]</strong></div>
+          <div class="repair-checks">
+            <div data-repair-row="0" class="repair-check invalid"><span>P ≤ 1.00</span><strong>1.08</strong><em>× {t.labels.violated[lang]}</em></div>
+            <div data-repair-row="1" class="repair-check invalid"><span>E ≥ 0</span><strong>−0.04</strong><em>× {t.labels.violated[lang]}</em></div>
+            <div data-repair-row="2" class="repair-check invalid"><span>y ∈ &#123;0,1&#125;</span><strong>0.73</strong><em>× {t.labels.violated[lang]}</em></div>
+            <div data-repair-row="3" class="repair-check invalid"><span>Στ ≤ T</span><strong>1.27T</strong><em>× {t.labels.violated[lang]}</em></div>
+          </div>
+          <div class="repair-ops">{t.labels.repairOps.map((op,i)=><span style={`--op:${i}`}>{op[lang]}</span>)}</div>
+          <div class="repaired-vector" data-repaired-vector><small>{t.labels.feasible[lang]}</small><strong>x̃ = [1.00, 0.00, 1, 0.92]</strong><b>✓ {t.labels.satisfied[lang]}</b></div>
+        </div>
+      </div>
+
+      <div class="demo-scene scene-compare" data-scene="5">
+        <div class="scene-copy">
+          <span class="scene-number">06</span>
+          <p class="eyebrow">COMPARE</p>
+          <h3>{t.scenes[5].title[lang]}</h3>
+          <p>{t.scenes[5].desc[lang]}</p>
+        </div>
+        <div class="compare-stage">
+          <div class="compare-header"><span>{t.labels.metric[lang]}</span><span>{t.labels.exactCol[lang]}</span><span>{t.labels.aiCol[lang]}</span></div>
+          <div class="compare-row"><b>{t.labels.gap[lang]}</b><div><strong>0%</strong><small>{t.labels.optimumQuality[lang]}</small></div><div class="ai-good"><strong>ε%</strong><small>{t.labels.nearOptimal[lang]}</small></div></div>
+          <div class="compare-row"><b>{t.labels.feasibleRate[lang]}</b><div><strong>100%</strong><small>hard constraints</small></div><div class="ai-good"><strong>100%</strong><small>after repair</small></div></div>
+          <div class="compare-row runtime-row"><b>{t.labels.runtime[lang]}</b><div><span class="runtime-bar exact-runtime"></span><small>{t.labels.slow[lang]}</small></div><div><span class="runtime-bar ai-runtime"></span><small>{t.labels.fast[lang]}</small></div></div>
+          <div class="compare-summary"><span>x*</span><i>↔</i><span>x̃</span><strong>near-optimal + feasible + fast</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-caption">
+      <span data-caption-index>01</span>
+      <div><strong data-caption-title>{t.scenes[0].title[lang]}</strong><p data-caption-desc>{t.scenes[0].desc[lang]}</p></div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector('[data-optimization-demo]');
+    if (!root) return;
+    const scenes = [...root.querySelectorAll('[data-scene]')];
+    const buttons = [...root.querySelectorAll('[data-demo-step]')];
+    const label = root.querySelector('[data-stage-label]');
+    const progress = root.querySelector('[data-demo-progress]');
+    const capIndex = root.querySelector('[data-caption-index]');
+    const capTitle = root.querySelector('[data-caption-title]');
+    const capDesc = root.querySelector('[data-caption-desc]');
+    const playBtn = root.querySelector('[data-demo-play]');
+    const pauseBtn = root.querySelector('[data-demo-pause]');
+    const replayBtn = root.querySelector('[data-demo-replay]');
+    const stageData = JSON.parse(root.dataset.stageData || 'null');
+    const fallback = [...buttons].map((button, i) => ({ short: button.querySelector('b')?.textContent || '', title: scenes[i]?.querySelector('h3')?.textContent || '', desc: scenes[i]?.querySelector('.scene-copy>p:last-child')?.textContent || '' }));
+    const data = stageData || fallback;
+    const durations = [4300, 5000, 4600, 6800, 5600, 5000];
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let index = 0;
+    let playing = !reduce;
+    let timer = null;
+    let localTimers = [];
+
+    const clearLocal = () => { localTimers.forEach(clearTimeout); localTimers = []; };
+    const clearMain = () => { if (timer) clearTimeout(timer); timer = null; };
+
+    function animateExpert(){
+      const lb = root.querySelector('[data-lb]');
+      const ub = root.querySelector('[data-ub]');
+      const gap = root.querySelector('[data-gap]');
+      if(lb) lb.textContent='0.620'; if(ub) ub.textContent='1.310'; if(gap) gap.textContent='52.7%';
+      const seq = [[.62,1.31,'52.7%'],[.78,1.12,'30.4%'],[.89,1.02,'12.7%'],[.96,.99,'3.0%'],[.981,.984,'0.3%']];
+      seq.forEach((v,i)=> localTimers.push(setTimeout(()=>{ if(lb) lb.textContent=v[0].toFixed(3); if(ub) ub.textContent=v[1].toFixed(3); if(gap) gap.textContent=v[2]; }, 600+i*620)));
+    }
+    function animateDataset(){
+      const count = root.querySelector('[data-sample-count]');
+      if(count) count.textContent='0';
+      let n=0;
+      const target=2400;
+      const tick=()=>{ n=Math.min(target,n+120); if(count) count.textContent=n.toLocaleString(); if(n<target) localTimers.push(setTimeout(tick,80)); };
+      localTimers.push(setTimeout(tick,300));
+    }
+    function animateTraining(){
+      const loss = root.querySelector('[data-train-loss]');
+      const epoch = root.querySelector('[data-train-epoch]');
+      const hidden = root.querySelector('[data-hidden-values]');
+      if(loss) loss.textContent='0.842'; if(epoch) epoch.textContent='01 / 60'; if(hidden) hidden.textContent='h₁ = [.81, .12, .64, …]';
+      const losses=[.842,.611,.428,.291,.173,.109,.071,.048];
+      losses.forEach((value,i)=> localTimers.push(setTimeout(()=>{
+        if(loss) loss.textContent=value.toFixed(3);
+        if(epoch) epoch.textContent=String(Math.min(60,1+i*8)).padStart(2,'0')+' / 60';
+        if(hidden) hidden.textContent=`h₁ = [${(.81+i*.01).toFixed(2)}, ${(.12+i*.008).toFixed(2)}, ${(.64-i*.006).toFixed(2)}, …]`;
+      }, 450+i*610)));
+    }
+    function animateRepair(){
+      const rows=[...root.querySelectorAll('[data-repair-row]')];
+      const final=root.querySelector('[data-repaired-vector]');
+      rows.forEach(r=>r.classList.remove('fixed'));
+      final?.classList.remove('show');
+      rows.forEach((row,i)=> localTimers.push(setTimeout(()=>row.classList.add('fixed'),700+i*820)));
+      localTimers.push(setTimeout(()=>final?.classList.add('show'),4200));
+    }
+    function runSceneAnimation(i){
+      clearLocal();
+      if(i===1) animateExpert();
+      if(i===2) animateDataset();
+      if(i===3) animateTraining();
+      if(i===4) animateRepair();
+    }
+
+    function show(i, keepPlaying=true){
+      index=(i+scenes.length)%scenes.length;
+      root.dataset.step=String(index);
+      scenes.forEach((scene,j)=>{ scene.classList.remove('is-active'); scene.setAttribute('aria-hidden', j===index?'false':'true'); });
+      // force reflow so per-scene CSS animations restart
+      void root.offsetWidth;
+      scenes[index]?.classList.add('is-active');
+      buttons.forEach((button,j)=>button.classList.toggle('active',j===index));
+      if(label) label.textContent=data[index]?.short || '';
+      if(progress) progress.style.width=`${((index+1)/scenes.length)*100}%`;
+      if(capIndex) capIndex.textContent=String(index+1).padStart(2,'0');
+      if(capTitle) capTitle.textContent=data[index]?.title || '';
+      if(capDesc) capDesc.textContent=data[index]?.desc || '';
+      runSceneAnimation(index);
+      clearMain();
+      if(playing && keepPlaying) timer=setTimeout(()=>show((index+1)%scenes.length,true),durations[index]);
+    }
+
+    buttons.forEach((button,i)=>button.addEventListener('click',()=>{ playing=false; show(i,false); }));
+    playBtn?.addEventListener('click',()=>{ playing=true; show(index,true); });
+    pauseBtn?.addEventListener('click',()=>{ playing=false; clearMain(); });
+    replayBtn?.addEventListener('click',()=>{ playing=true; show(0,true); });
+
+    const observer=new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){ if(!reduce && playing && !timer) show(index,true); }
+        else clearMain();
+      });
+    },{threshold:.22});
+    observer.observe(root);
+    show(0,false);
+    if(!reduce) { playing=true; timer=setTimeout(()=>show(1,true),durations[0]); }
+  })();
+</script>
+
