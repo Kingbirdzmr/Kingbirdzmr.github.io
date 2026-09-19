@@ -23,7 +23,8 @@ const { lang } = Astro.props as { lang: Lang };
       [310,85,0],[155,190,1],[475,205,2],[210,350,3],[400,370,4],[310,245,5]
     ].map(([x,y,i]) => (
       <g class={`graph-node node-${i}`} transform={`translate(${x} ${y})`} tabindex="0">
-        <circle r="34" />
+        <circle class="node-halo" r="44" />
+        <circle class="node-shell" r="34" />
         <circle class="node-core" r="8" />
         <text y="58" text-anchor="middle">{researchKeywords[i].label[lang]}</text>
       </g>
