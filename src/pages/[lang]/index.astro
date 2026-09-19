@@ -2,7 +2,6 @@
 import MainLayout from '../../layouts/MainLayout.astro';
 import ResearchGraph from '../../components/ResearchGraph.astro';
 import HomeIntro from '../../components/HomeIntro.astro';
-import ProjectCard from '../../components/ProjectCard.astro';
 import PublicationCard from '../../components/PublicationCard.astro';
 import { langPaths, isLang } from '../../utils/routes';
 import { profile, researchKeywords } from '../../data/profile';
@@ -17,6 +16,17 @@ if (!isLang(param)) return Astro.redirect('/en/');
 const lang: Lang = param;
 const title = `${profile.name} | Academic Homepage`;
 const description = profile.statement[lang];
+const homepageThemeSlugs = [
+  'communication-control-codesign',
+  'multi-uav-autonomy',
+  'learning-optimization',
+  'cyber-physical-security',
+  'uav-edge-vnf',
+  'secure-energy-aware-iot'
+];
+const homepageThemes = homepageThemeSlugs
+  .map((slug) => projects.find((project) => project.slug === slug))
+  .filter(Boolean);
 ---
 <MainLayout {lang} {title} {description}>
   <HomeIntro {lang} />
@@ -42,8 +52,16 @@ const description = profile.statement[lang];
     <div><p class="eyebrow">01 / RESEARCH</p><h2>{ui.common.selectedResearch[lang]}</h2></div>
     <p>{profile.statement[lang]}</p>
   </section>
-  <section class="section-shell project-grid">
-    {projects.filter(p=>p.featured).map((project, index) => <div data-reveal><ProjectCard {project} {lang} {index} /></div>)}
+  <section class="section-shell homepage-research-grid">
+    {homepageThemes.map((theme, index) => (
+      <article class="homepage-research-card" data-reveal>
+        <span class="homepage-research-index">0{index + 1}</span>
+        <p class="eyebrow">{theme!.eyebrow[lang]}</p>
+        <h3>{theme!.title[lang]}</h3>
+        <p>{theme!.summary[lang]}</p>
+        <div class="tag-row">{theme!.tags.map((tag) => <span>{tag}</span>)}</div>
+      </article>
+    ))}
   </section>
 
   <section class="section-shell publication-section" data-reveal>

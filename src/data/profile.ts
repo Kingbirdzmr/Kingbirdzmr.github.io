@@ -42,10 +42,10 @@ export const profile = {
 };
 
 export const researchKeywords = [
-  { key: 'uav', label: { en: 'Multi-UAV Systems', zh: '多无人机系统', ja: 'マルチUAVシステム' } },
-  { key: 'control', label: { en: 'Networked Control', zh: '网络化控制', ja: 'ネットワーク制御' } },
-  { key: 'wireless', label: { en: 'Wireless Communications', zh: '无线通信', ja: '無線通信' } },
-  { key: 'optimization', label: { en: 'Optimization', zh: '优化', ja: '最適化' } },
+  { key: 'uav', label: { en: 'Multi-UAV Autonomy', zh: '多无人机自主系统', ja: 'マルチUAV自律システム' } },
+  { key: 'codesign', label: { en: 'Communication–Control Co-Design', zh: '通信—控制协同设计', ja: '通信・制御協調設計' } },
+  { key: 'wireless-iot', label: { en: 'Secure Wireless IoT', zh: '安全无线物联网', ja: 'セキュア無線IoT' } },
+  { key: 'edge', label: { en: 'Edge Intelligence & VNF', zh: '边缘智能与VNF', ja: 'エッジ知能・VNF' } },
   { key: 'security', label: { en: 'Cyber-Physical Security', zh: '信息物理安全', ja: 'サイバーフィジカルセキュリティ' } },
-  { key: 'learning', label: { en: 'Learning for Optimization', zh: '面向优化的学习', ja: '最適化のための学習' } }
+  { key: 'learning', label: { en: 'Learning-Augmented Optimization', zh: '学习增强优化', ja: '学習拡張型最適化' } }
 ];

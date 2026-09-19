@@ -3,33 +3,33 @@ import type { Lang } from '../types';
 import { profile } from '../data/profile';
 const { lang } = Astro.props as { lang: Lang };
 const label = {
-  en: 'ACADEMIC HOMEPAGE',
+  en: 'Academic Homepage',
   zh: '个人学术主页',
   ja: '個人学術ホームページ'
+};
+const place = {
+  en: 'Hokkaido University · Sapporo, Japan',
+  zh: '北海道大学 · 日本札幌',
+  ja: '北海道大学・札幌'
 };
 ---
 <div class="home-intro" data-home-intro aria-hidden="true">
   <div class="home-intro-inner">
-    <svg class="home-intro-constellation" viewBox="0 0 260 150" role="presentation">
-      <g class="intro-links">
-        <path d="M42 88 L92 42 L148 72 L211 36" />
-        <path d="M42 88 L116 120 L148 72 L219 111" />
-        <path d="M92 42 L116 120" />
-        <path d="M148 72 L211 36 L219 111" />
-      </g>
-      <g class="intro-nodes">
-        <circle cx="42" cy="88" r="5" />
-        <circle cx="92" cy="42" r="5" />
-        <circle cx="116" cy="120" r="5" />
-        <circle cx="148" cy="72" r="7" />
-        <circle cx="211" cy="36" r="5" />
-        <circle cx="219" cy="111" r="5" />
-      </g>
-    </svg>
-    <p class="home-intro-kicker">COMMUNICATION · CONTROL · INTELLIGENCE</p>
+    <div class="home-intro-scene" role="presentation">
+      <div class="intro-moon"></div>
+      <div class="intro-sakura intro-sakura-a"></div>
+      <div class="intro-sakura intro-sakura-b"></div>
+      <svg class="intro-ridges" viewBox="0 0 320 110">
+        <path d="M0 78 C26 66 42 44 60 38 C78 33 88 49 104 50 C120 51 132 26 154 22 C182 17 188 47 214 49 C236 50 248 31 268 29 C289 27 304 41 320 56" />
+        <path d="M0 90 C35 84 58 64 82 59 C104 55 122 69 143 70 C167 71 182 51 204 48 C228 45 248 57 267 60 C289 64 305 72 320 80" />
+      </svg>
+      <div class="intro-ground"></div>
+    </div>
+    <p class="home-intro-kicker">SAPPORO · HOKKAIDO · JAPAN</p>
     <div class="home-intro-name"><span>MINGRUI</span><span>ZHENG</span></div>
     <div class="home-intro-rule"></div>
     <p class="home-intro-localized">{profile.displayName[lang]} · {label[lang]}</p>
+    <p class="home-intro-place">{place[lang]}</p>
   </div>
 </div>
 <script is:inline>
@@ -42,8 +42,8 @@ const label = {
       window.setTimeout(() => {
         intro.classList.add('is-leaving');
         document.documentElement.classList.remove('home-intro-active');
-      }, 1750);
-      window.setTimeout(() => intro.remove(), 2250);
+      }, 1850);
+      window.setTimeout(() => intro.remove(), 2350);
     }
   }
 </script>
