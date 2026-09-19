@@ -556,3 +556,22 @@ html[data-theme="light"] .system-canvas,html[data-theme="light"] .solver-box,htm
   .scene-expert .scene-copy,.scene-train .scene-copy{grid-template-columns:54px 1fr}
   .scene-expert .scene-copy .scene-number,.scene-train .scene-copy .scene-number{font-size:2.8rem}
 }
+
+/* v1.8.4 — B&B alignment and solver-trace containment */
+.bb-tree{display:block!important;width:min(100%,620px)!important;margin:0 auto!important;overflow:visible!important}
+.bb-node>text:not(.bb-bound){text-anchor:middle!important;dominant-baseline:middle!important}
+.bb-node .bb-bound{text-anchor:middle!important;dominant-baseline:auto!important}
+.bb-branch-labels text,.bb-status-labels text{text-anchor:middle!important}
+.bb-status-labels .bb-pruned-label,.bb-status-labels .bb-incumbent-label{dominant-baseline:hanging!important}
+.bb-legend{justify-content:center!important;align-items:center!important;gap:14px!important;padding-top:8px!important;text-align:center}
+.bb-legend span{justify-content:center;white-space:nowrap;line-height:1.2}
+.solver-trace-panel{overflow:hidden!important;min-width:0!important}
+.solver-trace-panel .solver-iterations{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important;width:100%!important;min-width:0!important;padding-top:9px!important;overflow:hidden!important}
+.solver-trace-panel .solver-iterations>div{display:grid;grid-template-columns:1fr;gap:2px;min-width:0;padding:6px 7px;border:1px solid color-mix(in srgb,var(--accent) 9%,var(--line));border-radius:9px;background:color-mix(in srgb,var(--bg) 24%,transparent);text-align:center}
+.solver-trace-panel .solver-iterations span,.solver-trace-panel .solver-iterations em{display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center!important}
+.solver-trace-panel .solver-iterations span{font-size:.52rem!important;letter-spacing:.04em;text-transform:uppercase}
+.solver-trace-panel .solver-iterations em{font-size:.6rem!important;line-height:1.25;font-variant-numeric:tabular-nums}
+.bb-log p{grid-template-columns:24px minmax(0,1fr)!important;align-items:start!important}
+.bb-log p b{text-align:center}
+.bb-log p span{min-width:0;text-align:left;line-height:1.35}
+@media(max-width:1180px){.bb-tree{width:min(100%,560px)!important}.bb-legend{gap:10px!important}.solver-trace-panel .solver-iterations>div{padding:5px 4px}}

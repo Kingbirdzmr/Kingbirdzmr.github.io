@@ -176,21 +176,21 @@ const t = {
                     <text x="105" y="144">y₅ = 0</text><text x="204" y="144">y₅ = 1</text>
                     <text x="347" y="144">y₂ = 0</text><text x="438" y="144">y₂ = 1</text>
                   </g>
-                  <g class="bb-node" data-bb-node="0" transform="translate(280 34)"><circle r="22"/><text y="4">N0</text><text class="bb-bound" y="36">0.620</text></g>
-                  <g class="bb-node" data-bb-node="1" transform="translate(165 102)"><circle r="21"/><text y="4">N1</text><text class="bb-bound" y="35">0.731</text></g>
-                  <g class="bb-node" data-bb-node="2" transform="translate(395 102)"><circle r="21"/><text y="4">N2</text><text class="bb-bound" y="35">0.754</text></g>
-                  <g class="bb-node" data-bb-node="3" transform="translate(92 180)"><circle r="20"/><text y="4">N3</text><text class="bb-bound" y="34">0.812</text></g>
-                  <g class="bb-node" data-bb-node="4" transform="translate(232 180)"><circle r="20"/><text y="4">N4</text><text class="bb-bound" y="34">∞</text></g>
-                  <g class="bb-node" data-bb-node="5" transform="translate(330 180)"><circle r="20"/><text y="4">N5</text><text class="bb-bound" y="34">0.801</text></g>
-                  <g class="bb-node" data-bb-node="6" transform="translate(470 180)"><circle r="20"/><text y="4">N6</text><text class="bb-bound" y="34">0.990</text></g>
-                  <g class="bb-node leaf" data-bb-node="7" transform="translate(58 258)"><circle r="18"/><text y="4">N7</text><text class="bb-bound" y="32">1.013</text></g>
-                  <g class="bb-node leaf" data-bb-node="8" transform="translate(128 258)"><circle r="18"/><text y="4">N8</text><text class="bb-bound" y="32">0.984</text></g>
-                  <g class="bb-node leaf" data-bb-node="9" transform="translate(300 258)"><circle r="18"/><text y="4">N9</text><text class="bb-bound" y="32">0.991</text></g>
-                  <g class="bb-node leaf" data-bb-node="10" transform="translate(365 258)"><circle r="18"/><text y="4">N10</text><text class="bb-bound" y="32">0.981</text></g>
+                  <g class="bb-node" data-bb-node="0" transform="translate(280 34)"><circle r="22"/><text y="0">N0</text><text class="bb-bound" y="36">0.620</text></g>
+                  <g class="bb-node" data-bb-node="1" transform="translate(165 102)"><circle r="21"/><text y="0">N1</text><text class="bb-bound" y="35">0.731</text></g>
+                  <g class="bb-node" data-bb-node="2" transform="translate(395 102)"><circle r="21"/><text y="0">N2</text><text class="bb-bound" y="35">0.754</text></g>
+                  <g class="bb-node" data-bb-node="3" transform="translate(92 180)"><circle r="20"/><text y="0">N3</text><text class="bb-bound" y="34">0.812</text></g>
+                  <g class="bb-node" data-bb-node="4" transform="translate(232 180)"><circle r="20"/><text y="0">N4</text><text class="bb-bound" y="34">∞</text></g>
+                  <g class="bb-node" data-bb-node="5" transform="translate(330 180)"><circle r="20"/><text y="0">N5</text><text class="bb-bound" y="34">0.801</text></g>
+                  <g class="bb-node" data-bb-node="6" transform="translate(470 180)"><circle r="20"/><text y="0">N6</text><text class="bb-bound" y="34">0.990</text></g>
+                  <g class="bb-node leaf" data-bb-node="7" transform="translate(58 258)"><circle r="18"/><text y="0">N7</text><text class="bb-bound" y="32">1.013</text></g>
+                  <g class="bb-node leaf" data-bb-node="8" transform="translate(128 258)"><circle r="18"/><text y="0">N8</text><text class="bb-bound" y="32">0.984</text></g>
+                  <g class="bb-node leaf" data-bb-node="9" transform="translate(300 258)"><circle r="18"/><text y="0">N9</text><text class="bb-bound" y="32">0.991</text></g>
+                  <g class="bb-node leaf" data-bb-node="10" transform="translate(365 258)"><circle r="18"/><text y="0">N10</text><text class="bb-bound" y="32">0.981</text></g>
                   <g class="bb-status-labels">
-                    <text x="206" y="209" class="bb-pruned-label">infeasible</text>
-                    <text x="442" y="209" class="bb-pruned-label">bound</text>
-                    <text x="96" y="293" class="bb-incumbent-label">incumbent</text>
+                    <text x="232" y="214" class="bb-pruned-label">infeasible</text>
+                    <text x="470" y="214" class="bb-pruned-label">bound</text>
+                    <text x="128" y="307" class="bb-incumbent-label">incumbent</text>
                   </g>
                 </svg>
                 <div class="bb-legend">
@@ -215,7 +215,11 @@ const t = {
                   <p><b>03</b><span>update incumbent</span></p>
                   <p><b>04</b><span>prune by infeasibility / bound</span></p>
                 </div>
-                <div class="solver-iterations"><span>LB</span><em data-lb>0.620</em><span>UB</span><em data-ub>1.310</em><span>gap</span><em data-gap-bottom>52.7%</em></div>
+                <div class="solver-iterations">
+                  <div><span>LB</span><em data-lb>0.620</em></div>
+                  <div><span>UB</span><em data-ub>1.310</em></div>
+                  <div><span>gap</span><em data-gap-bottom>52.7%</em></div>
+                </div>
               </aside>
             </div>
 
