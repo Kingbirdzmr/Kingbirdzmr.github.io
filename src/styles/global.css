@@ -932,8 +932,8 @@ html[data-theme="light"] .collaborator-popover-backdrop{background:rgba(37,55,72
 /* v1.9.5 — custom monochrome floating TOP control */
 .back-to-top{
   position:fixed;
-  right:max(18px,env(safe-area-inset-right));
-  bottom:max(20px,calc(env(safe-area-inset-bottom) + 14px));
+  inset-inline-end:max(40px,calc((100vw - min(var(--max),calc(100vw - 48px)))/2 + 16px));
+  inset-block-end:clamp(56px,7vh,88px);
   z-index:190;
   width:52px;
   min-height:62px;
@@ -993,8 +993,8 @@ html[data-theme="light"] .back-to-top{box-shadow:0 12px 30px rgba(58,75,96,.12)}
 
 @media(max-width:820px){
   .back-to-top{
-    right:max(12px,env(safe-area-inset-right));
-    bottom:max(14px,calc(env(safe-area-inset-bottom) + 10px));
+    inset-inline-end:max(20px,calc(env(safe-area-inset-right) + 16px));
+    inset-block-end:max(32px,calc(env(safe-area-inset-bottom) + 24px));
     width:48px;
     min-height:56px;
     border-radius:15px;
