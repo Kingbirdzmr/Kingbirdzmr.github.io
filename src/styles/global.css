@@ -1055,6 +1055,18 @@ html[data-theme="light"] .back-to-top{box-shadow:0 12px 30px rgba(58,75,96,.12)}
 .note-section ul{margin:18px 0 0;padding-left:1.2rem;color:var(--muted);line-height:1.8}
 .note-section li::marker{color:var(--accent)}
 .note-formula{margin-top:22px;padding:17px 20px;border:1px solid color-mix(in srgb,var(--accent) 20%,var(--line));border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 5%,transparent),color-mix(in srgb,var(--surface2) 70%,transparent));font-family:"Cambria Math","STIX Two Text","Times New Roman",serif;font-size:1rem;line-height:1.6;color:var(--text);overflow-x:auto;white-space:nowrap}
+.note-formula-stack{display:grid;gap:10px;margin-top:22px}
+.note-formula-stack .note-formula{margin-top:0}
+.note-block{margin-top:22px;padding:20px 22px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--surface2) 72%,transparent);max-width:900px}
+.note-block h3{margin:0 0 12px;color:var(--text);font-size:.82rem;letter-spacing:.035em;text-transform:uppercase}
+.note-block p{margin:0;color:var(--muted);font-size:.93rem;line-height:1.82}
+.note-block ul{margin:0;padding-left:1.2rem}
+.note-key-points{border-color:color-mix(in srgb,var(--accent) 18%,var(--line))}
+.note-example{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 6%,var(--surface2)),var(--surface2))}
+.note-pitfalls{border-style:dashed}
+.note-takeaway{border-color:color-mix(in srgb,var(--accent) 36%,var(--line));background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+.note-inline-formula{margin-top:14px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--surface) 84%,transparent);font-family:"Cambria Math","STIX Two Text","Times New Roman",serif;color:var(--text);overflow-x:auto;white-space:nowrap}
+
 .note-pagination{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:28px;padding-bottom:100px;border-top:1px solid var(--line)}
 .note-pagination>div:last-child{text-align:right}
 .note-pagination a{display:flex;flex-direction:column;gap:6px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:var(--surface);text-decoration:none;min-height:90px;transition:border-color .2s ease,transform .2s ease}
