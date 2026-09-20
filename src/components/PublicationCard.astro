@@ -19,7 +19,7 @@ const unavailable = {
 const hasDetailPage = p.detailPage !== false;
 const lockResearchAssets = p.statusKind === 'under-review' || p.statusKind === 'accepted-unpublished';
 ---
-<article class="publication-card publication-card-list" data-type={p.type} data-year={p.year}>
+<article class="publication-card publication-card-list" id={p.slug} data-type={p.type} data-year={p.year}>
   <div class="publication-card-topline">
     {index && <span class="publication-index">[{index}]</span>}
     <div class="publication-meta">

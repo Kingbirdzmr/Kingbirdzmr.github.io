@@ -53,6 +53,10 @@ const copy = {
   network: L('Collaboration Network','合作网络','共同研究ネットワーク'),
   networkIntro: L('Co-authors appearing in the current publication, preprint, patent, and under-review manuscript list.','当前期刊、会议、预印本、专利及在审论文列表中出现的合作者。','現在の学術雑誌、国際会議、プレプリント、特許、査読中原稿に含まれる共同研究者です。'),
   works: L('works','项合作','件'),
+  collaboratedWorks: L('Collaborated papers','合作论文','共同研究論文'),
+  hoverHint: L('Hover or click a collaborator to view the related papers.','将鼠标移到合作者上或点击，即可查看具体合作论文。','共同研究者にカーソルを合わせるかクリックすると、関連論文を確認できます。'),
+  openDetails: L('Show collaborated papers','查看合作论文','共同研究論文を表示'),
+  closeDetails: L('Close','关闭','閉じる'),
   publication: L('Publication','对应论文','関連論文'),
   viewPublication: L('View publication','查看论文','論文を見る'),
   viewList: L('View in publication list','在论文列表中查看','研究業績一覧で見る')
@@ -65,15 +69,17 @@ const preprintCount = publications.filter(p => p.type === 'preprint').length;
 const patentCount = publications.filter(p => p.type === 'patent').length;
 const underReviewCount = publications.filter(p => p.statusKind === 'under-review').length;
 
-const collaboratorCounts = new Map<string, number>();
+const collaboratorWorks = new Map<string, Publication[]>();
 for (const publication of publications) {
   for (const author of new Set(publication.authors)) {
     if (author === 'Mingrui Zheng') continue;
-    collaboratorCounts.set(author, (collaboratorCounts.get(author) ?? 0) + 1);
+    const works = collaboratorWorks.get(author) ?? [];
+    works.push(publication);
+    collaboratorWorks.set(author, works);
   }
 }
-const collaborators = [...collaboratorCounts.entries()]
-  .map(([name, count]) => ({ name, count }))
+const collaborators = [...collaboratorWorks.entries()]
+  .map(([name, works]) => ({ name, count: works.length, works }))
   .sort((a,b) => b.count - a.count || a.name.localeCompare(b.name));
 const initials = (name:string) => {
   const parts = name.replace(/\./g,'').trim().split(/\s+/).filter(Boolean);
@@ -84,7 +90,7 @@ const initials = (name:string) => {
 const impact = { reads: 27, citations: 5, sourceUrl: 'https://www.researchgate.net/profile/Mingrui-Zheng-2' };
 const publicationMap = new Map(publications.map(p => [p.slug, p] as const));
 const publicationHref = (p:Publication) => p.detailPage === false
-  ? `/${lang}/publications/#${p.type}`
+  ? `/${lang}/publications/#${p.slug}`
   : `/${lang}/publications/${p.slug}/`;
 ---
 <MainLayout {lang} title={`${copy.heading[lang]} | ${profile.name}`} description={copy.intro[lang]}>
@@ -164,13 +170,142 @@ const publicationHref = (p:Publication) => p.detailPage === false
       <div><p class="eyebrow">05 / NETWORK</p><h2>{copy.network[lang]}</h2></div>
       <p>{copy.networkIntro[lang]}</p>
     </div>
-    <div class="collaborator-grid">
-      {collaborators.map(person => (
-        <article class="collaborator-card">
+    <p class="collaboration-hint">{copy.hoverHint[lang]}</p>
+    <div class="collaborator-grid" data-collaborator-grid>
+      {collaborators.map((person, index) => (
+        <button
+          type="button"
+          class="collaborator-card"
+          data-collaborator-card
+          data-collaborator-index={index}
+          aria-label={`${copy.openDetails[lang]}: ${person.name}`}
+          aria-expanded="false"
+        >
           <div class="collaborator-avatar" aria-hidden="true">{initials(person.name)}</div>
           <div class="collaborator-copy"><strong>{person.name}</strong><span>{person.count} {copy.works[lang]}</span></div>
-        </article>
+          <span class="collaborator-card-arrow" aria-hidden="true">↗</span>
+          <template data-collaborator-template>
+            <div class="collaborator-popover-head">
+              <div class="collaborator-avatar collaborator-avatar-large" aria-hidden="true">{initials(person.name)}</div>
+              <div>
+                <strong>{person.name}</strong>
+                <span>{person.count} {copy.works[lang]}</span>
+              </div>
+            </div>
+            <div class="collaborator-popover-label">{copy.collaboratedWorks[lang]}</div>
+            <div class="collaborator-work-list">
+              {person.works.map((publication) => (
+                <a class="collaborator-work-item" href={publicationHref(publication)}>
+                  <span class:list={['collaborator-work-status', `status-${publication.statusKind ?? 'default'}`]}>{publication.status?.[lang] ?? publication.year}</span>
+                  <strong>{publication.title[lang]}</strong>
+                  {lang !== 'en' && <small class="collaborator-work-original">{publication.title.en}</small>}
+                  <small>{publication.venue} · {publication.year}</small>
+                </a>
+              ))}
+            </div>
+          </template>
+        </button>
       ))}
     </div>
+
+    <div class="collaborator-popover" data-collaborator-popover aria-hidden="true" role="dialog" aria-live="polite">
+      <button type="button" class="collaborator-popover-close" data-collaborator-close aria-label={copy.closeDetails[lang]}>×</button>
+      <div data-collaborator-popover-content></div>
+    </div>
+    <div class="collaborator-popover-backdrop" data-collaborator-backdrop aria-hidden="true"></div>
   </section>
+
+  <script is:inline>
+    (() => {
+      const grid = document.querySelector('[data-collaborator-grid]');
+      const popover = document.querySelector('[data-collaborator-popover]');
+      const content = document.querySelector('[data-collaborator-popover-content]');
+      const closeButton = document.querySelector('[data-collaborator-close]');
+      const backdrop = document.querySelector('[data-collaborator-backdrop]');
+      if (!grid || !popover || !content) return;
+
+      const cards = [...grid.querySelectorAll('[data-collaborator-card]')];
+      const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      let pinned = false;
+      let activeCard = null;
+      let hideTimer = null;
+
+      const clearHide = () => { if (hideTimer) window.clearTimeout(hideTimer); hideTimer = null; };
+      const positionDesktop = (card) => {
+        const rect = card.getBoundingClientRect();
+        const width = Math.min(430, window.innerWidth - 32);
+        popover.style.width = `${width}px`;
+        const gap = 12;
+        let left = rect.right + gap;
+        if (left + width > window.innerWidth - 16) left = rect.left - width - gap;
+        if (left < 16) left = Math.max(16, Math.min(window.innerWidth - width - 16, rect.left + rect.width / 2 - width / 2));
+        let top = rect.top - 12;
+        const estimatedHeight = Math.min(popover.scrollHeight || 420, window.innerHeight * .72);
+        if (top + estimatedHeight > window.innerHeight - 16) top = Math.max(16, window.innerHeight - estimatedHeight - 16);
+        popover.style.left = `${left}px`;
+        popover.style.top = `${top}px`;
+        popover.style.right = 'auto';
+        popover.style.bottom = 'auto';
+      };
+
+      const show = (card, lock = false) => {
+        clearHide();
+        const template = card.querySelector('[data-collaborator-template]');
+        if (!template) return;
+        content.replaceChildren(template.content.cloneNode(true));
+        cards.forEach(c => {
+          const active = c === card;
+          c.classList.toggle('is-active', active);
+          c.setAttribute('aria-expanded', active ? 'true' : 'false');
+        });
+        activeCard = card;
+        pinned = lock;
+        popover.classList.add('is-open');
+        popover.setAttribute('aria-hidden', 'false');
+        backdrop?.classList.toggle('is-open', !canHover);
+        if (canHover) requestAnimationFrame(() => positionDesktop(card));
+      };
+
+      const hide = (force = false) => {
+        if (pinned && !force) return;
+        clearHide();
+        pinned = false;
+        activeCard = null;
+        popover.classList.remove('is-open');
+        popover.setAttribute('aria-hidden', 'true');
+        backdrop?.classList.remove('is-open');
+        cards.forEach(c => { c.classList.remove('is-active'); c.setAttribute('aria-expanded', 'false'); });
+      };
+
+      cards.forEach(card => {
+        if (canHover) {
+          card.addEventListener('mouseenter', () => show(card, false));
+          card.addEventListener('mouseleave', () => {
+            clearHide();
+            hideTimer = window.setTimeout(() => hide(false), 180);
+          });
+          card.addEventListener('focus', () => show(card, false));
+        }
+        card.addEventListener('click', (event) => {
+          event.preventDefault();
+          if (activeCard === card && pinned) hide(true);
+          else show(card, true);
+        });
+      });
+
+      popover.addEventListener('mouseenter', clearHide);
+      popover.addEventListener('mouseleave', () => {
+        if (!pinned && canHover) hideTimer = window.setTimeout(() => hide(false), 180);
+      });
+      popover.addEventListener('click', (event) => {
+        const link = event.target.closest('a');
+        if (link) hide(true);
+      });
+      closeButton?.addEventListener('click', () => hide(true));
+      backdrop?.addEventListener('click', () => hide(true));
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') hide(true); });
+      window.addEventListener('resize', () => { if (activeCard && popover.classList.contains('is-open') && canHover) positionDesktop(activeCard); });
+      window.addEventListener('scroll', () => { if (activeCard && popover.classList.contains('is-open') && canHover && !pinned) positionDesktop(activeCard); }, { passive: true });
+    })();
+  </script>
 </MainLayout>
