@@ -1,0 +1,24 @@
+---
+import type { Lang } from '../types';
+const { lang } = Astro.props as { lang: Lang };
+const label = {
+  en: 'Back to top',
+  zh: '回到顶部',
+  ja: 'ページ上部へ'
+} as const;
+---
+<button class="back-to-top" type="button" data-back-to-top aria-label={label[lang]} title={label[lang]}>
+  <span aria-hidden="true">↑</span>
+</button>
+<script is:inline>
+  (() => {
+    const button = document.querySelector('[data-back-to-top]');
+    if (!button) return;
+    const sync = () => button.classList.toggle('is-visible', window.scrollY > 420);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+    button.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    });
+  })();
+</script>

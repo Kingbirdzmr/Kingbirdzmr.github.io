@@ -60,4 +60,9 @@ const languagePath = (target: Lang) => {
     const open = header?.classList.toggle('menu-open') ?? false;
     menu.setAttribute('aria-expanded', String(open));
   });
+  document.querySelectorAll('.main-nav a').forEach((link) => link.addEventListener('click', () => {
+    const header = document.querySelector('[data-header]');
+    header?.classList.remove('menu-open');
+    menu?.setAttribute('aria-expanded', 'false');
+  }));
 </script>
