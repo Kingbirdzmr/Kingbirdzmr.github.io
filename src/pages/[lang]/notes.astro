@@ -1,6 +1,57 @@
 ---
-import MainLayout from '../../layouts/MainLayout.astro';import {profile} from '../../data/profile';import {langPaths,isLang} from '../../utils/routes';import type{Lang}from'../../types';
-export function getStaticPaths(){return langPaths();}const param=Astro.params.lang;if(!isLang(param))return Astro.redirect('/en/');const lang:Lang=param;
-const h={en:'Research Notes',zh:'学术笔记',ja:'研究ノート'};const p={en:'Short technical notes on control, optimization, wireless systems, and research workflow will live here.',zh:'这里将用于记录控制、优化、无线系统与科研工作流相关的技术笔记。',ja:'制御、最適化、無線システム、研究ワークフローに関する短い技術ノートを掲載します。'};
+import MainLayout from '../../layouts/MainLayout.astro';
+import {profile} from '../../data/profile';
+import {studyNotes} from '../../data/notes';
+import {langPaths,isLang} from '../../utils/routes';
+import type{Lang,Localized}from'../../types';
+export function getStaticPaths(){return langPaths();}
+const param=Astro.params.lang;
+if(!isLang(param))return Astro.redirect('/en/');
+const lang:Lang=param;
+const L=(en:string,zh:string,ja:string):Localized=>({en,zh,ja});
+const copy={
+  heading:L('Study Notes','学习笔记','学習ノート'),
+  intro:L(
+    'Structured notes that consolidate the mathematical tools, control methods, and learning algorithms I use in research. The list is ordered from newest to oldest.',
+    '整理研究中常用的数学工具、控制方法与学习算法。以下按照从最新到最早的顺序排列。',
+    '研究で用いる数学的手法、制御手法、学習アルゴリズムを体系的に整理したノートです。新しいものから順に掲載しています。'
+  ),
+  latest:L('Latest','最新','最新'),
+  note:L('Study note','学习笔记','学習ノート'),
+  open:L('Open note','查看笔记','ノートを読む'),
+  topics:L('Topics','核心内容','主な内容'),
+  order:L('Newest → Oldest','最新 → 最早','新しい → 古い')
+};
 ---
-<MainLayout {lang} title={`${h[lang]} | ${profile.name}`} description={p[lang]}><section class="page-hero section-shell"><p class="eyebrow">NOTES</p><h1>{h[lang]}</h1><p>{p[lang]}</p></section><section class="section-shell empty-state"><div>∿</div><h2>Coming soon</h2><p>{p[lang]}</p></section></MainLayout>
+<MainLayout {lang} title={`${copy.heading[lang]} | ${profile.name}`} description={copy.intro[lang]}>
+  <section class="page-hero section-shell notes-hero">
+    <p class="eyebrow">STUDY NOTES</p>
+    <h1>{copy.heading[lang]}</h1>
+    <p>{copy.intro[lang]}</p>
+    <div class="notes-order-indicator"><span>01</span><i></i><span>04</span><strong>{copy.order[lang]}</strong></div>
+  </section>
+
+  <section class="section-shell notes-index" data-reveal>
+    <div class="notes-grid">
+      {studyNotes.map((note,index)=>(
+        <article class="study-note-card" id={note.slug}>
+          <div class="study-note-card-top">
+            <div class="study-note-number">{String(note.order).padStart(2,'0')}</div>
+            <div class="study-note-meta">
+              <span>{copy.note[lang]}</span>
+              {index===0 && <b>{copy.latest[lang]}</b>}
+            </div>
+          </div>
+          <p class="eyebrow">{note.category[lang]}</p>
+          <h2>{note.title[lang]}</h2>
+          <p class="study-note-summary">{note.summary[lang]}</p>
+          <div class="study-note-topic-label">{copy.topics[lang]}</div>
+          <div class="tag-row study-note-tags">{note.tags.map(tag=><span>{tag}</span>)}</div>
+          <a class="study-note-open" href={`/${lang}/notes/${note.slug}/`}>
+            <span>{copy.open[lang]}</span><b>↗</b>
+          </a>
+        </article>
+      ))}
+    </div>
+  </section>
+</MainLayout>

@@ -1,0 +1,63 @@
+---
+import MainLayout from '../../../layouts/MainLayout.astro';
+import {profile} from '../../../data/profile';
+import {studyNotes} from '../../../data/notes';
+import {langs} from '../../../i18n/ui';
+import {isLang} from '../../../utils/routes';
+import type{Lang,Localized}from'../../../types';
+export function getStaticPaths(){
+  return langs.flatMap(lang=>studyNotes.map(note=>({params:{lang,slug:note.slug},props:{note}})));
+}
+const param=Astro.params.lang;
+if(!isLang(param))return Astro.redirect('/en/');
+const lang:Lang=param;
+const {note}=Astro.props;
+const L=(en:string,zh:string,ja:string):Localized=>({en,zh,ja});
+const copy={
+  back:L('All study notes','全部学习笔记','学習ノート一覧'),
+  overview:L('Overview','概览','概要'),
+  outline:L('Contents','笔记内容','内容'),
+  noteNo:L('Note','笔记','ノート'),
+  previous:L('Older note','更早一篇','前のノート'),
+  next:L('Newer note','更新一篇','次のノート')
+};
+const ordered=[...studyNotes].sort((a,b)=>a.order-b.order);
+const idx=ordered.findIndex(n=>n.slug===note.slug);
+const newer=idx>0?ordered[idx-1]:undefined;
+const older=idx<ordered.length-1?ordered[idx+1]:undefined;
+---
+<MainLayout {lang} title={`${note.title[lang]} | ${profile.name}`} description={note.summary[lang]}>
+  <section class="section-shell note-detail-hero">
+    <a class="note-back-link" href={`/${lang}/notes/`}>← {copy.back[lang]}</a>
+    <div class="note-detail-kicker"><span>{copy.noteNo[lang]} {String(note.order).padStart(2,'0')}</span><i></i><span>{note.category[lang]}</span></div>
+    <h1>{note.title[lang]}</h1>
+    <p>{note.summary[lang]}</p>
+    <div class="tag-row note-detail-tags">{note.tags.map(tag=><span>{tag}</span>)}</div>
+  </section>
+
+  <section class="section-shell note-detail-layout">
+    <aside class="note-toc" data-reveal>
+      <p class="eyebrow">{copy.outline[lang]}</p>
+      <nav>
+        {note.sections.map((section,index)=><a href={`#section-${index+1}`}><span>{String(index+1).padStart(2,'0')}</span>{section.title[lang].replace(/^\d+\.\s*/, '')}</a>)}
+      </nav>
+    </aside>
+
+    <article class="note-article">
+      {note.sections.map((section,index)=>(
+        <section class="note-section" id={`section-${index+1}`} data-reveal>
+          <span class="note-section-index">{String(index+1).padStart(2,'0')}</span>
+          <h2>{section.title[lang]}</h2>
+          <p>{section.body[lang]}</p>
+          {section.formula && <div class="note-formula">{section.formula}</div>}
+          {section.bullets && <ul>{section.bullets.map(item=><li>{item[lang]}</li>)}</ul>}
+        </section>
+      ))}
+    </article>
+  </section>
+
+  <section class="section-shell note-pagination">
+    <div>{newer && <a href={`/${lang}/notes/${newer.slug}/`}><small>{copy.next[lang]}</small><strong>← {newer.title[lang]}</strong></a>}</div>
+    <div>{older && <a href={`/${lang}/notes/${older.slug}/`}><small>{copy.previous[lang]}</small><strong>{older.title[lang]} →</strong></a>}</div>
+  </section>
+</MainLayout>

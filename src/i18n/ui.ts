@@ -10,7 +10,7 @@ export const ui = {
     publications: { en: 'Publications', zh: '论文', ja: '研究業績' },
     projects: { en: 'Projects', zh: '项目', ja: 'プロジェクト' },
     experience: { en: 'Experience', zh: '经历', ja: '経歴' },
-    notes: { en: 'Notes', zh: '学术笔记', ja: 'ノート' },
+    notes: { en: 'Study Notes', zh: '学习笔记', ja: '学習ノート' },
     cv: { en: 'CV', zh: '简历', ja: 'CV' }
   },
   common: {

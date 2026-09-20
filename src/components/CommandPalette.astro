@@ -3,15 +3,18 @@ import type { Lang } from '../types';
 import { ui } from '../i18n/ui';
 import { publications } from '../data/publications';
 import { projects, selectedProjects } from '../data/projects';
+import { studyNotes } from '../data/notes';
 const { lang } = Astro.props as { lang: Lang };
 const entries = [
   { type: ui.nav.research[lang], title: ui.nav.research[lang], href: `/${lang}/research/` },
   { type: ui.nav.publications[lang], title: ui.nav.publications[lang], href: `/${lang}/publications/` },
   { type: ui.nav.projects[lang], title: ui.nav.projects[lang], href: `/${lang}/projects/` },
+  { type: ui.nav.notes[lang], title: ui.nav.notes[lang], href: `/${lang}/notes/` },
   { type: ui.nav.cv[lang], title: ui.nav.cv[lang], href: `/${lang}/cv/` },
   ...publications.map((p) => ({ type: ui.nav.publications[lang], title: p.title[lang], href: p.detailPage === false ? `/${lang}/publications/#${p.type}` : `/${lang}/publications/${p.slug}/` })),
   ...projects.map((p) => ({ type: ui.nav.research[lang], title: p.title[lang], href: `/${lang}/research/#${p.slug}` })),
-  ...selectedProjects.map((p) => ({ type: ui.nav.projects[lang], title: p.title[lang], href: `/${lang}/projects/#${p.slug}` }))
+  ...selectedProjects.map((p) => ({ type: ui.nav.projects[lang], title: p.title[lang], href: `/${lang}/projects/#${p.slug}` })),
+  ...studyNotes.map((n) => ({ type: ui.nav.notes[lang], title: n.title[lang], href: `/${lang}/notes/${n.slug}/` }))
 ];
 ---
 <dialog class="command-dialog" id="command-palette">
