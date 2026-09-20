@@ -7,20 +7,27 @@ const label = {
   ja: 'ページ上部へ'
 } as const;
 ---
-<button class="back-to-top" type="button" data-back-to-top aria-label={label[lang]} title={label[lang]}>
-  <span class="back-to-top-icon" aria-hidden="true">
-    <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
-      <path d="M12 19V5"></path>
-      <path d="M6.5 10.5 12 5l5.5 5.5"></path>
-    </svg>
-  </span>
-  <span class="back-to-top-text" aria-hidden="true">TOP</span>
-</button>
+<div class="back-to-top-rail" aria-hidden="true">
+  <button class="back-to-top" type="button" data-back-to-top aria-label={label[lang]} title={label[lang]}>
+    <span class="back-to-top-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+        <path d="M12 19V5"></path>
+        <path d="M6.5 10.5 12 5l5.5 5.5"></path>
+      </svg>
+    </span>
+    <span class="back-to-top-text" aria-hidden="true">TOP</span>
+  </button>
+</div>
 <script is:inline>
   (() => {
     const button = document.querySelector('[data-back-to-top]');
     if (!button) return;
-    const sync = () => button.classList.toggle('is-visible', window.scrollY > 420);
+    const rail = button.closest('.back-to-top-rail');
+    const sync = () => {
+      const visible = window.scrollY > 420;
+      button.classList.toggle('is-visible', visible);
+      if (rail) rail.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    };
     sync();
     window.addEventListener('scroll', sync, { passive: true });
     button.addEventListener('click', () => {
