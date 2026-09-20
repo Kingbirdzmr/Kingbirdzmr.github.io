@@ -33,17 +33,56 @@ const place = {
   </div>
 </div>
 <script is:inline>
-  const intro = document.querySelector('[data-home-intro]');
-  if (intro) {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) intro.remove();
-    else {
+  (() => {
+    let intro = document.querySelector('[data-home-intro]');
+    if (!intro) return;
+
+    let timers = [];
+    const clearTimers = () => {
+      timers.forEach((id) => window.clearTimeout(id));
+      timers = [];
+    };
+
+    const playIntro = ({ restored = false } = {}) => {
+      clearTimers();
+
+      // Safari may restore the homepage from BFCache with the previous intro state.
+      // Cloning restarts the CSS animation timeline without storing a one-time flag.
+      if (restored && intro?.parentNode) {
+        const fresh = intro.cloneNode(true);
+        intro.parentNode.replaceChild(fresh, intro);
+        intro = fresh;
+      }
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      intro.classList.remove('is-leaving', 'is-gone', 'home-intro-reduced');
+      intro.setAttribute('aria-hidden', 'false');
       document.documentElement.classList.add('home-intro-active');
-      window.setTimeout(() => {
-        intro.classList.add('is-leaving');
+
+      // Respect the OS accessibility preference, but do not make the intro flash away.
+      // In reduced-motion mode we keep the cover visible briefly, then reveal the page.
+      if (reduce) intro.classList.add('home-intro-reduced');
+
+      const leaveAt = reduce ? 1200 : 1850;
+      const hideAt = reduce ? 1450 : 2350;
+
+      timers.push(window.setTimeout(() => {
+        intro?.classList.add('is-leaving');
         document.documentElement.classList.remove('home-intro-active');
-      }, 1850);
-      window.setTimeout(() => intro.remove(), 2350);
-    }
-  }
+      }, leaveAt));
+
+      timers.push(window.setTimeout(() => {
+        intro?.classList.add('is-gone');
+        intro?.setAttribute('aria-hidden', 'true');
+      }, hideAt));
+    };
+
+    playIntro();
+
+    // Back/forward navigation on mobile Safari can restore a frozen DOM snapshot.
+    // Replay the intro when the homepage is restored from BFCache.
+    window.addEventListener('pageshow', (event) => {
+      if (event.persisted) playIntro({ restored: true });
+    });
+  })();
 </script>

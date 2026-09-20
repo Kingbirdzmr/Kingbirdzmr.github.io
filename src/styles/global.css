@@ -947,3 +947,16 @@ html[data-theme="light"] .collaborator-popover-backdrop{background:rgba(37,55,72
   .collaborator-popover{max-height:76vh}
   .collaborator-popover-head{padding-bottom:13px}
 }
+
+
+/* v1.9.2: deterministic language landing + mobile intro replay */
+.home-intro.is-gone{display:none!important}
+@media(prefers-reduced-motion:reduce){
+  .home-intro.home-intro-reduced .home-intro-inner{opacity:1!important;transform:none!important}
+  .home-intro.home-intro-reduced .home-intro-name span,
+  .home-intro.home-intro-reduced .home-intro-kicker,
+  .home-intro.home-intro-reduced .home-intro-localized,
+  .home-intro.home-intro-reduced .home-intro-place{opacity:1!important;transform:none!important}
+  .home-intro.home-intro-reduced .home-intro-rule{width:min(420px,78vw)!important}
+  .home-intro.home-intro-reduced .intro-ridges path{stroke-dashoffset:0!important}
+}
