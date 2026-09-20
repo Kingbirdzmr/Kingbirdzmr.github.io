@@ -29,7 +29,7 @@ export const ui = {
     researchOn: { en: 'Researching', zh: '研究主题', ja: '研究中' },
     researchNow: { en: 'Communication-control co-design for autonomous networked systems', zh: '自主网络化系统中的通信与控制协同设计', ja: '自律ネットワークシステムの通信・制御協調設計' },
     openSearch: { en: 'Search', zh: '搜索', ja: '検索' },
-    backTop: { en: 'Back to top', zh: '返回顶部', ja: 'トップへ' },
+    backTop: { en: '🔝', zh: '🔝', ja: '🔝' },
     noItems: { en: 'No items yet.', zh: '暂无内容。', ja: 'まだ項目がありません。' }
   }
 } as const;

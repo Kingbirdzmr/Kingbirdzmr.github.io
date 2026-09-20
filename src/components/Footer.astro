@@ -1,9 +1,9 @@
 ---
 import type { Lang } from '../types';
 import { profile } from '../data/profile';
-import { ui } from '../i18n/ui';
 const { lang } = Astro.props as { lang: Lang };
 const year = new Date().getFullYear();
+const topLabel = { en: 'Back to top', zh: '返回顶部', ja: 'ページ上部へ' } as const;
 const links = [
   profile.github && ['GitHub', profile.github],
   profile.scholar && ['Google Scholar', profile.scholar],
@@ -23,6 +23,6 @@ const links = [
   <div class="footer-meta">
     <span>© {year} {profile.name}</span>
     <span>Astro · GitHub Pages</span>
-    <a href="#top">↑ {ui.common.backTop[lang]}</a>
+    <a class="footer-back-top" href="#top" aria-label={topLabel[lang]} title={topLabel[lang]}>🔝</a>
   </div>
 </footer>
