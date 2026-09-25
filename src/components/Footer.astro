@@ -3,11 +3,12 @@ import type { Lang } from '../types';
 import { profile } from '../data/profile';
 const { lang } = Astro.props as { lang: Lang };
 const year = new Date().getFullYear();
+const emailLabel = { en: 'Email', zh: '邮箱', ja: 'メール' };
 const links = [
   profile.github && ['GitHub', profile.github],
   profile.scholar && ['Google Scholar', profile.scholar],
   profile.orcid && ['ORCID', profile.orcid],
-  profile.email && ['Email', `mailto:${profile.email}`]
+  profile.email && [emailLabel[lang], `mailto:${profile.email}`]
 ].filter(Boolean) as string[][];
 ---
 <footer class="site-footer">

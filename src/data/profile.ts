@@ -20,9 +20,9 @@ export const profile = {
 
   initials: 'MZ',
   role: {
-    en: 'Ph.D. Student · Systems Science and Informatics',
-    zh: '博士生 · 系统科学与信息学',
-    ja: '博士課程 · システム科学・情報学'
+    en: 'Ph.D. Student · Course of Systems Science and Informatics',
+    zh: '博士生 · 系统信息科学课程',
+    ja: '博士課程 · システム情報科学コース'
   } satisfies Localized,
   affiliation: {
     en: 'Hokkaido University · Sapporo, Japan',
@@ -34,7 +34,7 @@ export const profile = {
     zh: '我的研究关注自主网络化系统中的通信与控制协同设计，主要涉及多无人机系统、无线网络、优化、信息物理安全以及学习增强的决策方法。',
     ja: '自律ネットワークシステムにおける通信・制御協調設計を研究しています。特に、マルチUAV、無線ネットワーク、最適化、サイバーフィジカルセキュリティ、学習支援型意思決定に関心があります。'
   } satisfies Localized,
-  email: '',
+  email: 'zmr1584383567@stl.ssi.ist.hokudai.ac.jp',
   scholar: '',
   orcid: '',
   github: '',

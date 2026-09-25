@@ -16,6 +16,7 @@ if (!isLang(param)) return Astro.redirect('/en/');
 const lang: Lang = param;
 const title = `${profile.name} | Academic Homepage`;
 const description = profile.statement[lang];
+const emailLabel = { en: 'Email', zh: '邮箱', ja: 'メール' };
 const homepageThemeSlugs = [
   'communication-control-codesign',
   'multi-uav-autonomy',
@@ -42,6 +43,7 @@ const homepageThemes = homepageThemeSlugs
         <a class="primary-button" href={`/${lang}/research/`}>{ui.nav.research[lang]} →</a>
         <a class="ghost-button" href={`/${lang}/publications/`}>{ui.nav.publications[lang]}</a>
         <a class="ghost-button" href={`/${lang}/cv/`}>CV</a>
+        {profile.email && <a class="ghost-button" href={`mailto:${profile.email}`}>{emailLabel[lang]}</a>}
       </div>
       <div class="keyword-strip">{researchKeywords.map((k) => <span>{k.label[lang]}</span>)}</div>
     </div>

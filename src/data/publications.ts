@@ -285,7 +285,7 @@ export const publications: Publication[] = [
       'MEC网络中的太阳能感知DNN分割推理与资源分配',
       'MECネットワークにおける太陽光発電認識型DNN分割推論とリソース割当て'
     ),
-    authors: ['Z. Tan', 'Mingrui Zheng', 'Tengjiao He', 'Bing He'],
+    authors: ['Zhihe Tan', 'Mingrui Zheng', 'Tengjiao He', 'Bing He'],
     correspondingAuthors: ['Mingrui Zheng'],
     venue: 'The 22nd International Conference on Mobility, Sensing and Networking (MSN 2026)',
     details: L('2026', '2026', '2026'),
