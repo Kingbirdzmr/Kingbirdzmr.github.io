@@ -265,7 +265,7 @@ export const publications: Publication[] = [
     venue: 'IEEE Transactions on Intelligent Transportation Systems',
     impactFactor: { value: 9.1, year: 2025 },
     details: L('2026', '2026', '2026'),
-    classificationZh: ['中科院一区 Top（2026新锐分区）', '中科院二区 Top（2025版）', 'CCF-B 期刊（交叉/综合/新兴）'],
+    classificationZh: ['中科院一区Top期刊', '交叉/综合/新兴CCF-B期刊'],
     tags: ['Vehicle Platooning', 'Multi-UAV', 'Communication–Control Co-Design', 'MARL']
   },
 

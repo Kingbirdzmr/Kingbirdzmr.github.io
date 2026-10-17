@@ -21,6 +21,9 @@ const hasZhRanks = lang === 'zh' && p.classificationZh && p.classificationZh.len
 ---
 {(hasJif || hasZhRanks) && (
   <div class:list={['publication-rank-row', detail && 'detail-rank-row']} aria-label="Journal metrics and rankings">
+    {hasZhRanks && p.classificationZh!.map((item) => (
+      <span class:list={['publication-rank-badge', classificationTone(item)]}>{item}</span>
+    ))}
     {hasJif && (
       <span
         class:list={['publication-rank-badge', 'rank-jif', jifTone(p.impactFactor!.value)]}
@@ -29,8 +32,5 @@ const hasZhRanks = lang === 'zh' && p.classificationZh && p.classificationZh.len
         IF {p.impactFactor!.value.toFixed(1)}
       </span>
     )}
-    {hasZhRanks && p.classificationZh!.map((item) => (
-      <span class:list={['publication-rank-badge', classificationTone(item)]}>{item}</span>
-    ))}
   </div>
 )}
