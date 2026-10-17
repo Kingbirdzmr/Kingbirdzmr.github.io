@@ -243,10 +243,8 @@ export const publications: Publication[] = [
       '面向无人机辅助车辆编队切换与重构的通信、计算与控制联合优化',
       'ハンドオーバーと再構成を伴うUAV支援車両隊列における通信・計算・制御の共同最適化'
     ),
-    // Canonical full names feed the Collaboration Network (Projects page).
+    // Full author names are shown consistently in Publications and Collaboration Network.
     authors: ['Mingrui Zheng', 'Koichi Kobayashi', 'Hao Li', 'Ansei Yonezawa', 'Yuh Yamashita', 'Kenji Sawada', 'Tengjiao He'],
-    // The publication list uses K. Sawada, while the collaborator card uses Kenji Sawada.
-    authorDisplayNames: { 'Kenji Sawada': 'K. Sawada' },
     venue: 'IEEE Transactions on Intelligent Transportation Systems',
     impactFactor: { value: 9.1, year: 2025 },
     details: L('2026', '2026', '2026'),
