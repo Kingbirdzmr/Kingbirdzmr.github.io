@@ -3,7 +3,7 @@ import type { Localized, Publication } from '../types';
 const L = (en: string, zh: string, ja: string): Localized => ({ en, zh, ja });
 
 // Publication records follow the latest 論文リスト supplied in September 2026.
-// Chinese-only journal quartiles / CCF classifications are taken from the 2026.10 report.
+// Chinese-language rankings are annotated with their source edition when versions differ.
 // A name listed in correspondingAuthors is rendered with a superscript * on the website.
 // Under-review papers intentionally have no detail page, abstract, or BibTeX entry.
 // impactFactor stores the latest available 2025 Journal Impact Factor (JCR 2025, released in 2026).
@@ -229,6 +229,29 @@ export const publications: Publication[] = [
     details: L('2026', '2026', '2026'),
     classificationZh: ['中科院一区 Top 期刊', '计算机网络 CCF-A 期刊'],
     tags: ['GNN', 'VNF', 'UAV', 'Edge Computing']
+  },
+
+  {
+    slug: 'uav-vehicle-platooning-handovers-reconfiguration',
+    year: 2026,
+    type: 'journal',
+    statusKind: 'under-review',
+    status: L('Under Review', '在审', '査読中'),
+    detailPage: false,
+    title: L(
+      'Joint Communication, Computation, and Control Optimization for UAV-Assisted Vehicle Platooning With Handovers and Reconfiguration',
+      '面向无人机辅助车辆编队切换与重构的通信、计算与控制联合优化',
+      'ハンドオーバーと再構成を伴うUAV支援車両隊列における通信・計算・制御の共同最適化'
+    ),
+    // Canonical full names feed the Collaboration Network (Projects page).
+    authors: ['Mingrui Zheng', 'Koichi Kobayashi', 'Hao Li', 'Ansei Yonezawa', 'Yuh Yamashita', 'Kenji Sawada', 'Tengjiao He'],
+    // The publication list uses K. Sawada, while the collaborator card uses Kenji Sawada.
+    authorDisplayNames: { 'Kenji Sawada': 'K. Sawada' },
+    venue: 'IEEE Transactions on Intelligent Transportation Systems',
+    impactFactor: { value: 9.1, year: 2025 },
+    details: L('2026', '2026', '2026'),
+    classificationZh: ['中科院一区 Top（2026新锐分区）', '中科院二区 Top（2025版）', 'CCF-B 期刊（交叉/综合/新兴）'],
+    tags: ['Vehicle Platooning', 'Multi-UAV', 'Communication–Control Co-Design', 'MARL']
   },
 
   // Conference Papers

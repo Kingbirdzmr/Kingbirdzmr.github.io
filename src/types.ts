@@ -16,6 +16,8 @@ export type Publication = {
   type: 'journal' | 'conference' | 'preprint' | 'patent';
   title: Localized;
   authors: string[];
+  /** Full author names are canonical; override only the printed name on publication cards. */
+  authorDisplayNames?: Record<string, string>;
   correspondingAuthors?: string[];
   venue: string;
   details?: Localized;

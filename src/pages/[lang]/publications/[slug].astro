@@ -51,7 +51,7 @@ const publishableMetadata = p.statusKind !== 'accepted-unpublished';
       {p.authors.map((author, i) => (
         <>
           {i > 0 && (i === p.authors.length - 1 ? ' and ' : ', ')}
-          {author === me ? <strong>{author}</strong> : author}
+          {author === me ? <strong>{p.authorDisplayNames?.[author] ?? author}</strong> : (p.authorDisplayNames?.[author] ?? author)}
           {p.correspondingAuthors?.includes(author) && <sup class="corresponding-star">*</sup>}
         </>
       ))}
