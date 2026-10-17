@@ -181,15 +181,22 @@ export const publications: Publication[] = [
     tags: ['LLM', 'Scheduling', 'Control', 'UAV'],
     links: {
       doi: 'https://doi.org/10.1109/TVT.2026.3720280'
-    }
+    },
+    bibtex: `@article{Huang2026Doc2Control,
+  author  = {Zebin Huang and Mingrui Zheng and Hao Li and Yefeng Wu},
+  title   = {Doc2Control: LLM-Guided Scheduling and Control for UAV-Assisted Campus Vehicles},
+  journal = {IEEE Transactions on Vehicular Technology},
+  year    = {2026},
+  doi     = {10.1109/TVT.2026.3720280}
+}`
   },
   {
     slug: 'distributed-mpc-ddos-uav-iot',
     year: 2026,
     type: 'journal',
     featured: true,
-    statusKind: 'accepted',
-    status: L('Accepted', '已录用', '採択済み'),
+    statusKind: 'published',
+    status: L('Published', '已发表', '掲載済み'),
     title: L(
       'Distributed MPC for DDoS-Resilient Control and Communication Optimization in Multi-UAV Assisted IoT Smart Agriculture Networks',
       '面向多无人机辅助物联网智慧农业网络的DDoS韧性分布式MPC通信控制联合优化',
@@ -199,17 +206,27 @@ export const publications: Publication[] = [
     correspondingAuthors: ['Mingrui Zheng'],
     venue: 'IEEE Internet of Things Journal',
     impactFactor: { value: 8.7, year: 2025 },
-    details: L('Accepted (2026)', '已录用（2026）', '採択済み（2026）'),
+    details: L('Vol. 13, No. 19, pp. 45319–45336 (2026)', '第13卷，第19期，45319–45336页（2026）', 'Vol. 13, No. 19, pp. 45319–45336 (2026)'),
     classificationZh: ['中科院一区 Top 期刊'],
     abstract: L(
-      'This paper studies a multi-UAV-assisted smart-agriculture IoT control system whose access-link capacity is degraded by DDoS attacks. It formulates an attack-aware constrained co-optimization problem that jointly determines applied control commands, UAV–IoT associations, communication resources, and UAV mobility while accounting for packet-delivery reliability and subsystem safety. A distributed model predictive control framework is used to coordinate control and communication decisions under attack-induced capacity loss.',
-      '本文研究分布式拒绝服务攻击导致接入链路容量下降时的多无人机辅助智慧农业物联网控制系统。工作建立攻击感知的约束联合优化问题，在考虑数据包传输可靠性与子系统安全约束的同时，联合决定实际控制输入、无人机与物联网设备关联、通信资源以及无人机移动决策，并通过分布式模型预测控制协调攻击条件下的控制与通信优化。',
-      '本研究は、DDoS攻撃によりアクセスリンク容量が低下するマルチUAV支援スマート農業IoT制御システムを対象とする。パケット配送信頼性とサブシステムの安全制約を考慮しつつ、適用制御入力、UAV–IoT関連付け、通信資源、UAV移動を共同決定する攻撃認識型制約付き最適化問題を構築する。分散モデル予測制御により、攻撃による容量低下の下で制御と通信の意思決定を協調させる。'
+      'This paper studies a multi-UAV-assisted smart-agriculture IoT control system whose access-link capacity is degraded by DDoS attacks. It formulates an attack-aware constrained co-optimization problem that jointly determines applied control commands, UAV–IoT associations, communication resources, and UAV mobility while accounting for packet-delivery reliability and subsystem safety. The proposed DDoS-Aware Distributed Model Predictive Control (DA-DMPC) framework coordinates local IoT and UAV optimizations through primal-dual updates under attack-induced capacity loss. Numerical results demonstrate lower average control costs across tested scales and attack conditions, with small capacity violations and stable UAV trajectories.',
+      '本文研究分布式拒绝服务攻击导致接入链路容量下降时的多无人机辅助智慧农业物联网控制系统。工作建立攻击感知的约束联合优化问题，在考虑数据包传输可靠性与子系统安全约束的同时，联合决定实际控制输入、无人机与物联网设备关联、通信资源以及无人机移动决策，所提出的 DDoS-Aware Distributed Model Predictive Control（DA-DMPC）框架通过原始–对偶更新协调物联网终端与无人机侧的局部优化，以应对攻击引起的容量损失。数值实验表明，该方法在不同网络规模和攻击条件下实现更低的平均控制代价，同时保持较小的容量约束违反程度和稳定的无人机轨迹。',
+      '本研究は、DDoS攻撃によりアクセスリンク容量が低下するマルチUAV支援スマート農業IoT制御システムを対象とする。パケット配送信頼性とサブシステムの安全制約を考慮しつつ、適用制御入力、UAV–IoT関連付け、通信資源、UAV移動を共同決定する攻撃認識型制約付き最適化問題を構築する。提案するDDoS-Aware Distributed Model Predictive Control（DA-DMPC）は、主双対更新を通じてIoT側とUAV側の局所最適化を協調させ、攻撃による容量低下に対処する。数値実験では、各種システム規模と攻撃条件において平均制御コストが低減し、容量制約の違反が小さく、UAV軌道も安定することが示されている。'
     ),
     tags: ['MPC', 'Multi-UAV', 'IoT', 'Security'],
     links: {
       doi: 'https://doi.org/10.1109/JIOT.2026.3719293'
-    }
+    },
+    bibtex: `@article{Zheng2026DistributedMPC,
+  author  = {Mingrui Zheng and Koichi Kobayashi and Yuh Yamashita and Hao Li and Tengjiao He},
+  title   = {Distributed MPC for DDoS-Resilient Control and Communication Optimization in Multi-UAV Assisted IoT Smart Agriculture Networks},
+  journal = {IEEE Internet of Things Journal},
+  volume  = {13},
+  number  = {19},
+  pages   = {45319--45336},
+  year    = {2026},
+  doi     = {10.1109/JIOT.2026.3719293}
+}`
   },
   {
     slug: 'gima-uav-edge-computing',
