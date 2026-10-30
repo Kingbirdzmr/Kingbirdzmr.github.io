@@ -262,10 +262,10 @@ export const publications: Publication[] = [
     ),
     // Full author names are shown consistently in Publications and Collaboration Network.
     authors: ['Mingrui Zheng', 'Koichi Kobayashi', 'Hao Li', 'Ansei Yonezawa', 'Yuh Yamashita', 'Kenji Sawada', 'Tengjiao He'],
-    venue: 'IEEE Transactions on Intelligent Transportation Systems',
-    impactFactor: { value: 9.1, year: 2025 },
+    venue: 'IEEE Transactions on Automation Science and Engineering',
+    impactFactor: { value: 7.9, year: 2025 },
     details: L('2026', '2026', '2026'),
-    classificationZh: ['中科院一区Top期刊', '交叉/综合/新兴CCF-B期刊'],
+    classificationZh: ['中科院二区期刊', '交叉/综合/新兴CCF-B期刊'],
     tags: ['Vehicle Platooning', 'Multi-UAV', 'Communication–Control Co-Design', 'MARL']
   },
 
@@ -310,25 +310,6 @@ export const publications: Publication[] = [
     details: L('2027', '2027', '2027'),
     classificationZh: ['人工智能 CCF-B 会议'],
     tags: ['Multi-UAV', '3D Gaussian', 'Control', 'Communication']
-  },
-  {
-    slug: 'solar-aware-dnn-split-inference',
-    year: 2026,
-    type: 'conference',
-    statusKind: 'under-review',
-    status: L('Under Review', '在审', '査読中'),
-    detailPage: false,
-    title: L(
-      'Solar-Aware DNN Split Inference and Resource Allocation in MEC Networks',
-      'MEC网络中的太阳能感知DNN分割推理与资源分配',
-      'MECネットワークにおける太陽光発電認識型DNN分割推論とリソース割当て'
-    ),
-    authors: ['Zhihe Tan', 'Mingrui Zheng', 'Tengjiao He', 'Bing He'],
-    correspondingAuthors: ['Mingrui Zheng'],
-    venue: 'The 22nd International Conference on Mobility, Sensing and Networking (MSN 2026)',
-    details: L('2026', '2026', '2026'),
-    classificationZh: ['计算机网络 CCF-C 会议'],
-    tags: ['MEC', 'DNN Split Inference', 'Resource Allocation']
   },
   {
     slug: 'residual-structure-sparse-moe-routing',
